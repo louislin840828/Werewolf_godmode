@@ -2,11 +2,16 @@
   "name": "moonlit-werewolf",
   "version": "0.30.3-beta.1",
   "private": true,
-  "engines": { "node": ">=24 <25" },
+  "engines": {
+    "node": ">=24 <25"
+  },
   "scripts": {
     "dev": "node scripts/dev-server.cjs",
     "preview": "node scripts/dev-server.cjs --no-watch",
     "build": "node build.cjs",
     "test": "node test-all.cjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.0"
   }
 }
