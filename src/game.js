@@ -7,8 +7,8 @@ const icon=(name,cls='')=>`<svg class="sig ${cls}" viewBox="0 0 32 32" fill="non
 function visualAlive(p){return p.alive&&!(viewState().phase==='dawn'&&g.dawn>0&&Object.keys(viewState().nightResult||{}).map(Number).includes(p.id))}
 function victoryForecastMarkup(){
  const f=GameEngine.forecast();if(f.status!=='proven')return '';
- const body=`<p>預測至下一夜結算。上帝可宣告，也可繼續對局。</p><ul>${f.reasons.map(r=>`<li>${esc(r)}</li>`).join('')}</ul><div class="forecast-actions"><button onclick="GameEngine.dismissForecast()">略過 · 繼續遊戲</button><button class="primary" onclick="GameEngine.acceptForecast()">宣告狼人勝利</button></div>`;
- return f.dismissed?`<details class="victory-forecast"><summary>已略過必勝提示 · 查看</summary>${body}</details>`:`<aside class="victory-forecast" role="status" aria-label="上帝專用綁票預測"><strong>上帝專用 · 已推算狼人必勝</strong>${body}</aside>`;
+ const body=`<p>系統已找到狼方的必勝策略。以下是摘要，不是完整操作步驟；僅供主持人參考，請勿向玩家透露。</p><ul>${f.reasons.map(r=>`<li>${esc(r)}</li>`).join('')}</ul><p>你可以提前宣告狼人勝利，或略過提示，照正常流程繼續主持。系統不會自動結束對局。</p><div class="forecast-actions"><button onclick="GameEngine.dismissForecast()">略過 · 繼續遊戲</button><button class="primary" onclick="GameEngine.acceptForecast()">宣告狼人勝利</button></div>`;
+ return f.dismissed?`<details class="victory-forecast"><summary>已略過必勝提示 · 查看</summary>${body}</details>`:`<aside class="victory-forecast" role="status" aria-label="上帝專用綁票預測"><strong>主持人專用 · 狼方有必勝策略</strong>${body}</aside>`;
 }
 function scenePhase(){if(viewState().phase==='setup')return 'dusk';if(viewState().phase==='end')return viewState().winner.includes('狼人')?'eclipse':'dawn';if(isBloodMoon()&&viewState().phase==='night'&&(bloodSealed()||bloodFinalNight()))return 'eclipse';if(viewState().phase==='election')return 'day';if(viewState().phase==='night'||viewState().phase==='dawn'&&g.dawn<0)return 'night';return 'day'}
 function toast(t){gToast=t;clearTimeout(toastTimer);render();toastTimer=setTimeout(()=>{gToast='';render()},2300)}
@@ -46,23 +46,58 @@ const preparedPortraits=new Map();
 function roleImageSource(role){return typeof ROLE_IMAGES!=='undefined'?ROLE_IMAGES[ROLE_ART[role]||'villager']:`assets/roles/${ROLE_ART[role]||'villager'}.webp`}
 const portraitQueue=[];
 let portraitActive=0,portraitPreparation=0;
-function pumpPortraits(){while(portraitActive<3&&portraitQueue.length){portraitQueue.sort((a,b)=>b.priority-a.priority);const task=portraitQueue.shift();portraitActive++;task.started=true;const img=new Image();task.image=img;img.decoding='async';img.fetchPriority=task.priority>=2?'high':'low';const loaded=new Promise(resolve=>{img.onload=()=>resolve(true);img.onerror=()=>resolve(false)});img.src=task.src;const ready=img.decode?img.decode().then(()=>true,()=>loaded):loaded;ready.then(ok=>{task.ready=ok;if(!ok)portraitPreload.delete(task.src);task.resolve(ok)}).finally(()=>{portraitActive--;pumpPortraits()})}}
+const PORTRAIT_WAIT_MS=8000;
+function portraitDeadline(promise){return new Promise(resolve=>{const timer=setTimeout(()=>resolve(false),PORTRAIT_WAIT_MS);Promise.resolve(promise).then(ok=>{clearTimeout(timer);resolve(ok)},()=>{clearTimeout(timer);resolve(false)})})}
+function pumpPortraits(){while(portraitActive<3&&portraitQueue.length){
+ portraitQueue.sort((a,b)=>b.priority-a.priority);const task=portraitQueue.shift();portraitActive++;task.started=true;
+ const img=new Image();task.image=img;img.decoding='async';img.fetchPriority=task.priority>=2?'high':'low';
+ const loaded=new Promise(resolve=>{img.onload=()=>resolve(true);img.onerror=()=>resolve(false)});img.src=task.src;
+ const ready=img.decode?img.decode().then(()=>true,()=>false):loaded;
+ portraitDeadline(ready).then(ok=>{task.ready=ok;if(!ok&&portraitPreload.get(task.src)===task)portraitPreload.delete(task.src);task.resolve(ok)}).finally(()=>{portraitActive--;pumpPortraits()});
+}}
 function warmPortrait(role,priority=1){const src=roleImageSource(role);let task=portraitPreload.get(src);if(task){task.priority=Math.max(task.priority,priority);return task.promise}task={src,priority,ready:false};task.promise=new Promise(resolve=>task.resolve=resolve);portraitPreload.set(src,task);portraitQueue.push(task);pumpPortraits();return task.promise}
-function portraitNode(role,n){const key=role+':'+n;let img=portraitNodes.get(key);if(!img){const task=portraitPreload.get(roleImageSource(role));img=n===0&&task?.ready?task.image:new Image();img.className='role-portrait';img.alt=role+'角色肖像';img.width=1024;img.height=1024;img.decoding='async';img.loading='eager';portraitNodes.set(key,img)}return img}
-function mountPortraits(){primeRoleImages();const used=new Map();document.querySelectorAll('[data-portrait-role]').forEach(slot=>{const role=slot.dataset.portraitRole,n=used.get(role)||0;used.set(role,n+1);const img=portraitNode(role,n),src=roleImageSource(role);slot.replaceWith(img);if(img.getAttribute?.('src')===src)return;const task=portraitPreload.get(src);if(task?.ready){img.src=src;return}warmPortrait(role,viewState().phase==='setup'?0:3).then(ok=>{if(ok)img.src=src})})}
+function portraitNode(role,n){const key=role+':'+n;let img=portraitNodes.get(key);if(!img){const task=portraitPreload.get(roleImageSource(role));img=n===0&&task?.ready?task.image:new Image();img.className='role-portrait';img.alt='';img.setAttribute?.('aria-hidden','true');img.width=1024;img.height=1024;img.decoding='async';img.loading='eager';portraitNodes.set(key,img)}return img}
+function preparePortraitNode(role,n){
+ const img=portraitNode(role,n),src=roleImageSource(role);
+ if(img.portraitReady&&img.getAttribute?.('src')===src)return Promise.resolve(true);
+ if(img.portraitLoading)return img.portraitLoading;
+ img.className='portrait-image';img.portraitReady=false;
+ const failed=()=>{img.portraitReady=false;img.className='portrait-image';preparedPortraits.delete(src);const task=portraitPreload.get(src);if(task?.ready)portraitPreload.delete(src)};
+ const loaded=new Promise(resolve=>{img.onload=()=>resolve(true);img.onerror=()=>{failed();resolve(false)}});
+ img.src=src;
+ const ready=img.decode?img.decode().then(()=>true,()=>false):loaded;
+ img.portraitLoading=portraitDeadline(ready).then(ok=>{img.portraitReady=ok;img.className=ok?'portrait-image portrait-ready':'portrait-image';if(!ok)failed();img.portraitLoading=null;return ok});
+ return img.portraitLoading;
+}
+function mountPortraits(){
+ primeRoleImages();const used=new Map();
+ document.querySelectorAll('[data-portrait-role]').forEach(slot=>{
+  const role=slot.dataset.portraitRole,n=used.get(role)||0;used.set(role,n+1);
+  const img=portraitNode(role,n);img.className=img.portraitReady?'portrait-image portrait-ready':'portrait-image';slot.append(img);
+  warmPortrait(role,viewState().phase==='setup'?0:3).then(ok=>{if(ok)preparePortraitNode(role,n)});
+ });
+}
 function prepareRolePortrait(role){
  const src=roleImageSource(role),loading=warmPortrait(role,3),task=portraitPreload.get(src),cached=preparedPortraits.get(src);
  if(cached?.task===task)return cached.promise;
  const entry={task};entry.promise=(async()=>{
   if(!await loading)return false;
-  return (await Promise.all([0,1].map(async n=>{const img=portraitNode(role,n);if(img.getAttribute?.('src')!==src)img.src=src;try{if(img.decode)await img.decode();return true}catch{return false}}))).every(Boolean);
+  return (await Promise.all([0,1].map(n=>preparePortraitNode(role,n)))).every(Boolean);
  })().then(ok=>{if(!ok&&preparedPortraits.get(src)===entry)preparedPortraits.delete(src);return ok;});
  preparedPortraits.set(src,entry);return entry.promise;
 }
 function portrait(role,cls=''){return `<span class="portrait-slot role-portrait ${cls}" data-portrait-role="${esc(role)}" role="img" aria-label="${esc(role)}角色肖像"></span>`}
 function boardPortraitRoles(board){return [...new Set([...(BOARD_TEMPLATES[board]?.roles||[]),'平民',...(board==='brothers'?['幸運兒']:[])])]}
 function primeRoleImages(){const state=viewState(),board=state.phase==='setup'?(setupBoardFocus||galleryBoardIds()[0]):state.board;if(state.phase==='setup'){if(galleryDetail)boardPortraitRoles(galleryDetail).forEach(r=>warmPortrait(r,2));(BOARD_STORIES[board]?.art||[]).forEach(r=>warmPortrait(r,3));const ids=galleryBoardIds(),i=ids.indexOf(board);[ids[i-1],ids[i+1]].filter(Boolean).forEach(id=>BOARD_STORIES[id].art.forEach(r=>warmPortrait(r,1)))}else{portraitsFor(gameModel()).forEach(r=>warmPortrait(r,3));boardPortraitRoles(board).forEach(r=>warmPortrait(r,2))}}
-async function prepareGalleryGame(button){if(button.disabled)return;const id=galleryDetail||setupBoardFocus||viewState().board,token=++portraitPreparation,roles=boardPortraitRoles(id);let done=0;button.disabled=true;button.setAttribute('aria-live','polite');button.textContent=`準備本局角色 · 0／${roles.length}`;const results=await Promise.all(roles.map(async role=>{const ok=await prepareRolePortrait(role);if(token===portraitPreparation)button.textContent=`準備本局角色 · ${++done}／${roles.length}`;return ok}));if(token!==portraitPreparation||galleryDetail!==id||viewState().phase!=='setup')return;if(results.every(Boolean)){galleryConfirm()}else{button.disabled=false;button.textContent='圖片載入未完成 · 點此重試'}}
+async function prepareGalleryGame(button){
+ if(button.disabled)return;
+ const id=galleryDetail||setupBoardFocus||viewState().board,token=++portraitPreparation,roles=boardPortraitRoles(id);let done=0,waiting=true;
+ button.disabled=true;button.setAttribute('aria-live','polite');button.textContent=`準備本局角色 · 0／${roles.length}`;
+ await portraitDeadline(Promise.all(roles.map(async role=>{const ok=await prepareRolePortrait(role);if(waiting&&token===portraitPreparation)button.textContent=`準備本局角色 · ${++done}／${roles.length}`;return ok})));
+ waiting=false;
+ if(token!==portraitPreparation||galleryDetail!==id||viewState().phase!=='setup')return;
+ galleryConfirm();
+}
 function portraitsFor(m){if(m.kind==='electionExplosion')return ['狼人'];if(isCupid()){if(m.kind==='cupidAction')return ['狼人'];if(viewState().phase==='night'){const k=nightSteps()[viewState().step],rs=cupidRegRoles(k);if(rs)return [...new Set(rs)];if(k==='thief'&&[0,1].includes(viewState().draft.thiefPick))return [viewState().cupid.reserve[viewState().draft.thiefPick]];return ({reserve:['盜賊'],thief:['盜賊'],cupid:['丘比特'],lovers:['丘比特'],wolves:cupidExpected().includes('狼王')?['狼王','狼人']:['狼人'],witch:['女巫'],seer:['預言家'],hunter:['獵人'],idiot:['白痴']})[k]||['平民']}}if(isDream()){if(m.kind==='dreamAction')return ['狼人'];if(viewState().phase==='night'){const k=nightSteps()[viewState().step];return k==='wolves'?['夢魘','狼人']:[...(DREAM_REG[k]||['平民'])]}}if(isBloodMoon()){if(m.kind==='bloodAction')return [viewState().blood.action.kind==='blood'?'血月使者':'狼人'];if(m.kind==='daydone'&&viewState().blood.lastNight===viewState().n+1)return ['血月使者'];if(viewState().phase==='night')return [...new Set(BLOOD_REG[nightSteps()[viewState().step]]||['平民'])]}if(isWhiteKnight()){if(m.kind==='whiteTake')return ['白狼王'];if(m.kind==='whiteAction')return [viewState().white.action.kind==='duel'?'騎士':viewState().white.action.kind==='ordinary'?'狼人':'白狼王'];if(viewState().phase==='night'){const k=nightSteps()[viewState().step];return [...new Set(WHITE_REG[k]||['平民'])]}}if(isStone()&&viewState().phase==='night'){const rs=stoneRegRoles(nightSteps()[viewState().step]);if(rs)return [...new Set(rs)];const map={'stoneReg-gargoyle':'石像鬼',grave:'守墓人',gargoyle:'石像鬼',stoneKnife:'石像鬼',stoneResult:'石像鬼',wolves:'狼人',witch:'女巫',seer:'預言家',hunter:'獵人'};return [map[nightSteps()[viewState().step]]||'平民']}const rs=currentReg();if(rs)return [...new Set(rs)];if(viewState().phase==='night'){const k=nightSteps()[viewState().step],maps={meet:['狼兄','狼弟'],merchant:['黑市商人'],wolves:['狼人'],brother:['狼弟'],witch:['女巫'],seer:['預言家'],hunter:['獵人'],lucky:['幸運兒'],mechanical:['機械狼'],guard:['守衛'],spirit:['通靈師'],mechResult:['機械狼'],mechGun:['機械狼']};return maps[k]||['平民']}if(m.kind==='shot')return [player(viewState().pending[0].id).role];return ['平民']}
 function refreshIntro(m){
  const state=viewState(),key=[state.board,state.phase,state.n,state.phase==='night'?nightSteps()[state.step]:m.kind==='vote'?'vote'+state.voteRound:m.kind,state.pending?.[0]?.id||''].join(':');

@@ -31,6 +31,6 @@ run("s.step=nightSteps().indexOf('brother');hydrateGame()");const youngerCall=ru
 run("s.draft.revenge=5;newNight();s.step=nightSteps().indexOf('wolves');hydrateGame()");assert.equal(run('brotherState()'),'joined');assert.deepEqual(JSON.parse(run('JSON.stringify(wolfPack().map(p=>p.id))')),[2,3,4]);assert.equal(run('nightModel().line'),call);
 run("s.step=nightSteps().indexOf('brother');hydrateGame()");assert.equal(run('nightModel().line'),youngerCall);assert.equal(run('nightModel().actions.length'),0);
 run("s=fresh();s.players.forEach((p,i)=>p.role=ROLES[i]);s.phase='dawn';s.n=2;kill(1,'女巫毒')");assert.equal(run('s.revenge'),3);run("s.n=3");assert.equal(run('brotherState()'),'revenge');run('s.n=4');assert.equal(run('brotherState()'),'joined');
-// Decoded portrait DOM nodes are re-used across full-page re-renders.
-const mounted=[];c.document.querySelectorAll=()=>[{dataset:{portraitRole:'女巫'},replaceWith:img=>mounted.push(img)}];run('mountPortraits();mountPortraits()');assert.strictEqual(mounted[0],mounted[1]);assert.equal(mounted[0].decoding,'async');assert.equal(mounted[0].loading,'eager');assert.equal(mounted[0].width,1024);
+// Decoded portrait DOM nodes are re-used inside persistent silhouette wrappers across re-renders.
+const mounted=[];c.document.querySelectorAll=()=>[{dataset:{portraitRole:'女巫'},append:img=>mounted.push(img)}];run('mountPortraits();mountPortraits()');assert.strictEqual(mounted[0],mounted[1]);assert.equal(mounted[0].decoding,'async');assert.equal(mounted[0].loading,'eager');assert.equal(mounted[0].width,1024);
 console.log('PASS: initial pack, revenge night, joined night, night-death timing, invariant public calls, no extra knife after join, and decoded portrait node reuse.');

@@ -36,6 +36,18 @@ console.log('PASS bounded forecast: coalition ballots, sheriff, guards, witch se
 
 // Production mobile markup exposes explicit opt-out and an accessible advisory.
 reset();assert(run('victoryForecastMarkup()').includes('略過 · 繼續遊戲'));assert(run('victoryForecastMarkup()').includes('宣告狼人勝利'));run('GameEngine.dismissForecast()');assert(run('victoryForecastMarkup()').includes('<details'));assert(run('victoryForecastMarkup()').includes('已略過必勝提示'));
+// Host-facing explanations describe a strategy, not an unconditional result or full script.
+reset();let text=run('victoryForecastMarkup()');
+assert(text.includes('主持人專用 · 狼方有必勝策略'));assert(text.includes('不是完整操作步驟'));
+assert(text.includes('請勿向玩家透露'));assert(text.includes('系統不會自動結束對局'));
+assert(text.includes('今日投票已結束'));assert(text.includes('狼刀選 '));
+assert(text.includes('最遲於下一夜結算時'));assert(text.includes('不代表狼方隨意操作都會贏'));
+assert(!text.includes('放逐結算後'));assert(!text.includes('守護目標'));assert(!text.includes('決鬥反制'));
+reset('brothers',[3,4,5,9],false);run('s.sheriff=5');text=run('victoryForecastMarkup()');
+assert(text.includes('警長為 5 號'));assert(text.includes('1.5 票'));assert(text.includes('首輪狼隊一致'));
+run('s.sheriff=0');assert(run('victoryForecastMarkup()').includes('目前沒有警徽'));
+reset('whiteknight',[2,3,7,9]);assert.equal(run('victoryForecastMarkup()'),'');
+reset();run('s.pending=[{id:7,guns:1}]');assert.equal(run('victoryForecastMarkup()'),'');
 // Ended actual results remain stable after the batch context is consumed.
 reset('brothers',[3,5,9]);run("s.phase='dawn';s.nightResult={3:['女巫毒'],9:['狼隊刀']};settle()");assert.equal(run('winner()'),'狼人陣營獲勝');
 
@@ -50,5 +62,6 @@ assert.equal(run('s.voteDone'),true);assert.equal(run('s.voteRound'),2);assert.d
 // A completed double tie also forecasts the next night, while an active PK does not.
 reset('brothers',[2,3,7,9],false);run('s.revenge=3;s.voteRound=2;s.pk=[2,3];s.votes={7:2,9:3}');assert.equal(run('GameEngine.forecast().status'),'unknown');
 run('countVotes(false)');assert.equal(run('s.voteDone'),true);assert.equal(run('GameEngine.forecast().status'),'proven');
+assert(run('victoryForecastMarkup()').includes('今日投票已結束'));assert(!run('victoryForecastMarkup()').includes('放逐結算後'));
 // Ongoing first-round voting remains ineligible.
 reset('brothers',[2,3,5,7,9],false);run('s.revenge=3;s.votes={2:5}');assert.equal(run('GameEngine.forecast().status'),'unknown');

@@ -118,7 +118,7 @@ function calculateVictoryForecast(q,{maxNodes=10000,maxMs=180}={}){
  }
  try{
   const proved=day(clone(q));
-  return proved?{status:'proven',winner:WIN,nodes,horizon:'nextNight',reasons:[q.voteDone?'放逐結算後，已檢查下一夜所有可用反制。':`依警徽 ${q.sheriff?q.sheriff+' 號（1.5 票）':'已流失'}，檢查兩輪投票與白天決鬥反制。`,q.voteDone?`可成立的狼方行動：${[['恐懼',nightWitness?.fear],['狼刀',nightWitness?.kill],['第二刀',nightWitness?.extra],['復仇刀',nightWitness?.revenge],['機械毒',nightWitness?.mechPoison]].filter(x=>x[1]).map(([label,id])=>label+' '+id+' 號').join('、')||'依現有技能結算'}。`:`可成立的首輪投票策略：狼隊一致${voteWitness?'投 '+voteWitness+' 號':'棄票'}；再依公開結果推算後續。`,'狼方先固定行動，再檢查好人的合法技能選擇；包含猜中守護目標的情況。','在下一次夜間結算前，所檢查的反制皆無法避免狼人勝利。']}:{status:'unproven',reason:'存在續命／反制分支，或本輪未找到可證明必勝的策略',nodes};
+  return proved?{status:'proven',winner:WIN,nodes,horizon:'nextNight',reasons:[q.voteDone?'推算範圍：今日投票已結束，只推算接下來的一夜。':`推算範圍：從今日投票到下一夜結算，包含平票後的第二輪投票。${q.sheriff?'警長為 '+q.sheriff+' 號，其投票按 1.5 票計算。':'目前沒有警徽。'}`,q.voteDone?`狼方策略摘要：${[['恐懼',nightWitness?.fear],['狼刀',nightWitness?.kill],['第二刀',nightWitness?.extra],['復仇刀',nightWitness?.revenge],['機械毒',nightWitness?.mechPoison]].filter(x=>x[1]).map(([label,id])=>label+'選 '+id+' 號').join('、')||'配合現有技能完成夜間結算'}。`:`狼方策略摘要：首輪狼隊一致${voteWitness?'投給 '+voteWitness+' 號':'棄票'}，後續依公開的投票結果選擇行動。`,q.voteDone?'為何可判必勝：已考慮好人下一夜可用的技能與出局後可發動的技能；狼方不能偷看尚未公開的夜間選擇，再更改行動。':'為何可判必勝：已考慮好人的合法投票與現有可用技能；狼方不能偷看尚未公開的夜間選擇，再更改行動。','推算結論：狼方有一套能讓好人無法阻止的策略，最遲於下一夜結算時獲勝；不代表狼方隨意操作都會贏。']}:{status:'unproven',reason:'存在續命／反制分支，或本輪未找到可證明必勝的策略',nodes};
  }catch(error){if(error!==stop)throw error;return unknown('本次推算超過範圍或計算上限，繼續正常遊戲');}
 }
 function victoryForecast(){
