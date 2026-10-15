@@ -1,0 +1,161 @@
+/* Shared viewport, color and navigation contracts. Loaded after the scene theme. */
+:root{--app-height:100svh;--app-top:0px}
+@supports(height:100dvh){:root{--app-height:100dvh}}
+.play-scroll{display:contents}
+.mobile-vote-focus{display:none}
+.game-shell{grid-template-rows:75px minmax(350px,1fr) auto auto}
+.game-shell>.dock-footer{background:var(--panel);padding:10px 24px}
+.game-shell>.dock-footer .saved-whisper{align-self:center;margin:0}
+body[data-light=day] .game-shell>.dock-footer,body[data-light=dawn] .game-shell>.dock-footer{background:#dce3ce}
+.game-drawer,.role-intro,.gallery-dialog{--ink:#edf0df;--soft:#b4c5bc;--gold:#e2c68e;--edge:#b2b88a55;--panel:#14282f;color:var(--ink);color-scheme:dark}
+.game-drawer{top:var(--app-top);bottom:auto;height:var(--app-height);display:flex;flex-direction:column;overflow:hidden;padding:0}
+.drawer-head{position:relative;flex:none;padding:18px 20px 0;background:#132b32;border-bottom:1px solid var(--edge);z-index:2}
+.drawer-head h2{padding-right:44px;margin:8px 0 14px}
+.drawer-head .drawer-close{position:absolute;float:none;top:16px;right:16px;width:44px;height:44px}
+.drawer-head .host-tabs{margin:10px 0 14px}
+.drawer-body{min-height:0;flex:1;overflow-y:auto;overscroll-behavior-y:contain;padding:18px 20px calc(18px + env(safe-area-inset-bottom));scroll-padding-block:16px}
+.game-drawer p,.game-drawer details,.game-drawer label,.game-drawer .tiny{font-size:14px;line-height:1.75}
+.game-drawer input,.game-drawer select,.game-drawer textarea{font-size:16px;min-height:48px;scroll-margin-block:16px}
+.game-drawer input[type=checkbox]{min-height:24px;width:24px;flex-shrink:0}
+.game-drawer .check{min-height:48px}
+.game-drawer summary{min-height:44px;align-content:center;font-size:14px}
+.game-drawer .detail-empty,.game-drawer .role-list small,.game-drawer .role-facts dt{color:var(--soft)}
+.game-drawer .host-section summary{color:var(--ink)}
+.game-drawer .host-tabs button[aria-pressed=true]{color:var(--gold);border-color:var(--gold);background:#d9bc821c}
+.game-drawer .role-list small,.game-drawer .host-roster small,.game-drawer .story-list article small,.game-drawer .drawer-sub{font-size:13px}
+.game-drawer .role-facts>div{font-size:14px}
+.gallery-dialog{max-height:calc(var(--app-height) - 24px)}
+.gallery-dialog-inner{max-height:calc(var(--app-height) - 24px)}
+.gallery-dialog footer{padding-bottom:max(8px,env(safe-area-inset-bottom))}
+.gallery-dot{width:44px;min-width:44px;height:44px}
+.gallery-dot:after{left:18px}.gallery-dot.active:after{left:13px}
+.gallery-navigation{gap:0}.gallery-dots{min-width:0;overflow-x:auto;scrollbar-width:none;touch-action:pan-x pinch-zoom}
+.result-reselect{min-height:44px;padding:10px 14px;border:1px solid var(--gold);border-radius:8px;background:transparent;color:inherit;font-size:14px;margin-top:12px}
+.dawn-results{pointer-events:auto;overscroll-behavior:contain}
+.role-portrait{image-rendering:-webkit-optimize-contrast;backface-visibility:hidden}
+
+/* Phone portrait and phone landscape use the same interaction structure. */
+@media(max-width:650px),(max-width:1000px) and (max-height:600px){
+ html,body{height:100%;overflow:hidden}
+ body{font-size:15px}
+ .game-shell{height:var(--app-height);min-height:0;display:grid;grid-template-rows:calc(64px + env(safe-area-inset-top)) minmax(0,1fr) auto;overflow:hidden}
+ .game-hud{height:auto;min-width:0;padding:env(safe-area-inset-top) max(10px,env(safe-area-inset-right)) 0 max(10px,env(safe-area-inset-left));gap:6px}
+ .game-brand{gap:6px;padding:4px 0;font-size:15px;letter-spacing:1px;min-height:48px;min-width:0;flex:1}
+ .game-brand>.sig{width:23px;height:23px}.game-brand small{font-size:12px;letter-spacing:0;margin-top:4px}
+ .chapter-marker{display:none}
+ .game-hud nav{gap:2px;flex:none}
+ .game-hud nav button{display:flex;flex-direction:column;gap:3px;min-width:48px;min-height:48px;padding:4px;font-size:12px}
+ .game-hud nav span{display:block}.game-hud nav .sig{width:19px;height:19px}.game-hud nav .clock{display:none}
+ .play-scroll{display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior-y:contain;scrollbar-width:thin;scroll-padding-block:12px}
+ .game-world{flex:none;height:330px;min-height:330px;overflow:hidden}
+ .world-title{top:47%;transform:translateY(-50%)}.world-title>span{font-size:11px;letter-spacing:1px}.world-title h1{font-size:17px;letter-spacing:1px;max-width:50%;margin:5px auto 0}
+ .village-seat{width:44px;height:44px;min-width:44px;min-height:44px}
+ .seat-medal{font-size:21px;width:35px;height:30px;line-height:1;margin-top:0}
+ .seat-role{font-size:11px;line-height:20px;max-width:58px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .seat-caption,.seat-condition{display:none}.seat-actor{font-size:11px;line-height:12px;top:1px;left:-8px}
+ .pawn{position:absolute;left:0;top:5px;width:23px;height:28px;opacity:.6}
+ .village-seat:before,.village-seat.chosen:before{top:28px}.seat-selected{top:-6px;right:0}
+ .village-seat .vote-badge{font-size:12px;right:-6px;top:22px}
+ .village-heart,.world-corner{display:none}
+ .ritual-dock{flex:1 0 auto;position:static;bottom:auto;max-height:none;overflow:visible;padding:12px max(12px,env(safe-area-inset-right)) 12px max(12px,env(safe-area-inset-left))}
+ .dock-body{max-height:none;overflow:visible;padding:0;margin:0}
+ .ritual-intro{gap:10px;align-items:flex-start;margin-bottom:8px}.current-character{width:48px;height:54px;flex-shrink:0}
+ .spoken-line{font-size:16px;line-height:1.6;letter-spacing:0}.call-label{font-size:12px}
+ .turn-detail summary{font-size:14px;min-height:44px}.turn-detail .ritual-detail{font-size:14px;line-height:1.75;max-height:none;overflow:visible}
+ .ritual-controls{display:block}.relics,.registration-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(76px,1fr));gap:8px;overflow:visible;flex-wrap:wrap;margin-bottom:8px}
+ .relic{width:100%;min-width:0;min-height:76px;padding:8px;border-radius:10px}.relic span{font-size:14px}.relic small{font-size:12px}.relic>.sig{height:22px;width:22px}
+ .ritual-slot{min-width:0;min-height:72px;padding:8px}.ritual-slot small,.ritual-slot span{font-size:12px}
+ .turn-options{margin-top:4px}.turn-options summary{font-size:14px;min-height:48px}.turn-options .secondary-actions{max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .secondary-actions button{font-size:14px;min-height:48px;padding:8px;border:1px solid var(--edge);border-radius:6px}
+ .game-shell>.dock-footer{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 8px;padding:8px max(12px,env(safe-area-inset-right)) max(4px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));box-shadow:0 -4px 18px #0002;z-index:5;min-width:0}
+ .dock-footer>.ritual-commit{display:flex;flex-direction:row;align-items:stretch;min-width:0;gap:8px}
+ .dock-footer .commit-btn,.dock-footer .abstain-btn{min-width:0;width:auto;min-height:48px;padding:10px 12px;font-size:14px;line-height:1.4;letter-spacing:0}
+ .dock-footer .commit-btn{flex:1}.dock-footer .abstain-btn{flex:0 1 40%}.dock-footer .commit-btn .sig,.dock-footer .abstain-btn .sig{flex-shrink:0;width:18px}
+ .choice-receipt{font-size:13px;line-height:1.5;margin:0 0 4px;gap:4px}.choice-receipt b{font-size:15px}
+ .undo-action{font-size:12px;min-height:44px;text-align:left;justify-self:start;padding:4px 0}
+ .game-shell>.dock-footer .saved-whisper{font-size:12px;line-height:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;text-align:right;color:var(--soft)}
+ .mobile-vote-focus{display:block;grid-column:1/-1}
+ .mobile-vote-focus .vote-focus{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 9px}
+ .mobile-vote-focus .vote-focus>small{font-size:12px;letter-spacing:0;text-align:left;margin:0;max-width:100px}
+ .mobile-vote-focus .vote-focus>div{gap:9px}.mobile-vote-focus .vote-focus>div>span{display:flex;align-items:baseline;gap:4px;white-space:nowrap}
+ .mobile-vote-focus .vote-focus b,.mobile-vote-focus .vote-focus .vote-destination{font-size:23px}.mobile-vote-focus .vote-focus em{font-size:12px;margin:0}.mobile-vote-focus .vote-focus i{font-size:17px}
+ .vote-receipt{font-size:12px;padding:0;gap:8px;min-width:0}.vote-receipt>span{min-width:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:5px}.vote-receipt b{font-size:14px;margin:0}.vote-receipt small{display:none}.vote-receipt button{font-size:12px;min-height:44px;padding:6px 8px}
+ .vote-meter{font-size:14px;gap:8px;margin-bottom:10px}.vote-meter progress{height:6px}
+ .voting-dock .voter-line{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:none;overflow:visible;padding:0;margin-bottom:12px}
+ .voting-dock .voter-line:before{content:'投票者';font-size:14px;grid-column:1/-1;color:var(--soft)}
+ .voting-dock .voter{width:100%;min-width:0;min-height:56px;padding:6px;flex:none}.voting-dock .voter b{font-size:20px}.voting-dock .voter span{font-size:12px}
+ .day-powers,.withdrawal-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.day-power{padding:10px;min-height:72px;flex-wrap:wrap}.day-power strong,.withdrawal-card strong{font-size:14px}.day-power small,.withdrawal-card span{font-size:12px;line-height:1.6}.withdrawal-card{min-height:68px}
+ .reserve-slots{grid-template-columns:1fr;gap:12px}.reserve-slots label{font-size:14px}.reserve-slots select{min-height:48px}.thief-card{width:min(44%,160px);min-width:0;min-height:150px;padding:10px}.thief-card .role-portrait{width:100%;height:85px}.thief-card strong{font-size:15px}.thief-card small{font-size:12px}
+ .hunter-status{padding:10px;gap:6px;margin:10px 0}.hunter-status>strong{font-size:17px}.hunter-status small{font-size:13px}
+ .game-world:has(.revelation){height:330px;min-height:330px;padding:0}
+ .game-world:has(.revelation) .seat-orbit{opacity:.2;filter:grayscale(.35);pointer-events:none}.game-world:has(.revelation) .village-seat{pointer-events:none}
+ .game-world:has(.revelation) .world-title,.game-world:has(.revelation) .world-corner,.game-world:has(.revelation) .spell-trace{display:none}
+ .game-world .revelation{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(68vw,240px);max-width:calc(100% - 72px);max-height:calc(100% - 20px);min-height:0;overflow-y:auto;pointer-events:auto;margin:0;padding:16px 14px;border-radius:52px 52px 14px 14px;overscroll-behavior:contain}
+ .game-world:has(.dawn-results){height:auto;min-height:0;padding:16px}
+ .game-world:has(.dawn-results)>:not(.dawn-results){display:none}
+ .game-world .dawn-results{position:static;transform:none;width:100%;max-width:none;max-height:none;min-height:0;overflow:visible;pointer-events:auto;margin:0;padding:24px 16px;border-radius:14px}
+ .revelation small,.revelation span,.dawn-results>small{font-size:14px;line-height:1.75;letter-spacing:0}.revelation strong{font-size:30px;margin:12px 0}.revelation>.sig{width:32px;height:32px}
+ .revelation small,.revelation span,.revelation strong{max-width:100%;text-align:center}.revelation strong{overflow-wrap:normal;word-break:keep-all;line-height:1.25}.revelation .result-reselect{width:100%;flex:none;margin-top:10px}
+ .dawn-dead-list{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px 12px}.dawn-dead-list b{font-size:30px}.dawn-dead-list small{font-size:14px;line-height:1.5}.dawn-results>strong{font-size:26px}
+ .role-transition{top:8px;width:calc(100% - 24px);max-width:340px;transform:translateX(-50%);flex-direction:row;padding:10px;gap:12px;animation:mobile-role-pass 1.2s ease both}
+ .role-transition .role-portrait{width:38px;height:46px}.role-transition>span{text-align:left}.role-transition small{font-size:12px;margin-bottom:3px}.role-transition strong{font-size:15px}
+ .role-intro{width:calc(100vw - 24px);max-width:500px;max-height:calc(var(--app-height) - 24px);overflow-y:auto;overscroll-behavior:contain;grid-template-columns:minmax(0,1fr)}
+ .intro-art{width:100%;height:clamp(138px,22svh,176px);min-height:0;display:flex;justify-content:center;gap:2px;overflow:hidden;background:radial-gradient(circle at 50% 40%,#31584d 0,#143a35 38%,#0d2928 76%)}
+ .intro-art .role-portrait{position:relative;flex:0 0 auto;width:clamp(138px,22svh,176px);height:100%;min-width:0;object-fit:cover;object-position:center 24%;box-shadow:0 0 34px #061d1b99}
+ .intro-art.duet .role-portrait{position:relative;flex:0 1 176px;width:min(44vw,176px);height:100%;min-width:0;object-fit:cover}
+ .intro-art-shade{pointer-events:none}
+ .intro-copy{padding:16px}.intro-copy h2{font-size:23px}.intro-label,.intro-chapter{font-size:12px;letter-spacing:1px}.intro-call{font-size:16px;line-height:1.7}.intro-note{font-size:14px;line-height:1.75}.intro-copy .commit-btn{position:sticky;bottom:0;min-height:48px;font-size:15px;margin-top:16px}
+ .board-gallery{height:var(--app-height);min-height:0;padding-top:env(safe-area-inset-top);padding-right:env(safe-area-inset-right);padding-left:env(safe-area-inset-left)}
+ .gallery-heading{padding:12px 16px}.gallery-heading>span{font-size:12px;letter-spacing:2px}.gallery-heading h1{font-size:22px}.gallery-header small,.gallery-choice{font-size:13px}
+ .gallery-dot{width:44px;min-width:44px}.gallery-navigation>button{flex-shrink:0}.gallery-footer{max-width:none;padding:0 12px 8px}.gallery-dots{justify-content:flex-start}
+ .board-open .board-copy{padding:8px 16px 14px}.board-open .board-copy h2{font-size:25px}.board-open .board-copy h2 em{font-size:19px}.board-open .board-teaser,.board-open-label{font-size:14px}
+ .gallery-detail-body .board-copy>p,.board-composition p{font-size:15px;line-height:1.8}.gallery-detail-body .board-tag,.board-art>div>span{font-size:13px}.gallery-settings{font-size:14px;min-height:48px}.gallery-dialog .commit-btn{font-size:15px;min-height:48px}
+ .game-drawer{width:100vw;max-width:100vw;padding:0;animation:none;border:0}
+ .drawer-head{padding:calc(12px + env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left))}
+ .drawer-head .drawer-close{top:calc(12px + env(safe-area-inset-top));right:max(12px,env(safe-area-inset-right))}.drawer-head h2{font-size:23px}
+ .drawer-body{padding:16px max(16px,env(safe-area-inset-right)) max(16px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+ .game-drawer .setupgrid,.game-drawer .votes{grid-template-columns:minmax(0,1fr)}
+ .game-drawer .footerbar,.drawer-foot{display:flex;flex-direction:column;align-items:stretch;gap:10px}.game-drawer .footerbar button,.drawer-foot button{width:100%;min-height:48px}
+ .game-drawer .host-section{padding:12px}.host-tabs button{font-size:15px;min-height:48px}.host-roster span{font-size:16px}.player-profile small{font-size:13px}.role-facts>div{font-size:14px;gap:12px}.role-list strong{font-size:15px}
+ .game-drawer .log-tools{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:8px}.log-tools button{max-width:120px;font-size:13px;min-height:48px}
+ .game-drawer textarea{min-height:110px}.host-section:has(#game-note)>button{width:100%;min-height:48px;position:sticky;bottom:0;background:#2b4346}
+ .veil-screen{height:var(--app-height);min-height:0;padding:20px}.veil-screen h1{font-size:25px;letter-spacing:2px}.veil-screen p{font-size:14px}.veil-screen>.sig{width:70px;height:70px}
+}
+@media(min-width:651px) and (max-width:1000px) and (max-height:600px){
+ .game-shell{grid-template-rows:56px minmax(0,1fr) auto}.game-hud{padding-top:0}.game-brand small{display:none}
+ .play-scroll{display:grid;grid-template-columns:minmax(280px,1fr) minmax(260px,.9fr);align-items:start;gap:0}.game-world{height:280px;min-height:280px}.ritual-dock{border-top:0;min-width:0}
+ .game-shell>.dock-footer{grid-template-columns:minmax(0,1fr) minmax(240px,1fr);padding-top:6px}.dock-footer>.ritual-commit{grid-column:2;grid-row:1 / span 2;align-self:center}.dock-footer>.choice-receipt,.mobile-vote-focus,.vote-receipt{grid-column:1}.undo-action{grid-column:1}.saved-whisper{grid-column:2}
+ .mobile-vote-focus .vote-focus>small{display:none}.game-drawer{width:min(580px,100vw);max-width:100vw}.drawer-head{padding-top:8px}.drawer-head h2{margin:0 0 6px}.drawer-head .host-tabs{margin:4px 0 8px}.drawer-head .drawer-close{top:8px}
+ .gallery-heading{padding:6px 16px}.gallery-heading>span{display:none}.gallery-header{height:42px}.gallery-choice{display:none}.board-open{flex-direction:row}.board-open .board-art{flex:0 0 48%;width:48%;height:100%}.board-open .board-copy{width:52%;align-self:center}.gallery-footer{padding-bottom:0}
+}
+@media(prefers-reduced-motion:reduce){.role-transition{animation:none}}
+@keyframes mobile-role-pass{0%,100%{opacity:0}15%,80%{opacity:1}}
+
+/* Forecast is advisory; normal progression remains available. */
+.victory-forecast{margin:12px 0;padding:14px;border:1px solid #bfa46b88;border-radius:14px;background:#152e36;color:#eee4cb;overflow-wrap:anywhere}
+.victory-forecast strong,.victory-forecast summary{font-size:15px;color:#e0bf79}
+.victory-forecast p,.victory-forecast li{font-size:13px;line-height:1.6}
+.victory-forecast ul{padding-left:20px;margin:10px 0}
+.forecast-actions{display:flex;flex-wrap:wrap;gap:8px}
+.forecast-actions button{flex:1 1 140px;min-height:44px;white-space:normal}
+
+/* A stable receipt row prevents the first selection from resizing the footer. */
+.dock-footer>.choice-receipt,.dock-footer>.vote-receipt{height:48px;min-height:48px;max-height:48px;margin:0;padding:0;min-width:0;align-items:center;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;white-space:nowrap;overscroll-behavior-x:contain}
+.dock-footer>.choice-receipt>span{flex:none;white-space:nowrap}
+.dock-footer>.vote-receipt>span{flex:1;min-width:0;flex-wrap:nowrap;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dock-footer>.vote-receipt b{display:inline;white-space:nowrap;margin:0 4px}
+.dock-footer>.vote-receipt small{display:none}
+.dock-footer>.receipt-empty{color:var(--soft)}
+.dock-footer>.receipt-empty>span{background:none;border-color:transparent}
+.badge-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(100%,340px)}
+.badge-choices .relic{width:100%;min-height:96px;transform:none}
+@media(max-width:650px),(max-width:1000px) and (max-height:600px){
+ .dock-footer>.vote-receipt{gap:6px;font-size:12px}
+ .dock-footer>.vote-receipt b{font-size:14px}
+ .dock-footer>.vote-receipt button{flex:none;white-space:nowrap}
+ .badge-choices{width:100%}
+}
+
+/* Short daytime turns must fill the viewport with the daytime panel. */
+body[data-light=day] .game-shell,body[data-light=dawn] .game-shell,
+body[data-light=day] .play-scroll,body[data-light=dawn] .play-scroll{background:#dce3ce}

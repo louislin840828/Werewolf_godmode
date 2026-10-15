@@ -1,0 +1,45 @@
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),R=require('./src/rules/role-state.js');
+// The rules run with no document, canvas, images, or view modules.
+let saved=null;const c={console,Date,Math,JSON,localStorage:{getItem:()=>saved,setItem:(_,v)=>saved=v},confirm:()=>true,alert:m=>{throw Error(m)},prompt:()=>0,render:()=>{}};vm.createContext(c);const run=x=>vm.runInContext(x,c),obj=x=>JSON.parse(run('JSON.stringify('+x+')'));
+const files=['app','boards','mechanical','gargoyle','whiteknight','bloodmoon','dream','cupid','election'];
+for(const f of [...files.map(x=>x+'.js'),'rules/role-state.js','role-runtime.js'])run(fs.readFileSync('src/'+f,'utf8'));
+function reset(board='dream',phase='night'){run(`s=fresh();s.board='${board}';s.players.forEach((p,i)=>p.role=boardDefinition().roles[i]);s.n=2;s.phase='${phase}';s.elected=true;ensureRoleSystem()`);if(board==='cupid')run("s.cupid.reserve=['平民','平民'];s.cupid.pick=0;s.cupid.thiefId=1;s.cupid.cupidId=2;s.players.forEach((p,i)=>p.role=['平民','丘比特','狼王','狼人','狼人','預言家','女巫','獵人','白痴','平民','平民','平民'][i]);s.roleSystem.identities={};ensureRoleSystem()");}
+// Every board exposes the same schema; unknown identity is never a good/villager guess.
+for(const b of ['brothers','mechanical','gargoyle','whiteknight','bloodmoon','dream','cupid']){reset(b);for(let id=1;id<=12;id++){const st=obj('roleStatus('+id+')');for(const key of ['originalRole','currentRole','alignment','edge','life','canSpeak','canVote','canAct','skills','effects','relationships','knowledge','pendingAbilities'])assert(key in st,b+':'+key);}run('player(12).role="未確認"');assert.equal(run('roleStatus(12).alignment'),'未知');assert.equal(run('roleStatus(12).edge'),'unknown');assert.equal(run('roleStatus(12).canAct'),false);assert.equal(run('winner()'),'');}
+// All permutations of a simultaneous direct lover death forbid both guns.
+for(const entries of ["{3:['女巫毒'],8:['狼隊刀']}","{8:['狼隊刀'],3:['女巫毒']}","{3:['狼隊刀'],8:['女巫毒']}","{8:['狼隊刀'],3:['狼隊刀']}"]){reset('cupid');run(`s.cupid.lovers=[3,8];s.cupid.third=false;s.nightResult=${entries};s.phase='dawn';settle()`);assert.equal(run('s.pending.length'),0);for(const id of [3,8])assert(obj('roleStatus('+id+').death.factors').some(f=>f.code==='heartbreak'));}
+// A sole original casualty may fire; its lover dies only from heartbreak.
+reset('cupid');run("s.cupid.lovers=[3,8];s.nightResult={8:['狼隊刀']};s.phase='dawn';settle()");assert.equal(run('s.pending[0].id'),8);assert.equal(run('s.pending.length'),1);assert(obj('roleStatus(3).death.factors').some(f=>f.code==='heartbreak'));
+// Repeat/link deaths forbid hunter guns, including night gun chains; normal day gun remains.
+for(const cause of ['連續攝夢','攝夢牽連']){reset();run(`s.nightResult={7:['${cause}']};s.phase='dawn';settle()`);assert.equal(run('s.pending.length'),0);assert.equal(run('RoleSystem.gunEligibility(s,7,roleStatus(7).death.factors.map(x=>x.label),true).available'),false);}
+reset();run("s.draft={dream:7,kill:8};s.dream.linkTarget=7;s.dream.linkNight=2;s.nightResult=outcomes();s.phase='dawn';settle()");assert.equal(run('s.pending.length'),0);assert.equal(run('player(7).alive'),false);
+reset('dream','day');run("s.draft={fear:7};kill(7,'放逐')");assert.equal(run('s.pending[0].id'),7);
+// Normal white king self-explosion retains the distinct carry power.
+reset('whiteknight','day');run("kill(1,'自爆')");assert.equal(run('s.pending[0].type'),'whiteTake');
+// No blood exile, ordinary or last-wolf, creates a seal. Only explicit explosion does.
+reset('bloodmoon','day');run("kill(2,'放逐')");assert.equal(run('s.blood.sealedNight'),0);
+reset('bloodmoon','day');run("[2,3,4].forEach(id=>kill(id,'槍擊'));kill(1,'放逐')");assert.equal(run('roleStatus(1).life'),'delayedDeath');assert.equal(run('s.blood.sealedNight'),0);run('newNight()');assert.equal(run('bloodFinalNight()'),true);assert.equal(run('roleStatus(6).canAct'),true);
+reset('bloodmoon','day');run("openBloodAction('blood');s.blood.action.target=1;resolveBloodAction()");assert.equal(run('bloodSealed()'),true);assert.equal(run('roleStatus(6).canAct'),false);assert(run('roleStatus(6).effects.some(e=>e.kind===\'seal\')'));
+// Independent knife activates on the next night, never in the current settlement.
+for(const b of ['mechanical','gargoyle']){reset(b);run("[2,3,4].forEach(id=>kill(id,'槍擊'))");assert.equal(run('RoleSystem.independentKnife(s)'),false);run('newNight()');assert.equal(run('RoleSystem.independentKnife(s)'),true);assert.equal(run('roleStatus(1).skills.find(x=>x.id===\'knife\').enabled'),true);}
+// Thief origin and lover third faction do not overwrite physical role or edge.
+reset('cupid');run('s.cupid.lovers=[3,6];s.cupid.third=true');assert.equal(run('roleStatus(1).originalRole'),'盜賊');assert.equal(run('roleStatus(1).currentRole'),'平民');assert.equal(run('roleStatus(3).alignment'),'第三方');assert.equal(run('roleStatus(3).edge'),'wolf');assert.equal(run('roleStatus(6).edge'),'god');
+// Future-active learned ability differs from immediate passive gun / inspection disguise.
+reset('mechanical');run("s.mech.learned={id:5,role:'通靈師',night:2}");assert.equal(run('roleStatus(1).inspectionRole'),'通靈師');assert.equal(run('roleStatus(1).skills.find(x=>x.id===\'learnedInspectRole\').enabled'),false);run('newNight()');assert.equal(run('roleStatus(1).skills.find(x=>x.id===\'learnedInspectRole\').enabled'),true);
+// Frozen public role views cannot freeze or mutate authoritative state.
+run('GameEngine.role(1)');assert.equal(run('Object.isFrozen(s.mech.learned)'),false);assert.equal(run('Object.isFrozen(GameEngine.role(1).learned)'),true);const q=obj('s');q.mech.learned.role='女巫';assert.equal(run('s.mech.learned.role'),'通靈師');
+// Structured events and confirmed information roll back with the entire transaction.
+reset();run("mutate(()=>{s.poison=false;pushRoleEvent('information',{recipient:5,kind:'inspect',target:1,result:'狼人'})})");assert.equal(run('roleStatus(5).knowledge.length'),1);assert.equal(run('s.poison'),false);assert(run('s.roleSystem.events.some(e=>e.type===\'roleStateChanged\')'));run('undo()');assert.equal(run('s.poison'),true);assert.equal(run('roleStatus(5).knowledge.length'),0);
+// Legacy migration is idempotent, and does not clear drafts, resources, election or history.
+reset('cupid','dawn');run("s.cupid.lovers=[3,8];s.nightResult={3:['女巫毒'],8:['狼隊刀']};s.poison=false;s.election={stage:'withdraw',registered:[3,4],withdrawn:[4]};delete s.roleSystem;const legacyBefore=clone(s);ensureRoleSystem();const once=clone(s);ensureRoleSystem()");assert.deepEqual(obj('s'),obj('once'));assert.equal(run('s.poison'),false);assert.deepEqual(obj('s.election'),obj('legacyBefore.election'));assert(obj('s.nightResult[8]').includes('殉情'));run('save()');assert(JSON.parse(saved).roleSystem.schemaVersion===1);
+// Reload a compact checkpoint journal, then undo: information and resources survive.
+reset();run("mutate(()=>{s.heal=false;pushRoleEvent('information',{recipient:5,kind:'inspect',target:1,result:'狼人'})});save();s=JSON.parse(localStorage.getItem('moonlit-immersive-prototype-v1'));ensureRoleSystem();undo()");assert.equal(run('s.heal'),true);assert.equal(run('roleStatus(5).knowledge.length'),0);
+// Paused legacy pending guns adopt the new restrictions without discarding the game.
+reset('cupid','day');run("s.cupid.lovers=[3,8];s.draft={kill:8,poison:3};player(3).alive=false;player(8).alive=false;s.pending=[{id:8,guns:1}];s.logs=[{period:'第 2 天',text:'3 號 出局：女巫毒'},{period:'第 2 天',text:'8 號 出局：狼隊刀'}];delete s.roleSystem;ensureRoleSystem();pruneLegacyDeathSkills()");assert.equal(run('s.pending.length'),0);
+// Structured journals are not duplicated into every persisted undo snapshot.
+reset();run("for(let i=0;i<120;i++)mutate(()=>{s.poison=!s.poison;log('第 '+i+' 次操作');pushRoleEvent('information',{recipient:5,kind:'inspect',target:1,result:'狼人'});});save()");assert.equal(run('s.history.length'),100);assert(run('s.history.every(h=>h.roleSystem.events.length===0)'));assert(Buffer.byteLength(saved,'utf8')<3*1024*1024);run('undo()');assert.equal(run('roleStatus(5).knowledge.length'),119);
+// Rules do not import renderer/browser APIs; views cannot write authoritative state.
+const pure=fs.readFileSync('src/rules/role-state.js','utf8');assert(!/\b(document|window|localStorage|canvas)\b/.test(pure));
+for(const f of ['game.js',...fs.readdirSync('src').filter(f=>f.endsWith('.view.js'))]){const text=fs.readFileSync('src/'+f,'utf8');assert(!/\bs\./.test(text),f+' reads live state');assert(!/\b(kill|checkWin|newNight|mutate)\s*\(/.test(text),f+' invokes a low-level mutation');}
+for(const f of files){const text=fs.readFileSync('src/'+f+'.js','utf8');assert(!/\bdocument\b|<button|<select|<div/.test(text),f+' contains rendering');}
+console.log('PASS: DOM-free seven-board rule execution/schema; simultaneous lover death order invariance; dream gun exclusions; white carry; explicit-only blood seal; next-night knife inheritance; thief/third/edges; learned timing/disguise; frozen views; structured events/information/undo; idempotent legacy migration; rules/view dependency guards.');

@@ -1,0 +1,2 @@
+const ROLE_IMAGE_KEYS=['blood-moon','cupid','demon-hunter','dreamweaver','gargoyle','gravekeeper','guard','hunter','idiot','knight','lucky','mechanical-wolf','merchant','nightmare','seer','spirit-medium','thief','villager','werewolf','white-wolf-king','witch','wolf-brother','wolf-king','wolf-younger'];
+const ROLE_IMAGES=Object.fromEntries(ROLE_IMAGE_KEYS.map(key=>[key,`assets/roles/${key}.webp`]));
