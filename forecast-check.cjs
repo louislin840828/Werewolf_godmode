@@ -2,15 +2,24 @@ const assert=require('node:assert/strict');const {createGameTest}=require('./tes
 function reset(board='brothers',ids=[3,4,5,9],done=true){run(`s=fresh();s.board=${JSON.stringify(board)};s.players.forEach((p,i)=>{p.role=boardDefinition().roles[i];p.alive=${JSON.stringify(ids)}.includes(p.id)});s.n=3;s.phase='day';s.elected=true;s.voteDone=${done};s.heal=false;s.poison=false;ensureRoleSystem();s.trade={id:10,gift:'查驗',success:true,used:true,night:1};`);}
 const predict=()=>obj('calculateVictoryForecast(s,{maxNodes:100000,maxMs:5000})');
 reset();assert.equal(predict().status,'proven');
+// Two wolves, two gods and one villager: daylight forecasting cannot use the
+// host's hidden role knowledge to pick the sole villager as an inevitable knife.
+reset('brothers',[3,4,5,6,9]);assert.equal(predict().status,'unproven');
+// After the wolf knife is confirmed on that sole villager, the nightly edge
+// priority proves the wolf win even when the witch still has a poison.
+reset('brothers',[3,4,5,6,9]);run("s.phase='night';s.n=3;s.step=2;s.draft.kill=9;s.poison=true");assert.equal(predict().status,'proven');
+assert.equal(predict().horizon,'currentNight');assert(predict().reasons[0].includes('狼刀已確認'));
+assert(run('victoryForecastMarkup()').includes('宣告狼人勝利'));
+run('GameEngine.acceptForecast()');assert.equal(run('s.winner'),'狼人陣營獲勝');assert.equal(run('s.phase'),'end');
 reset('brothers',[3,4,5,9],false);assert.equal(predict().status,'proven');
 // Good sheriff is recalculated; losing one wolf still leaves an unavoidable edge.
 run('s.sheriff=5');assert.equal(predict().status,'proven');
 reset('brothers',[3,5,9],false);run('s.sheriff=5');assert.equal(predict().status,'unproven');
 // Guards must be guessed before the knife: a possible correct guard is sufficient.
 reset('whiteknight',[2,3,7,9]);assert.equal(predict().status,'unproven');
-reset('whiteknight',[2,3,7,9]);run('s.guardLast=9');assert.equal(predict().status,'proven');
-// Witch's remaining heal can save the last villager, but cannot self-save by default.
-reset('brothers',[3,4,6,9]);run('s.heal=true');assert.equal(predict().status,'proven');
+reset('whiteknight',[2,3,7,9]);run('s.guardLast=9');assert.equal(predict().status,'unproven');
+// Without confirmed knife, do not assume the wolves identify the unsavable witch.
+reset('brothers',[3,4,6,9]);run('s.heal=true');assert.equal(predict().status,'unproven');
 run("s.rules.self='yes'");assert.equal(predict().status,'unproven');
 // Knight can kill the last wolf before any vote/night; do not predict a win.
 reset('whiteknight',[2,8,9],false);assert.equal(predict().status,'unproven');
