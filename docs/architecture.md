@@ -24,6 +24,12 @@
 提交意圖。不可從 view 直接修改 live `s`，也不可直接呼叫死亡／勝負／切夜結算。
 共用角色系統目前是既有七板的轉接規格，不是任意角色組合的通用規則引擎。
 
+## 0.40 呈現更新與轉場
+
+`game.js` 在對局畫面以同步 DOM reconciliation 保留同型同鍵節點（id／座號／角色／主要 class），保留 Canvas bitmap、成功圖片、焦點輸入與同回合 disclosure。開局輪播仍採原本整頁渲染及原生手勢流程。VM stub 不支援真實 DOM 時保留 innerHTML 路徑。
+`village-render.js` 依場景／存活顯示／動態設定簽章重用 Canvas 迴圈；簽章變更才重建繪製，舊 Canvas 圖層只用於非互動淡出。
+轉場由呈現 key 判斷；動畫只處理 opacity，不呼叫 controller／engine，不等待動畫才更新權威狀態。離場副本 inert、aria-hidden 且無 id；隱藏身分立即整頁替換，不建立副本。靜態場景及 reduced-motion 停用 JS 轉場。首次渲染與手機效能仍須實機驗收。
+
 ## 狀態
 
 `s` 保存對局；`roleSystem` 投影共用角色與事件。`g`、drawer、popup、timer 等是

@@ -159,3 +159,25 @@ body[data-light=day] .game-shell>.dock-footer,body[data-light=dawn] .game-shell>
 /* Short daytime turns must fill the viewport with the daytime panel. */
 body[data-light=day] .game-shell,body[data-light=dawn] .game-shell,
 body[data-light=day] .play-scroll,body[data-light=dawn] .play-scroll{background:#dce3ce}
+
+/* 0.40: persistent scene and stage-scoped motion, never an interaction lock. */
+.ritual-intro,.revelation,.role-intro,.game-drawer{animation:none}
+.scene-crossfade{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.presentation-exit{pointer-events:none!important;animation:none!important}
+.game-hud,.ritual-dock,.dock-footer,.game-shell,.play-scroll{transition:background-color .36s ease,color .36s ease,border-color .36s ease}
+/* Solid theme surfaces can interpolate; the former gradient images could not. */
+.game-hud{background:#152b32}.ritual-dock{background:#162c33}
+body[data-light=day] .game-hud,body[data-light=dawn] .game-hud{background:#d7e1cd}
+body[data-light=day] .ritual-dock,body[data-light=dawn] .ritual-dock{background:#dfe3ce}
+body[data-light=eclipse] .game-hud,body[data-light=eclipse] .ritual-dock{background:#292930}
+.portrait-image{transition:opacity .18s ease-out}
+.seat-orbit{transition:opacity .2s ease,filter .2s ease}
+@media(max-width:650px),(max-width:1000px) and (max-height:600px){
+ /* Death announcements replace the scene without pulling the controls upward. */
+ .game-world:has(.dawn-results){min-height:330px;display:flex;align-items:center}
+ .game-world:has(.dawn-results)>.scene-crossfade{display:block}
+}
+@media(prefers-reduced-motion:reduce){
+ .scene-crossfade,.presentation-exit{display:none!important}
+ .portrait-image,.seat-orbit,.game-hud,.ritual-dock,.dock-footer,.game-shell,.play-scroll{transition:none}
+}

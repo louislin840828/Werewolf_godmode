@@ -1,6 +1,6 @@
 # 自動測試基線
 
-目前 0.30.5-beta.1 基線為 **17 支測試**。0.29 的 14 支原有測試完成修復並加入
+目前 0.40.0-beta.1 基線為 **18 支測試**。0.29 的 14 支原有測試完成修復並加入
 tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以目前確認家規為準。
 
 ## 執行
@@ -46,6 +46,11 @@ DOM stubs 只支援字串／controller 測試，不代表真實瀏覽器執行�
 原始碼／機密檔不公開及角色原圖位元組。直接呼叫 handler，不開監聽埠，不能宣稱
 已在使用者電腦啟動過 dev server 或完成手機連線。
 統一測試入口會把 scripts 與 package.json 一併複製到隔離目錄。
+
+## 0.40.0 呈現連續性回歸
+
+新增 `presentation-check.cjs`，以可操作的 DOM 節點模型驗證 reconciler 保留 Canvas、座位、已解碼圖片、焦點輸入及展開狀態，並驗證重排／刪除、離場副本 inert／aria-hidden、立即隱藏與減少動態契約。
+既有 VM stub 仍走純 innerHTML 路徑，不可將全套測試描述為已驗證真實瀏覽器的 DOM reconciliation、Canvas 交疊或動畫流暢度。本次環境 Node 22.23.3；正式 Node 24 基線與手機驗收待補跑。
 
 ## 0.30.5 預判文字回歸
 
