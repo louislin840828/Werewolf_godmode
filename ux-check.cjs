@@ -110,3 +110,60 @@ run('confirmBadgeChoice()');assert.equal(run('s.sheriff'),9);assert.equal(run('s
 run("undo();chooseBadgeMode('destroy');confirmBadgeChoice()");assert.equal(run('s.sheriff'),0);assert.equal(run('s.badge'),false);
 run('undo()');assert.equal(run('s.sheriff'),7);assert.equal(run('s.badge'),true);
 console.log('PASS: visible badge options, selection-only mode changes, seat reselect, existing transfer/destroy confirmation and undo.');
+
+// Merchant target and gift are independent persisted choices, not three target actions.
+reset('brothers');run('s.step=nightSteps().indexOf("merchant");hydrateGame()');
+assert.equal(run('gameModel().actions.length'),1);assert.equal(run('s.draft.gift'),undefined);
+run('sceneSeatChoice(9)');assert.equal(run('s.draft.trade'),9);assert.equal(run('s.draft.gift'),undefined);
+assert(run('merchantChoiceHint(gameModel())').includes('贈送技能'));
+const merchantStep=run('s.step');run('confirmGame()');assert.equal(run('s.step'),merchantStep);
+for(const gift of ['查驗','毒藥','獵槍']){run(`chooseMerchantGift('${gift}')`);assert.equal(run('s.draft.trade'),9);assert.equal(run('s.draft.gift'),gift);assert.equal(obj('skillEdges(gameModel())').length,1);assert(run('seatHTML(player(9),gameModel())').includes('aria-pressed="true"'));}
+run('sceneSeatChoice(10)');assert.equal(run('s.draft.gift'),'獵槍');assert.equal(run('s.draft.trade'),10);
+assert.equal(run('s.trade'),null);assert.equal(run('s.history.length'),0);
+assert.equal(run('GameEngine.choose("gift","非法技能")'),false);
+assert.equal(run('GameEngine.choose("trade",8)'),false);
+run('player(11).alive=false');assert.equal(run('GameEngine.choose("trade",11)'),false);
+prod();assert(nodes.app.innerHTML.includes('aria-label="贈送技能"'));assert(nodes.app.innerHTML.includes('交易對象'));assert(nodes.app.innerHTML.includes('贈送技能'));assert(!nodes.app.innerHTML.includes("chooseAction('gift"));
+run('gKey="";hydrateGame()');assert.equal(run('s.draft.trade'),10);assert.equal(run('s.draft.gift'),'獵槍');
+run('clearChoice()');assert.equal(run('s.draft.gift'),'獵槍');assert.equal(run('s.draft.trade'),0);
+assert(run('merchantChoiceHint(gameModel())').includes('交易對象'));
+run('sceneSeatChoice(9);confirmGame()');assert.equal(run('s.step'),merchantStep+1);run('undo()');assert.equal(run('s.step'),merchantStep);assert.equal(run('s.draft.trade'),9);assert.equal(run('s.draft.gift'),'獵槍');
+run('skipTurn()');assert.equal(run('s.draft.trade'),0);assert.equal(run('s.draft.gift'),undefined);
+reset('brothers');run('s.step=nightSteps().indexOf("merchant");hydrateGame();chooseAction("gift1")');assert.equal(run('s.draft.gift'),'毒藥');assert.equal(run('s.draft.trade'),undefined);run('sceneSeatChoice(9)');assert.equal(run('s.draft.gift'),'毒藥');
+run('s.trade={id:9,gift:"查驗",success:true,night:1};save()');assert.equal(run('GameEngine.choose("gift","獵槍")'),false);
+console.log('PASS: independent merchant target/gift in either order, persistent reselect, one trace, validation, incomplete confirmation, skip and undo.');
+
+// A lost transient receipt never implies that the persisted votes disappeared.
+for(const board of ['brothers','mechanical','gargoyle','whiteknight','bloodmoon','dream','cupid']){
+ reset(board);run('s.phase="day";s.elected=true;s.voteDone=false;s.votes={};gameModel();if(s.white)s.white.voting=true;if(s.blood)s.blood.voting=true;if(s.dream)s.dream.voting=true;if(s.cupid)s.cupid.voting=true;gKey="";hydrateGame();syncVotePresentation(gameModel())');
+ assert(run('voteReceiptMarkup(gameModel())').includes('尚未記錄投票'));
+ run('sceneSeatChoice(12);sceneAbstainVote();s=JSON.parse(JSON.stringify(s));gKey="";votePresentationKey="";lastVoteReceipt=null;hydrateGame();syncVotePresentation(gameModel())');
+ assert.equal(run('s.votes[1]'),12);assert.equal(run('s.votes[2]'),0);
+ assert(run('voteReceiptMarkup(gameModel())').includes('已恢復 2／12 票'));
+ assert(!run('voteReceiptMarkup(gameModel())').includes('尚未記錄投票'));
+ run('while(!voteComplete(gameModel()))sceneSeatChoice(12);lastVoteReceipt=null');assert(run('voteReceiptMarkup(gameModel())').includes('可以揭曉票數'));
+ run('s.voteRound=2;s.pk=[11,12];s.votes={};gKey="";hydrateGame();syncVotePresentation(gameModel())');assert(run('voteReceiptMarkup(gameModel())').includes('尚未記錄投票'));
+}
+console.log('PASS: restored receipt counts include abstentions on seven boards, complete tally prompt and round reset.');
+
+// Cancelling new game leaves both the game and management UI untouched.
+reset('brothers');run('gDrawer="engine";detailPlayerId=7;g.shot=9');
+const resetBefore=run('JSON.stringify(s)'),resetUI=run('JSON.stringify(g)');const originalConfirm=c.confirm;c.confirm=()=>false;
+run('resetFromManagement()');assert.equal(run('JSON.stringify(s)'),resetBefore);assert.equal(run('JSON.stringify(g)'),resetUI);assert.equal(run('gDrawer'),'engine');assert.equal(run('detailPlayerId'),7);
+assert(run('hostManagementMarkup()').includes('onclick="resetFromManagement()"'));
+c.confirm=()=>true;run('resetFromManagement()');assert.equal(run('s.phase'),'setup');assert.equal(run('gDrawer'),'');assert.equal(run('detailPlayerId'),0);assert.equal(run('g.shot'),undefined);c.confirm=originalConfirm;
+console.log('PASS: cancelled new game preserves state/drawer/selection; confirmed new game clears presentation.');
+
+// Shot mode changes are presentation-only; the production footer confirms existing engine actions.
+for(const board of ['brothers','mechanical','gargoyle','dream','cupid']){
+ reset(board);run('s.phase="day";s.elected=true;kill(role("獵人").id,"放逐");gKey="";hydrateGame()');nodes.shot={value:'0'};
+ assert.equal(run('gameModel().kind'),'shot');const shotBefore=run('JSON.stringify(s)');
+ assert(run('actionTray(gameModel())').includes('選擇開槍'));assert(run('actionTray(gameModel())').includes('放棄開槍'));
+ run('chooseShotMode("skip")');assert.equal(run('JSON.stringify(s)'),shotBefore);assert.equal(run('ritualButton(gameModel())'),'確認放棄開槍');assert(run('selectionSummary(gameModel())').includes('放棄開槍'));
+ run('sceneSeatChoice(9)');assert.equal(run('g.shotMode'),'shoot');assert.equal(run('g.shot'),9);assert.equal(run('JSON.stringify(s)'),shotBefore);
+ prod();assert(nodes.app.innerHTML.includes('onclick="confirmShotChoice()"'));
+ run('render=()=>hydrateGame();confirmShotChoice()');assert.equal(run('player(9).alive'),false);
+ run('undo();chooseShotMode("skip");confirmShotChoice()');assert.equal(run('player(9).alive'),true);assert.equal(run('s.pending.length'),0);
+ run('undo()');assert.equal(run('gameModel().kind'),'shot');assert.equal(run('s.pending.length'),1);
+}
+console.log('PASS: shot/skip cards, selection-only mode, seat reselect, production confirmation, existing shoot/skip and undo on five boards.');

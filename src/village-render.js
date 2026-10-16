@@ -3,7 +3,8 @@ function initVillage(){const canvas=document.getElementById('village-canvas'),wo
  const signature=[scenePhase(),sceneStill,window.matchMedia('(prefers-reduced-motion: reduce)').matches,viewState().players.map(p=>visualAlive(p)?1:0).join('')].join(':');
  if(canvas===villageCanvas&&signature===villageSignature)return;
  let previous=null;
- if(canvas===villageCanvas&&presentationMotionAllowed()&&canvas.width&&canvas.height){
+ if(canvas===villageCanvas&&!sceneStill&&presentationMotionAllowed()&&villageSignature.split(':')[0]!==signature.split(':')[0]&&canvas.width&&canvas.height){
+  world.querySelectorAll?.('.scene-crossfade').forEach(el=>el.remove());
   previous=document.createElement('canvas');previous.width=canvas.width;previous.height=canvas.height;previous.getContext('2d')?.drawImage(canvas,0,0);previous.className='scene-crossfade';previous.setAttribute('aria-hidden','true');
  }
  cancelAnimationFrame(sceneFrame);sceneResize?.disconnect();villageCanvas=canvas;villageSignature=signature;
@@ -33,5 +34,5 @@ const vignette=ctx.createRadialGradient(w/2,h/2,Math.min(w,h)*.23,w/2,h/2,w*.7);
 if(!reduce)sceneFrame=requestAnimationFrame(draw)}
 function resize(){const rect=world.getBoundingClientRect();w=rect.width;h=rect.height;if(!w||!h)return;const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);scale=Math.min(w/650,h/390);document.querySelectorAll('.village-seat').forEach((el,i)=>{const pos=seatPosition(i,w,h);el.style.left=pos.x+'%';el.style.top=pos.y+'%'});cancelAnimationFrame(sceneFrame);draw(performance.now())}
 sceneResize=new ResizeObserver(resize);sceneResize.observe(world);resize();
- if(previous){world.append(previous);const animation=previous.animate?.([{opacity:1},{opacity:0}],{duration:480,easing:'ease-in-out'});if(animation)animation.onfinish=()=>previous.remove();else previous.remove()}
+ if(previous){world.append(previous);const animation=previous.animate?.([{opacity:1},{opacity:0}],{duration:MOTION.scene,easing:'ease-in-out'});if(animation)animation.onfinish=()=>previous.remove();else previous.remove()}
 }

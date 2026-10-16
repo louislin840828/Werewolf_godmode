@@ -160,11 +160,14 @@ body[data-light=day] .game-shell>.dock-footer,body[data-light=dawn] .game-shell>
 body[data-light=day] .game-shell,body[data-light=dawn] .game-shell,
 body[data-light=day] .play-scroll,body[data-light=dawn] .play-scroll{background:#dce3ce}
 
+/* Static scene disables decorative loops, not navigation feedback. */
+body[data-scene-motion=still] .role-transition,body[data-scene-motion=still] .spell-trace path{animation:none}
 /* 0.40: persistent scene and stage-scoped motion, never an interaction lock. */
 .ritual-intro,.revelation,.role-intro,.game-drawer{animation:none}
+.gallery-dialog.presentation-exit{display:block;position:fixed;inset:0;margin:auto;z-index:21;max-height:90svh}
 .scene-crossfade{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
 .presentation-exit{pointer-events:none!important;animation:none!important}
-.game-hud,.ritual-dock,.dock-footer,.game-shell,.play-scroll{transition:background-color .36s ease,color .36s ease,border-color .36s ease}
+.game-hud,.ritual-dock,.dock-footer,.game-shell,.play-scroll{transition:background-color .4s ease,color .4s ease,border-color .4s ease}
 /* Solid theme surfaces can interpolate; the former gradient images could not. */
 .game-hud{background:#152b32}.ritual-dock{background:#162c33}
 body[data-light=day] .game-hud,body[data-light=dawn] .game-hud{background:#d7e1cd}

@@ -42,4 +42,4 @@ function shoot(selected){let id=selected===undefined?+readHostValue('shot'):+sel
 function badge(){let id=+readHostValue('badge');if(id&&!player(id)?.alive)return;mutate(()=>{s.sheriff=id;s.badge=false;log(id?`警徽移交 ${who(id)}`:'警徽撕毀');if(s.afterBoom&&!s.pending.length){s.afterBoom=false;newNight()}})}
 function start(){mutate(()=>{s.players.forEach(p=>p.role='未確認');s.phase='night';log('遊戲開始；第一夜依睜眼順序登記身分')})}
 function note(){let text=String(readHostValue('note')).trim();if(text)mutate(()=>log('備註：'+text))}
-function reset(){if(confirm('開新局會清除目前進度。請先匯出需要保留的紀錄。確定繼續？')){s=fresh();tab='play';save();render()}}
+function reset(){if(!confirm('開新局會清除目前進度。請先匯出需要保留的紀錄。確定繼續？'))return false;s=fresh();tab='play';save();render();return true;}

@@ -36,3 +36,20 @@ assert.match(source,/if\(hidden\)\{cancelAnimationFrame/,'hide path bypasses ani
 const village=fs.readFileSync('src/village-render.js','utf8');assert.match(village,/canvas===villageCanvas&&signature===villageSignature\)return/);assert.doesNotMatch(village,/\bs\.players/);
 const css=fs.readFileSync('src/mobile.css','utf8');assert.match(css,/\.ritual-intro,\.revelation,\.role-intro,\.game-drawer\{animation:none\}/);assert.match(css,/prefers-reduced-motion:reduce/);
 console.log('PASS: persistent canvas/seats/decoded portraits, focused drafts, disclosures, reorder/removal, inert exits, immediate privacy and reduced-motion contracts.');
+// Semantic motion: reveal is local; drawer navigation does not re-enter its container.
+const calls=[],disclosure={open:true};let reduced=false;
+const element=name=>({getAnimations:()=>[],animate:(frames,options)=>calls.push({name,frames,options})});
+const motion=vm.createContext({document:{body:{dataset:{}},querySelector:element,querySelectorAll:selector=>selector==='.turn-detail,.turn-options'?[disclosure]:[element(selector)]},window:{matchMedia:()=>({matches:reduced})}});
+vm.runInContext(`let sceneStill=false,gDrawer='',introOpen=false,galleryDetail=null;`+source.slice(source.indexOf("let presentationKey="),source.indexOf('function presentationNodeKey'))+source.slice(source.indexOf('function reducedPresentationMotion'),source.indexOf('function updatePresentation'))+source.slice(source.indexOf('function finishPresentation'),source.indexOf('render=function(){')),motion);
+const turn='brothers:night:2:1:act:false:-1';motion.finishPresentation(turn,'night');calls.length=0;disclosure.open=true;
+motion.finishPresentation(turn.replace('false:-1','true:-1'),'night');assert.equal(disclosure.open,true);assert.equal(calls.length,1);assert.equal(calls[0].name,'.revelation,.dawn-results,.village-heart');
+calls.length=0;motion.finishPresentation(turn.replace('false:-1','true:-1'),'night');assert.equal(calls.length,0,'same-turn choices never replay motion');
+vm.runInContext('gDrawer="seats"',motion);motion.finishPresentation(turn,'night');assert(calls.some(c=>c.name==='.game-drawer'));
+calls.length=0;vm.runInContext('drawerNavigation="forward"',motion);motion.finishPresentation(turn,'night');assert.equal(calls.length,1);assert.equal(calls[0].name,'.drawer-body');assert.equal(calls[0].frames[0].transform,'translateX(10px)');
+calls.length=0;vm.runInContext('drawerNavigation="back"',motion);motion.finishPresentation(turn,'night');assert.equal(calls[0].frames[0].transform,'translateX(-10px)');
+calls.length=0;vm.runInContext('drawerNavigation="tab"',motion);motion.finishPresentation(turn,'night');assert.equal(calls[0].frames[0].transform,'translateX(0px)');
+calls.length=0;reduced=true;vm.runInContext('drawerNavigation="forward"',motion);motion.finishPresentation(turn,'night');assert.equal(calls.length,0);
+reduced=false;vm.runInContext('sceneStill=true;drawerNavigation="forward"',motion);motion.finishPresentation(turn,'night');assert.equal(calls.length,1,'static environment retains navigation feedback');
+assert(village.includes("villageSignature.split(':')[0]!==signature.split(':')[0]"),'Canvas crossfade is limited to environmental changes');
+assert.match(village,/duration:MOTION.scene/);assert.match(source,/function returnToRoster/);assert.match(source,/body.scrollTop=rosterScroll/);
+console.log('PASS: semantic stage/result split, no incidental replay, drawer container vs tab/detail motion, paired directions, reduced motion and static navigation.');
