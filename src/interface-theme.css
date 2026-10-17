@@ -1,0 +1,112 @@
+/* Shared 0.45 ink language for all host surfaces. Layout and engine contracts stay intact. */
+:root{
+ --ui-ink:#131c24;--ui-paper:#f0eee3;--ui-muted:#bac3c7;--ui-power:#e5b861;--ui-line:#788991;
+ --ui-error:#f0bba4;--ui-disabled:#818a91;--ui-radius:9px 6px 11px 5px;
+ --ui-material:url('assets/ui/ink-surface-v1.webp');
+}
+body{background:var(--ui-ink);color:var(--ui-paper)}
+:is(.board-gallery,.gallery-dialog,.game-drawer){
+ --ink:var(--ui-paper);--soft:var(--ui-muted);--gold:var(--ui-power);--edge:#78899155;--panel:var(--ui-ink);--glass:#131c24f5;
+ color:var(--ui-paper);background-color:var(--ui-ink);color-scheme:dark;
+}
+:is(.board-gallery,.gallery-dialog,.game-drawer,.graphic-play.role-intro,.graphic-play.veil-screen){
+ background-image:linear-gradient(#101a2266,#101a2266),var(--ui-material);background-size:auto,512px 512px;
+}
+.board-gallery .gallery-header,.board-gallery .gallery-footer,.game-drawer .drawer-head{
+ background:transparent;color:var(--ui-paper);border-color:#78899155;
+}
+:is(.board-gallery,.gallery-dialog,.game-drawer) :is(h1,h2,h3){
+ font-family:Georgia,'Noto Serif TC','Songti TC',serif;color:var(--ui-paper);letter-spacing:1px;
+}
+:is(.board-gallery,.gallery-dialog) :is(.board-tag,.board-open-label,.gallery-heading>span,.gallery-dialog header>span){color:var(--ui-power)}
+:is(.board-gallery,.gallery-dialog) :is(.gallery-header small,.board-copy>p,.board-copy h2 em,.board-composition p,.gallery-choice>span,.gallery-settings){color:var(--ui-muted)}
+.board-gallery .gallery-choice>strong{color:var(--ui-paper)}
+.board-gallery .board-slide,.gallery-dialog{
+ background-color:#17232c;border:1px solid var(--ui-line);border-radius:var(--ui-radius);box-shadow:3px 4px 0 #08131d;
+}
+:is(.board-gallery,.gallery-dialog) .board-art{background-color:#101a23}
+:is(.board-gallery,.gallery-dialog) .board-art:after{background:linear-gradient(transparent 50%,#17232c)}
+.board-gallery .board-open .board-copy{background:#17232c}
+.board-gallery .gallery-navigation>button{background:#1a252e;color:var(--ui-muted);border-color:var(--ui-line);border-radius:var(--ui-radius)}
+.board-gallery .gallery-dot:after{background:var(--ui-line)}
+.board-gallery .gallery-dot.active:after{background:var(--ui-power);box-shadow:none}
+.gallery-dialog::backdrop{background:#07111ac9;backdrop-filter:blur(3px)}
+.drawer-backdrop,.intro-backdrop{background:#07111ab8;backdrop-filter:blur(3px)}
+.game-drawer .drawer-close{background:#1a252e;border:1px solid var(--ui-line);border-radius:var(--ui-radius);color:var(--ui-muted)}
+/* Explicit component rules override legacy blanket drawer button styles. */
+.game-drawer button:not(.drawer-close){
+ background:#1a252e;border:1px solid #78899177;border-radius:var(--ui-radius);color:var(--ui-paper);
+ box-shadow:none;min-height:48px;font-size:14px;
+}
+.game-drawer .host-tabs button{background:transparent;color:var(--ui-muted);padding:8px}
+.game-drawer .host-tabs button[aria-pressed=true]{background:#292820;color:var(--ui-power);border-color:var(--ui-power)}
+.game-drawer .host-roster>button{
+ display:flex;align-items:center;gap:14px;width:100%;min-height:72px;padding:12px;text-align:left;background:#17232c;
+}
+.game-drawer .host-roster b{color:var(--ui-paper);font-variant-numeric:tabular-nums}
+.game-drawer .host-roster i{color:var(--ui-muted)}
+.game-drawer .detail-back{background:transparent;border:0;color:var(--ui-muted);padding:0}
+.game-drawer .host-section,.game-drawer .pending-detail{background:#17232c;border:1px solid #78899155;border-radius:var(--ui-radius)}
+.game-drawer .pending-detail{border-color:var(--ui-power)}
+.game-drawer :is(p,details,label,.tiny,.drawer-sub,.role-list small,.role-facts dt,.story-list article small){color:var(--ui-muted)}
+.game-drawer :is(.host-section summary,.role-list strong,.story-list article p,.role-facts dd,.host-roster span){color:var(--ui-paper)}
+.game-drawer :is(.detail-section h3,.host-timer,.player-profile p,.story-list>h3){color:var(--ui-power)}
+.game-drawer :is(.detail-section,.drawer-foot,.story-list article){border-color:#78899155}
+.game-drawer :is(.eyebrow,.pill,.number){color:var(--ui-muted)}
+.game-drawer .notice{background:#292820;border-color:#e5b86166;color:var(--ui-paper)}
+.game-drawer .seatsetup{border-color:#78899155;border-radius:var(--ui-radius)}
+.game-drawer .unknown-portrait{background:#1a252e;border-color:var(--ui-line);border-radius:var(--ui-radius)}
+.game-drawer .log-tools button,.game-drawer .drawer-foot button{background:transparent;color:var(--ui-muted)}
+.game-drawer .new-game-zone button{background:#25282c;border-color:var(--ui-error);color:var(--ui-error)}
+:is(.gallery-dialog,.game-drawer) :is(input:not([type=checkbox]),select,textarea){
+ background:#101a23;color:var(--ui-paper);border:1px solid var(--ui-line);border-radius:var(--ui-radius);
+ min-height:48px;font-size:16px;padding:10px;max-width:100%;
+}
+.gallery-dialog .board-composition select{width:100%;margin:6px 0 12px}
+.game-drawer input[type=checkbox]{accent-color:var(--ui-power)}
+:is(.gallery-dialog,.game-drawer) :is(input,textarea)::placeholder{color:#97a5ac;opacity:1}
+/* One primary confirmation style, including legacy engine-pane and forecast actions. */
+:is(.gallery-dialog,.game-drawer) :is(.primary,.commit-btn),.graphic-play .primary{
+ position:relative;isolation:isolate;background:linear-gradient(100deg,#71532538,#e5b86115,#71532538),var(--ui-material);
+ background-size:auto,512px 512px;color:#f5d59a!important;border:1px solid #e5b86166!important;border-radius:var(--ui-radius);
+ box-shadow:2px 3px 0 #060e14;min-height:48px;padding:12px;white-space:normal;overflow-wrap:anywhere;
+}
+:is(.gallery-dialog,.game-drawer,.graphic-play) .primary:before,.gallery-dialog .commit-btn:before{
+ content:'';position:absolute;inset:-4px;pointer-events:none;background:var(--ui-power);opacity:.9;
+ mask:url('assets/ui/power-frame-v1.svg') center/100% 100% no-repeat;
+}
+/* Play confirmation/vote buttons retain their already-reviewed graphic-play styles. */
+:is(.gallery-dialog,.game-drawer) :is(.primary,.commit-btn):disabled,.graphic-play .primary:disabled{
+ background:#3b454d;color:#c4cbd0!important;border-color:#6c7b83!important;box-shadow:none;opacity:1;
+}
+:is(.gallery-dialog,.game-drawer,.graphic-play) .primary:disabled:before{background:var(--ui-disabled);opacity:.4}
+:is(.board-gallery,.gallery-dialog,.game-drawer) button:disabled{opacity:.5}
+:is(.board-gallery,.gallery-dialog,.game-drawer) :is(button,input,select,textarea,summary):focus-visible{outline:2px solid var(--ui-paper);outline-offset:3px}
+/* Less common play cards share the surface, while dense lists remain quiet. */
+.graphic-play :is(.victory-forecast,.role-transition,.revelation,.dawn-results,.vote-results){
+ background-image:linear-gradient(#101a224d,#101a224d),var(--ui-material);background-size:auto,512px 512px;
+}
+.graphic-play .thief-card.on,.graphic-play .withdrawal-card.on{position:relative;isolation:isolate}
+.graphic-play .thief-card.on:before,.graphic-play .withdrawal-card.on:before{
+ content:'';position:absolute;inset:-4px;pointer-events:none;background:var(--ui-power);opacity:.75;
+ mask:url('assets/ui/power-frame-v1.svg') center/100% 100% no-repeat;
+}
+.host-dialog{width:min(440px,calc(100vw - 32px));max-height:calc(100svh - 32px);overflow:auto;margin:auto;padding:24px;color:var(--ui-paper);background:linear-gradient(#101a2266,#101a2266),var(--ui-material);background-size:auto,512px 512px;border:1px solid var(--ui-line);border-radius:var(--ui-radius);box-shadow:3px 4px 0 #08131d;color-scheme:dark}
+.host-dialog::backdrop{background:#07111acc}
+.host-dialog header>span{color:var(--ui-muted);font-size:12px;letter-spacing:2px}
+.host-dialog h2{font:600 24px Georgia,'Noto Serif TC',serif;margin:10px 0}
+.host-dialog p{font-size:16px;line-height:1.8;overflow-wrap:anywhere}
+.host-dialog label{display:block;color:var(--ui-muted);margin-bottom:8px}
+.host-dialog input{width:100%;min-height:48px;padding:10px;font-size:16px;background:#101a23;color:var(--ui-paper);border:1px solid var(--ui-line);border-radius:var(--ui-radius)}
+.host-dialog footer{display:flex;gap:12px;justify-content:flex-end;margin-top:24px}
+.host-dialog button{min-height:48px;padding:12px 20px;border:1px solid var(--ui-line);border-radius:var(--ui-radius);background:#1a252e;color:var(--ui-paper)}
+.host-dialog .primary{background:linear-gradient(100deg,#71532538,#e5b86115),var(--ui-material);background-size:auto,512px 512px;color:#f5d59a;border-color:var(--ui-power);box-shadow:none}
+.host-dialog :is(button,input):focus-visible{outline:2px solid var(--ui-paper);outline-offset:3px}
+/* Native disclosure and scrolling remain immediate; motion is intentionally unchanged. */
+@media(max-width:650px){
+ .game-drawer .host-roster>button{min-height:72px}
+ .game-drawer .log-tools{flex-wrap:wrap;gap:8px}
+ .game-drawer .log-tools label{flex:1 1 160px}
+ .game-drawer .log-tools button{flex:0 0 auto}
+ .gallery-dialog footer{padding-left:16px;padding-right:16px}
+}

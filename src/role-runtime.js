@@ -79,7 +79,7 @@ function reconcileVictoryOnLoad(){
 ensureRoleSystem();pruneLegacyDeathSkills();reconcileVictoryOnLoad();
 // Stable boundary used by controllers; visual modules only receive frozen data.
 const GameEngine=Object.freeze({
- configure:(board,variant)=>setBoardConfiguration(board,variant),
+ configure:(board,variant,after)=>setBoardConfiguration(board,variant,after),
  read:viewState,
  role:id=>deepFreezeRoleView(clone(RoleSystem.state(s,id))),
  roles:()=>deepFreezeRoleView(clone(s.players.map(p=>RoleSystem.state(s,p.id)))),

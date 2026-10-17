@@ -1,4 +1,4 @@
-/* Shared graphic-novel play flow. Gallery, dossiers and host drawers retain their design. */
+/* Shared graphic-novel play flow. Other host surfaces use interface-theme.css. */
 .graphic-play{
  --ink:#f0eee3;--soft:#bac3c7;--gold:#e5b861;--edge:#83939b55;--panel:#131c24;--glass:#131c24f5;
  --gn-ink:#131c24;--gn-paper:#f0eee3;--gn-muted:#bac3c7;--gn-power:#e5b861;--gn-vote:#b5c9d3;

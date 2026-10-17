@@ -14,11 +14,12 @@ const isBrothersTen=()=>s.board==='brothers'&&s.variant==='wolfking10';
 const boardDefinition=()=>({... (BOARD_TEMPLATES[s.board]||BOARD_TEMPLATES.brothers),roles:boardConfiguration().roles});
 const boardLabel=()=>boardDefinition().label+(isBrothersTen()?' · 10 人狼王版':'');
 function brotherReg(k){return isBrothersTen()&&k==='wolves'?['狼王']:REG[k];}
-function setBoardConfiguration(board,variant='standard12'){
+function setBoardConfiguration(board,variant='standard12',after){
  if(s.phase!=='setup'||!Object.hasOwn(BOARD_TEMPLATES,board)||!['standard12','wolfking10'].includes(variant)||variant==='wolfking10'&&board!=='brothers')return false;
  const count=boardConfiguration(board,variant).playerCount;
- if(s.players.slice(count).some(p=>p.name)&&!confirm('縮編會移除多出的座位暱稱，確定切換？'))return false;
- mutate(()=>{s.board=board;s.variant=variant;s.players=Array.from({length:count},(_,i)=>({id:i+1,name:s.players[i]?.name||'',role:'未確認',alive:true}));ensureMech();});return true;
+ const apply=()=>{mutate(()=>{s.board=board;s.variant=variant;s.players=Array.from({length:count},(_,i)=>({id:i+1,name:s.players[i]?.name||'',role:'未確認',alive:true}));ensureMech();});after?.();return true;};
+ if(s.players.slice(count).some(p=>p.name))return requestHostConfirmation('縮編會移除多出的座位暱稱，確定切換？',apply,()=>render());
+ return apply();
 }
 const isStone=()=>s.board==='gargoyle';
 function roleStatus(id){const p=player(id);if(!p)return null;return {id:p.id,originalRole:p.role,alignment:wolf(p)?'狼人':'好人',alive:p.alive};}

@@ -1,6 +1,6 @@
 # 自動測試基線
 
-目前 0.45.0-beta.1 為 **22 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
+目前 0.46.0-beta.1 為 **23 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
 tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以目前確認家規為準。
 
 ## 執行
@@ -16,6 +16,10 @@ tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以�
 
 `node role-system-check.cjs` 可單獨檢查共用角色規則與呈現層邊界。
 部分個別測試需要建置後的圖片；完整驗證以統一入口為準。
+
+## 0.46 全介面與站內彈窗
+
+新增 host-dialog-check：注入 deferred service，使用正式 adapter／規則驗證取消不寫狀態、過期確認、縮編／重設完成回呼、無警長與自爆資格；全套 Node v24.22.0 23 支、0 失敗。Chrome 抽屜多尺寸／彈窗部分驗證及未驗收清單見 [interface-consistency.md](interface-consistency.md)。VM 不代替 dialog 焦點、top layer、鍵盤或手機驗收。
 
 ## 0.45 城市插畫與操作媒介
 

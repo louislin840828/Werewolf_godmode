@@ -3,7 +3,7 @@
 ## 執行方式
 
 原生 JavaScript、CSS、Canvas；沒有 React／Next.js、npm 執行期依賴或伺服器 API。
-`build.cjs` 按 `sources` 陣列串接 27 個模組，合併三份 CSS 進 `dist/index.html`，
+`build.cjs` 按 `sources` 陣列串接 28 個模組，合併四份 CSS 進 `dist/index.html`，
 複製角色圖。這些檔案共用 script 的全域作用域，**不是 ES modules**。
 模組中有 wrapper／adapter 接續前一個實作，載入順序有意義，不可任意排序。
 每次建置會先刪除 `dist/`；只修改 `src/` 或工具來源，不手動改 dist。
@@ -28,6 +28,10 @@
 
 `graphic-play.css` 限定 play 呈現 token／元件，最後載入，不改全域主題。`city-render.js` 是無玩家資料的純 Canvas 城市 painter，`village-render.js` 依 `.graphic-play` 接入並保留 resize／節點重用／日夜過渡；不改 controller 或存檔。
 0.44.1 依使用者確認將呈現範圍延伸至警長、黎明、出局技能與結束流程，遊玩角色介紹與隱藏畫面亦接入同一 token；Canvas 簽章包含 graphic-play 模式。選板、名冊、紀錄及管理抽屜仍用現有設計。詳見 [visual-design.md](visual-design.md)；未使用瀏覽器驗收不得宣稱完成 RWD。
+
+## 0.46 全介面一致性
+
+`interface-theme.css` 在 graphic-play 之後載入，使用 ui-* 共用 token；對齊選板／抽屜／站內彈窗，不改遊玩座位、Canvas 或投票確認。`host-dialog.view.js` 提供原生 dialog top layer 與焦點／取消服務，無權威狀態存取。app.js 的 host intent adapter 在等待時不寫 state，以完整狀態比對拒絕過期 continuation；無 dialog 能力的 VM 使用同步原生 adapter。配置與重設支援完成回呼，界面只在成功後開局／清除抽屜。既有驗證與結算閉包不變。詳見 [interface-consistency.md](interface-consistency.md)。
 
 ## 0.40 呈現更新與轉場
 
