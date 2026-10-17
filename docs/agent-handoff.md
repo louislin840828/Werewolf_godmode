@@ -28,7 +28,7 @@ MCP 是工具連接方式；專案本身不需要 MCP server 才能執行。
 
 > 請接手這個月夜議會專案，先只完成環境驗證。讀取 README.md、AGENTS.md 與
 > docs/ 中的架構、七板家規、角色系統、localStorage 保存及已知問題文件。
-> 專案版本為 0.30.3-beta.1，使用 Node.js 24，無第三方依賴。先執行 npm test，
+> 專案版本以 package.json 為準（本輪 0.45.0-beta.1），使用 Node.js 24，無第三方依賴。先執行 npm test，
 > 確認乾淨建置及 17 支測試，再用 npm run dev 啟動本機預覽，回報可用網址與限制。
 > 遊戲以手機為主，請依 mobile-acceptance.md 協助驗收，沒實際驗證的項目不要宣稱通過。
 > UI 修改不能改動底層規則；不重寫框架、不降低角色圖畫質、不新增完整存檔匯出／匯入，
@@ -55,3 +55,5 @@ MCP 實際連接、自有 Git／Hosting 設定及第 32–33 版手機介面／�
 - 開第二盤同板子與切不同板子，量測圖片請求、快取命中、解碼及記憶體；不先清快取。
 - 復仇刀已用的狼弟＋狼人＋獵人＋平民，放逐結算後可提示必勝（含保留票單／PK）。
 - 不將 Node VM／DOM stub 的綠燈當作真實手機版面或網路效能驗證。
+
+0.45 視覺改版：先閱讀 [visual-redesign-acceptance.md](visual-redesign-acceptance.md) 與 [visual-assets.md](visual-assets.md)。規則檔不在本輪變更範圍；新素材必須隨 binary Patch 交付。

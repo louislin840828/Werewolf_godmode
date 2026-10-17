@@ -40,6 +40,20 @@ Detailed tokens, component states and phase-one scope: [docs/visual-design.md](d
 - 動態只解釋變化、不阻擋操作，支援 reduced-motion；保留節點與圖片準備快取，不逐局清除重載。
 - UI 不得改變底層規則、已確認家規、controller 驗證或存檔契約。先交付夜間行動／白天討論／投票供確認，再延伸其他頁面；未有真實瀏覽器验收不得宣稱完成 RWD。
 
+## City artwork and visual delivery (0.45)
+
+- `src/assets/scenes/` contains the shared day/night city; `src/assets/ui/` contains
+  ink material and decorative SVG masks. Build copies all `src/assets/` byte-for-byte.
+- Preserve image dimensions and lossless quality. Do not reset cityArtwork or the
+  existing portrait caches when starting another game. Async city callbacks must
+  check the current canvas/signature and must not trigger a game-state change.
+- Medium edges are decorative (`pointer-events:none`); keep live text and controls
+  above artwork. Voting masks inherit neutral vote color, not gold/faction color.
+- Mobile markers retain at least 44px hit areas with stable shared line coordinates.
+  Run city-art-check through npm test; numeric geometry does not prove browser RWD.
+- Deliver patches with `--binary --full-index`, lock their base commit, and verify
+  applying/building/testing in a clean checkout. Never force a failed apply.
+
 ## Required checks
 
 For a complete regression baseline run `npm test` (or `node test-all.cjs`). This

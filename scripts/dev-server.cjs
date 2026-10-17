@@ -22,7 +22,7 @@ function assetPath(url){
  if(!file.startsWith(output+path.sep))return {status:403};
  try{const real=fs.realpathSync(file);if(!real.startsWith(output+path.sep))return {status:403};if(!fs.statSync(real).isFile())return {status:404};return {status:200,file:real}}catch{return {status:404}}
 }
-const mime={'.html':'text/html; charset=utf-8','.webp':'image/webp','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8'};
+const mime={'.html':'text/html; charset=utf-8','.webp':'image/webp','.svg':'image/svg+xml','.json':'application/json; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8'};
 function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
  if(!['GET','HEAD'].includes(req.method)){res.setHeader('Allow','GET, HEAD');res.writeHead(405);res.end();return}

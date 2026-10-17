@@ -1,6 +1,6 @@
 # 自動測試基線
 
-目前 0.44.1-beta.1 為 **21 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
+目前 0.45.0-beta.1 為 **22 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
 tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以目前確認家規為準。
 
 ## 執行
@@ -16,6 +16,12 @@ tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以�
 
 `node role-system-check.cjs` 可單獨檢查共用角色規則與呈現層邊界。
 部分個別測試需要建置後的圖片；完整驗證以統一入口為準。
+
+## 0.45 城市插畫與操作媒介
+
+新增 `city-art-check.cjs`：同時請求共用 Promise、成功解碼只執行一次、失敗與 decode 失敗後重試、日夜映射、不同場景比例 cover 不變形、完整素材建置／HTTP MIME、10／12 席 320／390／430px 數值幾何不重疊。舊 graphic-play-check 保留規則互動與 fallback 決定性斷言；不再要求已移除幾何房屋的 200 次 Canvas 呼叫。
+
+本輪檢查為 Node／VM／靜態契約，尚未做真實 Canvas 呈現、CSS computed style、Safari／Chrome／手機觸控驗證。0.44.1 的歷史瀏覽器紀錄不能代替本次驗收。交付將在乾淨基準套用完整 binary Patch，再執行全套測試與建置。
 
 ## 修復內容
 

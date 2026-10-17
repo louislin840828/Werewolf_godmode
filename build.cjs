@@ -6,6 +6,6 @@ const css=fs.readFileSync('src/game.css','utf8')+'\n'+fs.readFileSync('src/mobil
 // dist is generated output: never carry old prototype files into a new release.
 fs.rmSync('dist',{recursive:true,force:true});
 fs.mkdirSync('dist/assets/roles',{recursive:true});
-fs.cpSync('src/assets/roles','dist/assets/roles',{recursive:true,force:true});
+fs.cpSync('src/assets','dist/assets',{recursive:true,force:true});
 fs.writeFileSync('dist/index.html',`<!doctype html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#132b32"><meta name="application-version" content="${release.version}"><meta name="description" content="月夜議會：12 人警長狼人殺的沉浸式上帝席，支援狼兄狼弟、機械狼、石像鬼、白狼王騎士、血月獵魔人、夢魘攝夢人與盜賊丘比特。"><title>月夜議會｜上帝席</title><style>${css}</style></head><body><div id="app"></div><script>${js}</script></body></html>`);
 console.log('Built self-contained Site: '+sources.length+' source modules; '+fs.statSync('dist/index.html').size+' bytes.');

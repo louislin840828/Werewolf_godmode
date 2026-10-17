@@ -34,5 +34,11 @@ const vignette=ctx.createRadialGradient(w/2,h/2,Math.min(w,h)*.23,w/2,h/2,w*.7);
 if(!reduce)sceneFrame=requestAnimationFrame(draw)}
 function resize(){const rect=world.getBoundingClientRect();w=rect.width;h=rect.height;if(!w||!h)return;const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);scale=Math.min(w/650,h/390);document.querySelectorAll('.village-seat').forEach((el,i)=>{const pos=seatPosition(i,w,h);el.style.left=pos.x+'%';el.style.top=pos.y+'%'});cancelAnimationFrame(sceneFrame);draw(performance.now())}
 sceneResize=new ResizeObserver(resize);sceneResize.observe(world);resize();
+ // Paint only this live scene when its decoded art arrives. No rerender, no wait,
+ // no stale-night callback overwriting a later day or a detached canvas.
+ if(world.closest?.('.graphic-play'))prepareGraphicCity(phase).then(image=>{
+  if(image&&villageCanvas===canvas&&villageSignature===signature&&canvas.isConnected!==false)resize();
+  if(image)prepareGraphicCity(night?'day':'night');
+ });
  if(previous){world.append(previous);const animation=previous.animate?.([{opacity:1},{opacity:0}],{duration:MOTION.scene,easing:'ease-in-out'});if(animation)animation.onfinish=()=>previous.remove();else previous.remove()}
 }
