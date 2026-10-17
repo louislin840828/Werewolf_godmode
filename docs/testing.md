@@ -1,6 +1,6 @@
 # 自動測試基線
 
-目前 0.46.0-beta.1 為 **23 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
+目前 0.46.1-beta.1 為 **24 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
 tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以目前確認家規為準。
 
 ## 執行
@@ -16,6 +16,10 @@ tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以�
 
 `node role-system-check.cjs` 可單獨檢查共用角色規則與呈現層邊界。
 部分個別測試需要建置後的圖片；完整驗證以統一入口為準。
+
+## 0.46.1 動畫修正
+
+新增 scene-transition-check，驗證插畫解碼交接、600ms 背景等待上限、舊副本／計時清理、過期 callback 及 reduced-motion。presentation-check 更新 160ms／6px 規格，保留同回合不重播與靜態導覽。Chrome 部分動畫屬性／reduced-motion 驗證與限制見 [motion-refinement.md](motion-refinement.md)。
 
 ## 0.46 全介面與站內彈窗
 

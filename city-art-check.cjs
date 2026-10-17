@@ -51,6 +51,7 @@ async function main(){
  const canvas={isConnected:true,width:390,height:371,getContext:()=>({setTransform(){}})};
  const world={closest:()=>true,getBoundingClientRect:()=>({width:390,height:371})};canvas.parentElement=world;
  const scene=vm.createContext({
+  clearTimeout(){},setTimeout(){},cityArtwork:new Map(),cityArtKey:p=>p,
   sceneStill:true,sceneFrame:0,sceneResize:null,window:{devicePixelRatio:1,matchMedia:()=>({matches:false})},
   document:{getElementById:()=>canvas,querySelectorAll:()=>[]},viewState:()=>({players:[]}),visualAlive:()=>true,
   scenePhase:()=>phase,cancelAnimationFrame(){},performance:{now:()=>0},ResizeObserver:class{observe(){}disconnect(){}},

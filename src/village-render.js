@@ -1,10 +1,11 @@
-let villageCanvas=null,villageSignature='';
+let villageCanvas=null,villageSignature='',cityTransitionTimer=null;
 function initVillage(){const canvas=document.getElementById('village-canvas'),world=canvas?.parentElement;if(!canvas||!world)return;
  const signature=[scenePhase(),sceneStill,window.matchMedia('(prefers-reduced-motion: reduce)').matches,viewState().players.map(p=>visualAlive(p)?1:0).join(''),!!world.closest?.('.graphic-play')].join(':');
  if(canvas===villageCanvas&&signature===villageSignature)return;
+ clearTimeout(cityTransitionTimer);cityTransitionTimer=null;
+ world.querySelectorAll?.('.scene-crossfade').forEach(el=>{el.getAnimations?.().forEach(a=>a.cancel());el.remove();});
  let previous=null;
  if(canvas===villageCanvas&&!sceneStill&&presentationMotionAllowed()&&villageSignature.split(':')[0]!==signature.split(':')[0]&&canvas.width&&canvas.height){
-  world.querySelectorAll?.('.scene-crossfade').forEach(el=>el.remove());
   previous=document.createElement('canvas');previous.width=canvas.width;previous.height=canvas.height;previous.getContext('2d')?.drawImage(canvas,0,0);previous.className='scene-crossfade';previous.setAttribute('aria-hidden','true');
  }
  cancelAnimationFrame(sceneFrame);sceneResize?.disconnect();villageCanvas=canvas;villageSignature=signature;
@@ -34,11 +35,27 @@ const vignette=ctx.createRadialGradient(w/2,h/2,Math.min(w,h)*.23,w/2,h/2,w*.7);
 if(!reduce)sceneFrame=requestAnimationFrame(draw)}
 function resize(){const rect=world.getBoundingClientRect();w=rect.width;h=rect.height;if(!w||!h)return;const dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);scale=Math.min(w/650,h/390);document.querySelectorAll('.village-seat').forEach((el,i)=>{const pos=seatPosition(i,w,h);el.style.left=pos.x+'%';el.style.top=pos.y+'%'});cancelAnimationFrame(sceneFrame);draw(performance.now())}
 sceneResize=new ResizeObserver(resize);sceneResize.observe(world);resize();
- // Paint only this live scene when its decoded art arrives. No rerender, no wait,
- // no stale-night callback overwriting a later day or a detached canvas.
- if(world.closest?.('.graphic-play'))prepareGraphicCity(phase).then(image=>{
-  if(image&&villageCanvas===canvas&&villageSignature===signature&&canvas.isConnected!==false)resize();
-  if(image)prepareGraphicCity(night?'day':'night');
- });
- if(previous){world.append(previous);const animation=previous.animate?.([{opacity:1},{opacity:0}],{duration:MOTION.scene,easing:'ease-in-out'});if(animation)animation.onfinish=()=>previous.remove();else previous.remove()}
+ // Old pixels may briefly cover the new fallback while art decodes; only the
+ // noninteractive backdrop waits, never the controller or live scene nodes.
+ const live=()=>villageCanvas===canvas&&villageSignature===signature&&canvas.isConnected!==false;
+ let faded=false;
+ const fadePrevious=()=>{
+  if(faded||!previous)return;faded=true;
+  if(!live()){previous.remove();return;}
+  clearTimeout(cityTransitionTimer);cityTransitionTimer=null;
+  if(sceneStill||!presentationMotionAllowed()){previous.remove();return;}
+  const animation=previous.animate?.([{opacity:1},{opacity:0}],{duration:MOTION.scene,easing:'ease-in-out'});
+  if(animation)animation.onfinish=()=>previous.remove();else previous.remove();
+ };
+ if(previous){world.append(previous);cityTransitionTimer=setTimeout(fadePrevious,600);}
+ if(world.closest?.('.graphic-play')){
+  const ready=cityArtwork.get(cityArtKey(phase))?.loaded;
+  prepareGraphicCity(phase).then(image=>{
+   if(!live())return;
+   if(image)resize();
+   fadePrevious();
+   if(image)prepareGraphicCity(night?'day':'night');
+  });
+  if(ready)fadePrevious();
+ }else fadePrevious();
 }

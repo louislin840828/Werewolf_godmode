@@ -181,7 +181,10 @@ body[data-light] .graphic-play .withdrawal-card.retired{background:#202830;color
  min-height:48px;background:var(--gn-power);color:#151e25;border:2px solid #f0ce85;border-radius:var(--gn-radius);box-shadow:2px 3px 0 #060e14;
 }
 .graphic-play .result-reselect{border-color:var(--gn-power)}
-.graphic-play .role-transition{background:#16232ef5;animation:none}
+.graphic-play .role-transition{background:#16232ef5;animation:ink-role-pass 1.2s linear both}
+@keyframes ink-role-pass{0%,100%{opacity:0}13%,87%{opacity:1}}
+body[data-scene-motion=still] .graphic-play .role-transition{animation:none}
+@media(prefers-reduced-motion:reduce){.graphic-play .role-transition{animation:none}}
 .graphic-play .role-transition strong{color:var(--gn-paper)}
 .graphic-play.role-intro{--gold:var(--gn-power);background:var(--gn-ink);border:1px solid var(--gn-line);border-radius:var(--gn-radius);box-shadow:3px 4px 0 #08131d}
 .graphic-play.role-intro .intro-art{background:#101a23}

@@ -33,6 +33,10 @@
 
 `interface-theme.css` 在 graphic-play 之後載入，使用 ui-* 共用 token；對齊選板／抽屜／站內彈窗，不改遊玩座位、Canvas 或投票確認。`host-dialog.view.js` 提供原生 dialog top layer 與焦點／取消服務，無權威狀態存取。app.js 的 host intent adapter 在等待時不寫 state，以完整狀態比對拒絕過期 continuation；無 dialog 能力的 VM 使用同步原生 adapter。配置與重設支援完成回呼，界面只在成功後開局／清除抽屜。既有驗證與結算閉包不變。詳見 [interface-consistency.md](interface-consistency.md)。
 
+## 0.46.1 動態收斂
+
+`game.js` MOTION 為內容 160／進場 180／離場 140／場景 400ms，抽屜位移 6px，投票結果納入局部回饋。compact 提示按 transition key 重用／重建並短淡入淡出。`village-render.js` 舊背景等待新插畫解碼最多 600ms，只遮背景；跨階段清理 timer／副本，過期回呼不繪製，不改 controller。詳見 [motion-refinement.md](motion-refinement.md)。
+
 ## 0.40 呈現更新與轉場
 
 `game.js` 在對局畫面以同步 DOM reconciliation 保留同型同鍵節點（id／座號／角色／主要 class），保留 Canvas bitmap、成功圖片、焦點輸入與同回合 disclosure。開局輪播亦接入共用節點更新及過渡，保留原生手勢流程並防止重複綁定。VM stub 不支援真實 DOM 時保留 innerHTML 路徑。

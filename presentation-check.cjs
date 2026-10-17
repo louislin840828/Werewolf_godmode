@@ -42,11 +42,11 @@ const element=name=>({getAnimations:()=>[],animate:(frames,options)=>calls.push(
 const motion=vm.createContext({document:{body:{dataset:{}},querySelector:element,querySelectorAll:selector=>selector==='.turn-detail,.turn-options'?[disclosure]:[element(selector)]},window:{matchMedia:()=>({matches:reduced})}});
 vm.runInContext(`let sceneStill=false,gDrawer='',introOpen=false,galleryDetail=null;`+source.slice(source.indexOf("let presentationKey="),source.indexOf('function presentationNodeKey'))+source.slice(source.indexOf('function reducedPresentationMotion'),source.indexOf('function updatePresentation'))+source.slice(source.indexOf('function finishPresentation'),source.indexOf('render=function(){')),motion);
 const turn='brothers:night:2:1:act:false:-1';motion.finishPresentation(turn,'night');calls.length=0;disclosure.open=true;
-motion.finishPresentation(turn.replace('false:-1','true:-1'),'night');assert.equal(disclosure.open,true);assert.equal(calls.length,1);assert.equal(calls[0].name,'.revelation,.dawn-results,.village-heart');
+motion.finishPresentation(turn.replace('false:-1','true:-1'),'night');assert.equal(disclosure.open,true);assert.equal(calls.length,1);assert.equal(calls[0].name,'.revelation,.dawn-results,.vote-results,.village-heart');assert.equal(calls[0].options.duration,160);
 calls.length=0;motion.finishPresentation(turn.replace('false:-1','true:-1'),'night');assert.equal(calls.length,0,'same-turn choices never replay motion');
 vm.runInContext('gDrawer="seats"',motion);motion.finishPresentation(turn,'night');assert(calls.some(c=>c.name==='.game-drawer'));
-calls.length=0;vm.runInContext('drawerNavigation="forward"',motion);motion.finishPresentation(turn,'night');assert.equal(calls.length,1);assert.equal(calls[0].name,'.drawer-body');assert.equal(calls[0].frames[0].transform,'translateX(10px)');
-calls.length=0;vm.runInContext('drawerNavigation="back"',motion);motion.finishPresentation(turn,'night');assert.equal(calls[0].frames[0].transform,'translateX(-10px)');
+calls.length=0;vm.runInContext('drawerNavigation="forward"',motion);motion.finishPresentation(turn,'night');assert.equal(calls.length,1);assert.equal(calls[0].name,'.drawer-body');assert.equal(calls[0].frames[0].transform,'translateX(6px)');
+calls.length=0;vm.runInContext('drawerNavigation="back"',motion);motion.finishPresentation(turn,'night');assert.equal(calls[0].frames[0].transform,'translateX(-6px)');
 calls.length=0;vm.runInContext('drawerNavigation="tab"',motion);motion.finishPresentation(turn,'night');assert.equal(calls[0].frames[0].transform,'translateX(0px)');
 calls.length=0;reduced=true;vm.runInContext('drawerNavigation="forward"',motion);motion.finishPresentation(turn,'night');assert.equal(calls.length,0);
 reduced=false;vm.runInContext('sceneStill=true;drawerNavigation="forward"',motion);motion.finishPresentation(turn,'night');assert.equal(calls.length,1,'static environment retains navigation feedback');

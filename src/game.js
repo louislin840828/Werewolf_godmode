@@ -47,11 +47,11 @@ function seatHTML(p,m){const a=currentAction(m),chosen=m.kind==='register'?g.reg
 // Reconcile presentation nodes synchronously; animations never schedule game actions.
 let presentationKey='',presentationLight='',presentationOverlay='',presentationResult='',presentationHidden=false;
 let drawerNavigation='',drawerReturnFocus=null,rosterReturnFocus=null,rosterScroll=0,roleIntroReturnFocus=null;
-const MOTION={content:200,enter:200,exit:160,scene:400};
+const MOTION={content:160,enter:180,exit:140,scene:400};
 function animatePresentation(el,frames,duration=MOTION.content){if(!el||!presentationMotionAllowed())return;el.getAnimations?.().forEach(a=>a.cancel());el.animate?.(frames,{duration,easing:'ease-out'});}
 function presentationNodeKey(node){
  if(node.nodeType!==1)return '';
- return node.id||node.getAttribute('data-seat')||node.getAttribute('data-portrait-role')||node.classList[0]||node.tagName;
+ return node.id||node.getAttribute('data-transition-key')||node.getAttribute('data-seat')||node.getAttribute('data-portrait-role')||node.classList[0]||node.tagName;
 }
 function reconcilePresentation(target,source){
  if(target.nodeType===3){if(target.nodeValue!==source.nodeValue)target.nodeValue=source.nodeValue;return}
@@ -89,23 +89,23 @@ function updatePresentation(markup){
   const el=app.querySelector(selector);if(el&&!next.querySelector(selector)){const ghost=el.cloneNode(true);ghost.querySelectorAll('[id]').forEach(n=>n.removeAttribute('id'));ghost.removeAttribute('id');ghost.setAttribute('inert','');ghost.setAttribute('aria-hidden','true');ghost.classList.add('presentation-exit');exiting.push(ghost)}
  }
  reconcilePresentation(app,next);
- exiting.forEach(el=>{app.append(el);const animation=el.animate?.(el.matches('.game-drawer')?[{opacity:1,transform:'translateX(0)'},{opacity:0,transform:'translateX(12px)'}]:[{opacity:1},{opacity:0}],{duration:MOTION.exit,easing:'ease-out'});if(animation)animation.onfinish=()=>el.remove();else el.remove()});
+ exiting.forEach(el=>{app.append(el);const animation=el.animate?.(el.matches('.game-drawer')?[{opacity:1,transform:'translateX(0)'},{opacity:0,transform:'translateX(6px)'}]:[{opacity:1},{opacity:0}],{duration:MOTION.exit,easing:'ease-out'});if(animation)animation.onfinish=()=>el.remove();else el.remove()});
 }
 function finishPresentation(key,light){
  document.body.dataset.sceneMotion=sceneStill?'still':'animated';
  const stage=key.split(':').slice(0,-2).join(':'),result=key.split(':').slice(-2).join(':');
  const overlay=gDrawer?'drawer':introOpen?'intro':galleryDetail?'gallery':'';
- const changed=stage!==presentationKey,chapter=light!==presentationLight;
+ const changed=stage!==presentationKey;
  if(changed)document.querySelectorAll('.turn-detail,.turn-options').forEach(el=>el.open=false);
  if(!presentationHidden){
-  const selectors=changed?'.world-title,.dock-body':result!==presentationResult?'.revelation,.dawn-results,.village-heart':'';
-  if(selectors)document.querySelectorAll(selectors).forEach(el=>animatePresentation(el,[{opacity:.35},{opacity:1}],chapter?MOTION.scene:MOTION.content));
+  const selectors=changed?'.world-title,.dock-body,.vote-results':result!==presentationResult?'.revelation,.dawn-results,.vote-results,.village-heart':'';
+  if(selectors)document.querySelectorAll(selectors).forEach(el=>animatePresentation(el,[{opacity:.35},{opacity:1}],MOTION.content));
   if(overlay&&overlay!==presentationOverlay){
    const selector=overlay==='drawer'?'.game-drawer':overlay==='intro'?'.role-intro':'.gallery-dialog';
-   animatePresentation(document.querySelector(selector),overlay==='drawer'?[{opacity:0,transform:'translateX(12px)'},{opacity:1,transform:'translateX(0)'}]:[{opacity:0},{opacity:1}],MOTION.enter);
+   animatePresentation(document.querySelector(selector),overlay==='drawer'?[{opacity:0,transform:'translateX(6px)'},{opacity:1,transform:'translateX(0)'}]:[{opacity:0},{opacity:1}],MOTION.enter);
    animatePresentation(document.querySelector(overlay==='drawer'?'.drawer-backdrop':'.intro-backdrop'),[{opacity:0},{opacity:1}],MOTION.enter);
   }else if(overlay==='intro'&&changed){animatePresentation(document.querySelector('.intro-copy'),[{opacity:.35},{opacity:1}]);}
-  else if(overlay==='drawer'&&drawerNavigation){const x=drawerNavigation==='forward'?10:drawerNavigation==='back'?-10:0;animatePresentation(document.querySelector('.drawer-body'),[{opacity:.35,transform:`translateX(${x}px)`},{opacity:1,transform:'translateX(0)'}]);}
+  else if(overlay==='drawer'&&drawerNavigation){const x=drawerNavigation==='forward'?6:drawerNavigation==='back'?-6:0;animatePresentation(document.querySelector('.drawer-body'),[{opacity:.35,transform:`translateX(${x}px)`},{opacity:1,transform:'translateX(0)'}]);}
  }
  drawerNavigation='';presentationKey=stage;presentationResult=result;presentationLight=light;presentationOverlay=overlay;presentationHidden=false;
 }
@@ -185,7 +185,7 @@ function refreshIntro(m){
 function openRoleIntro(){roleIntroReturnFocus=document.activeElement;clearTimeout(roleTransitionTimer);roleTransition=null;introOpen=true;render()}
 function mountRoleIntro(){const el=document.querySelector('.role-intro');if(!introOpen||gDrawer||!el)return;if(!el.contains?.(document.activeElement))document.getElementById('begin-role')?.focus({preventScroll:true});if(el.getAttribute?.('data-keyboard-bound'))return;el.setAttribute?.('data-keyboard-bound','true');el.addEventListener?.('keydown',e=>{if(e.key!=='Tab')return;const list=[...el.querySelectorAll('button:not(:disabled),a[href],summary')].filter(n=>n.getClientRects().length);const first=list[0],last=list[list.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}});}
 function closeRoleIntro(){dismissIntro();if(roleIntroReturnFocus?.isConnected)roleIntroReturnFocus.focus({preventScroll:true});else document.querySelector('.current-character')?.focus({preventScroll:true});roleIntroReturnFocus=null;}
-function roleTransitionMarkup(){if(!roleTransition||introOpen||gDrawer)return '';return `<div class="role-transition" role="status"><div>${roleTransition.roles.map(r=>portrait(r)).join('')}</div><span><small>本回合</small><strong>${esc(roleTransition.title)}</strong></span></div>`}
+function roleTransitionMarkup(){if(!roleTransition||introOpen||gDrawer)return '';return `<div class="role-transition" data-transition-key="${esc(roleTransition.key)}" role="status"><div>${roleTransition.roles.map(r=>portrait(r)).join('')}</div><span><small>本回合</small><strong>${esc(roleTransition.title)}</strong></span></div>`}
 function voteComplete(m){return m.voters.every(p=>viewState().votes[p.id]!==undefined&&viewState().votes[p.id]>=0)}
 function voteStatus(id){const target=viewState().votes[id];return target===undefined||target<0?'尚未記錄':target===0?'棄票':target+' 號'}
 function syncVotePresentation(m){
