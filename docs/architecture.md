@@ -3,7 +3,7 @@
 ## 執行方式
 
 原生 JavaScript、CSS、Canvas；沒有 React／Next.js、npm 執行期依賴或伺服器 API。
-`build.cjs` 按 `sources` 陣列串接 28 個模組，合併四份 CSS 進 `dist/index.html`，
+`build.cjs` 按 `sources` 陣列串接 29 個模組，合併四份 CSS 進 `dist/index.html`，
 複製角色圖。這些檔案共用 script 的全域作用域，**不是 ES modules**。
 模組中有 wrapper／adapter 接續前一個實作，載入順序有意義，不可任意排序。
 每次建置會先刪除 `dist/`；只修改 `src/` 或工具來源，不手動改 dist。
@@ -32,6 +32,10 @@
 ## 0.46 全介面一致性
 
 `interface-theme.css` 在 graphic-play 之後載入，使用 ui-* 共用 token；對齊選板／抽屜／站內彈窗，不改遊玩座位、Canvas 或投票確認。`host-dialog.view.js` 提供原生 dialog top layer 與焦點／取消服務，無權威狀態存取。app.js 的 host intent adapter 在等待時不寫 state，以完整狀態比對拒絕過期 continuation；無 dialog 能力的 VM 使用同步原生 adapter。配置與重設支援完成回呼，界面只在成功後開局／清除抽屜。既有驗證與結算閉包不變。詳見 [interface-consistency.md](interface-consistency.md)。
+
+## 0.47 角色圖鑑
+
+`role-atlas.view.js` 在 game.js 後載入：靜態 24 角色技能概覽，獨立圖鑑選取／捲動狀態，不讀玩家身分、不呼叫 engine。game.js 的 atlas 抽屜與命名入口沿用焦點／導覽；保留肖像快取。詳見 [role-atlas.md](role-atlas.md)。
 
 ## 0.46.1 動態收斂
 

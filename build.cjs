@@ -1,7 +1,7 @@
 const fs=require('fs');
 process.chdir(__dirname);
 const release=require('./package.json');
-const sources=['app.js','app.view.js','boards.js','mechanical.js','mechanical.view.js','gargoyle.js','gargoyle.view.js','whiteknight.js','whiteknight.view.js','bloodmoon.js','bloodmoon.view.js','dream.js','dream.view.js','cupid.js','cupid.view.js','classic.js','classic.view.js','election.js','election.view.js','rules/role-state.js','role-runtime.js','game-controller.js','victory-forecast.js','role-images.js','city-render.js','village-render.js','game.js','host-dialog.view.js'];
+const sources=['app.js','app.view.js','boards.js','mechanical.js','mechanical.view.js','gargoyle.js','gargoyle.view.js','whiteknight.js','whiteknight.view.js','bloodmoon.js','bloodmoon.view.js','dream.js','dream.view.js','cupid.js','cupid.view.js','classic.js','classic.view.js','election.js','election.view.js','rules/role-state.js','role-runtime.js','game-controller.js','victory-forecast.js','role-images.js','city-render.js','village-render.js','game.js','host-dialog.view.js','role-atlas.view.js'];
 const css=fs.readFileSync('src/game.css','utf8')+'\n'+fs.readFileSync('src/mobile.css','utf8')+'\n'+fs.readFileSync('src/graphic-play.css','utf8')+'\n'+fs.readFileSync('src/interface-theme.css','utf8'),js=sources.map(f=>fs.readFileSync('src/'+f,'utf8')).join('\n');
 // dist is generated output: never carry old prototype files into a new release.
 fs.rmSync('dist',{recursive:true,force:true});

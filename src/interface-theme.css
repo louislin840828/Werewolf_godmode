@@ -102,6 +102,21 @@ body{background:var(--ui-ink);color:var(--ui-paper)}
 .host-dialog button{min-height:48px;padding:12px 20px;border:1px solid var(--ui-line);border-radius:var(--ui-radius);background:#1a252e;color:var(--ui-paper)}
 .host-dialog .primary{background:linear-gradient(100deg,#71532538,#e5b86115),var(--ui-material);background-size:auto,512px 512px;color:#f5d59a;border-color:var(--ui-power);box-shadow:none}
 .host-dialog :is(button,input):focus-visible{outline:2px solid var(--ui-paper);outline-offset:3px}
+/* Role collection: existing portraits, whole-card targets, no game-seat data. */
+.atlas-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding-bottom:16px}
+.game-drawer .atlas-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:8px;min-width:0;width:100%;text-align:center;background:#17232c}
+.atlas-card .role-portrait{width:100%;aspect-ratio:3/4;height:auto;object-fit:cover;object-position:center 24%;border-radius:var(--ui-radius)}
+.atlas-card strong{font-size:14px;font-weight:500;line-height:1.6;overflow-wrap:anywhere}
+.atlas-number{position:absolute;z-index:1;top:12px;left:12px;background:#101a23e8;color:var(--ui-muted);font:12px Georgia,serif;padding:3px 5px;border:1px solid #78899166}
+.game-drawer .atlas-back{background:transparent;color:var(--ui-muted);margin-bottom:16px}
+.atlas-art{width:100%;max-width:440px;margin:auto;aspect-ratio:1}
+.atlas-art .role-portrait{height:100%;width:100%;object-fit:contain;border:1px solid #78899166;border-radius:var(--ui-radius);background:#101a23}
+.atlas-label{display:block;color:var(--ui-muted);font-size:12px;letter-spacing:2px;margin-top:20px}
+.game-drawer .atlas-detail h3{font:600 28px Georgia,'Noto Serif TC',serif;letter-spacing:2px;margin:10px 0 14px;color:var(--ui-paper)}
+.game-drawer .atlas-detail p{font-size:16px;line-height:1.9;color:var(--ui-paper);overflow-wrap:anywhere}
+.atlas-detail small{display:block;font-size:13px;color:var(--ui-muted);line-height:1.8;border-top:1px solid #78899155;padding-top:16px}
+.atlas-detail{padding-bottom:24px}
+@media(max-width:370px){.atlas-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 /* Native disclosure and scrolling remain immediate; motion is intentionally unchanged. */
 @media(max-width:650px){
  .game-drawer .host-roster>button{min-height:72px}

@@ -1,6 +1,6 @@
 # 自動測試基線
 
-目前 0.46.1-beta.1 為 **24 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
+目前 0.47.0-beta.1 為 **25 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
 tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以目前確認家規為準。
 
 ## 執行
@@ -16,6 +16,10 @@ tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以�
 
 `node role-system-check.cjs` 可單獨檢查共用角色規則與呈現層邊界。
 部分個別測試需要建置後的圖片；完整驗證以統一入口為準。
+
+## 0.47 角色圖鑑
+
+role-atlas-check 驗證 24 角色／素材對應、卡冊／詳情／返回、無篩選、不讀玩家資訊、不改 state 或選取。Chrome 真實點擊入口、詳情、返回焦點／捲動、Escape 與多尺寸版面 smoke check 見 [role-atlas.md](role-atlas.md)。舊隱藏的 inline 名稱衝突是在真實點擊發現，VM 字串檢查不代表事件接線有效。
 
 ## 0.46.1 動畫修正
 
