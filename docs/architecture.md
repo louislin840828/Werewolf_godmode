@@ -24,14 +24,17 @@
 提交意圖。不可從 view 直接修改 live `s`，也不可直接呼叫死亡／勝負／切夜結算。
 共用角色系統目前是八板的轉接規格，不是任意角色組合的通用規則引擎。
 
-## 圖像小說第一階段（0.44.0-beta.1）
+## 當前呈現結構（源自 0.44）
 
-`graphic-play.css` 限定 play 呈現 token／元件，最後載入，不改全域主題。`city-render.js` 是無玩家資料的純 Canvas 城市 painter，`village-render.js` 依 `.graphic-play` 接入並保留 resize／節點重用／日夜過渡；不改 controller 或存檔。
-0.44.1 依使用者確認將呈現範圍延伸至警長、黎明、出局技能與結束流程，遊玩角色介紹與隱藏畫面亦接入同一 token；Canvas 簽章包含 graphic-play 模式。選板、名冊、紀錄及管理抽屜仍用現有設計。詳見 [visual-design.md](visual-design.md)；未使用瀏覽器驗收不得宣稱完成 RWD。
+`graphic-play.css` 限定 play token／元件，之後載入 interface-theme.css。`city-render.js` 是無玩家資料的插畫快取／解碼／Canvas cover 模組；village-render.js 接入共享城市並保留 resize／節點重用／日夜交疊。夜間、競選、黎明、白天、結束與介紹都使用 graphic-play；選板／抽屜／dialog 使用共用墨色主題。Hidden 模式已移除。詳見 visual-design.md；部分 Chrome 檢查不代表完整手機 RWD。
 
 ## 0.46 全介面一致性
 
 `interface-theme.css` 在 graphic-play 之後載入，使用 ui-* 共用 token；對齊選板／抽屜／站內彈窗，不改遊玩座位、Canvas 或投票確認。`host-dialog.view.js` 提供原生 dialog top layer 與焦點／取消服務，無權威狀態存取。app.js 的 host intent adapter 在等待時不寫 state，以完整狀態比對拒絕過期 continuation；無 dialog 能力的 VM 使用同步原生 adapter。配置與重設支援完成回呼，界面只在成功後開局／清除抽屜。既有驗證與結算閉包不變。詳見 [interface-consistency.md](interface-consistency.md)。
+
+## 0.48.1 維護清理
+
+選板 header Beta 為非互動標籤；已移除 gameNote／MREG／只寫不讀的 presentationLight。高風險待清理項目見 dead-code-audit.md。舊 app.view.js render 仍供部分 standalone VM loader，正式主入口為 game.js render。
 
 ## 0.48 品牌／素材與清理
 
@@ -49,7 +52,7 @@
 
 `game.js` 在對局畫面以同步 DOM reconciliation 保留同型同鍵節點（id／座號／角色／主要 class），保留 Canvas bitmap、成功圖片、焦點輸入與同回合 disclosure。開局輪播亦接入共用節點更新及過渡，保留原生手勢流程並防止重複綁定。VM stub 不支援真實 DOM 時保留 innerHTML 路徑。
 `village-render.js` 依場景／存活顯示／動態設定簽章重用 Canvas 迴圈；簽章變更才重建繪製，舊 Canvas 圖層只用於非互動淡出。
-轉場由呈現 key 判斷；動畫只處理 opacity，不呼叫 controller／engine，不等待動畫才更新權威狀態。離場副本 inert、aria-hidden 且無 id；隱藏身分立即整頁替換，不建立副本。0.40.2 將回合 key 與局部結果分開，抽屜容器開關與層內導覽分開；名冊／詳情使用 ±10px 輕移。日夜 Canvas 與面板採 400ms，只有環境變更建立 Canvas 副本。靜態場景停止環境與裝飾持續動態，保留導覽回饋；reduced-motion 停用 JS 過渡與程式平滑捲動。首次渲染與手機效能仍須實機驗收。
+轉場由呈現 key 判斷；動畫只處理 opacity，不呼叫 controller／engine，不等待動畫才更新權威狀態。離場副本 inert、aria-hidden 且無 id。回合 key 與局部結果、抽屜開關與層內導覽分開；名冊／詳情目前使用 ±6px 輕移（原 0.40.2 為 ±10px）。日夜 Canvas 與面板採 400ms，只有環境變更建立 Canvas 副本。靜態場景停止環境與裝飾持續動態，保留導覽回饋；reduced-motion 停用 JS 過渡與程式平滑捲動。首次渲染與手機效能仍須實機驗收。
 
 ## 固定配置變體（0.43.0）
 
@@ -70,7 +73,7 @@ GameEngine.configure() 只允許開局前切換，依配置建立玩家並保留
 - 修改功能後按影響調整 patch／minor，記錄 CHANGELOG；封閉測試期間保留 beta。
 - Site「第 33 版」是網站發布版號；不能當成 package version 或存檔 schema。
 - roleSystem schemaVersion 目前為 1；不能因改版號就更換 localStorage key／schema。
-- 交接 ZIP 的 HANDOFF.json 含 source commit、檔案清單與 checksum；不是玩家存檔。
+- docs/history/handoff-0.30.3.json 是舊 ZIP manifest，不驗證現行 checkout；不是玩家存檔。
 
 ## 修改與驗證
 

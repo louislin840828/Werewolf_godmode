@@ -20,16 +20,16 @@ MCP 是工具連接方式；專案本身不需要 MCP server 才能執行。
 
 1. 讀 README → AGENTS → architecture → boards → role-system → victory-and-forecast → development-handoff → known-issues。
 2. 檢查 Node 24 與 package 版本，執行 `npm test`，再 `npm run dev`。
-3. 確認 17 支測試通過、本機首頁與角色圖可用；手機驗收清單中的狀態不要先標成通過。
+3. 確認當前全套 26 支測試通過、本機首頁與角色圖可用；手機驗收清單中的狀態不要先標成通過。
 4. 若工具無法實機驗證，清楚記錄限制；有錯誤先解讀訊息，不要改規則來遷就環境。
 5. 在自己的 Git 留下基準，再接受下一個明確開發任務。
 
 ## 可直接貼給本機代理的任務
 
-> 請接手這個月夜議會專案，先只完成環境驗證。讀取 README.md、AGENTS.md 與
-> docs/ 中的架構、七板家規、角色系統、localStorage 保存及已知問題文件。
-> 專案版本以 package.json 為準（本輪 0.45.0-beta.1），使用 Node.js 24，無第三方依賴。先執行 npm test，
-> 確認乾淨建置及 17 支測試，再用 npm run dev 啟動本機預覽，回報可用網址與限制。
+> 請接手這個 Aurawolf｜全知之人專案，先只完成環境驗證。讀取 README.md、AGENTS.md 與
+> docs/ 中的架構、八板家規、角色系統、localStorage 保存及已知問題文件。
+> 專案版本以 package.json 為準，使用 Node.js 24，無第三方執行期依賴（Wrangler 是選用部署開發依賴）。先執行 npm test，
+> 確認乾淨建置及全部 26 支測試，再用 npm run dev 啟動本機預覽，回報可用網址與限制。
 > 遊戲以手機為主，請依 mobile-acceptance.md 協助驗收，沒實際驗證的項目不要宣稱通過。
 > UI 修改不能改動底層規則；不重寫框架、不降低角色圖畫質、不新增完整存檔匯出／匯入，
 > 也不擅自清除或更換 localStorage key。先不要部署或推送遠端，等我提供下一個任務。
@@ -38,8 +38,8 @@ MCP 是工具連接方式；專案本身不需要 MCP server 才能執行。
 
 已備妥完整原始碼、24 張圖、建置、本機指令、測試、版本標示、文件與靜態輸出。
 使用者已完成前版的本機驗證，並驗收第 31 版判勝修正；本包仍須在接手電腦重新執行基線。
-MCP 實際連接、自有 Git／Hosting 設定及第 32–33 版手機介面／連開兩局效能仍待驗證。
-交接包根目錄的 HANDOFF.json 記錄交接來源 commit 與檔案 checksum，不是歷史 Git clone。
+本機已有 Git 分支與提交；遠端／Hosting 設定與當前手機完整對局／連開兩局效能未在此任務驗證。
+目前是本機 Git checkout；docs/history/handoff-0.30.3.json 只記錄舊 ZIP 的來源／checksum，不驗證當前檔案。現行版本看 package.json／Git，驗證看 testing.md。
 
 ## 接手後的協作方式
 
@@ -56,4 +56,4 @@ MCP 實際連接、自有 Git／Hosting 設定及第 32–33 版手機介面／�
 - 復仇刀已用的狼弟＋狼人＋獵人＋平民，放逐結算後可提示必勝（含保留票單／PK）。
 - 不將 Node VM／DOM stub 的綠燈當作真實手機版面或網路效能驗證。
 
-0.45 視覺改版：先閱讀 [visual-redesign-acceptance.md](visual-redesign-acceptance.md) 與 [visual-assets.md](visual-assets.md)。規則檔不在本輪變更範圍；新素材必須隨 binary Patch 交付。
+當前接手先讀 [documentation-review.md](documentation-review.md)、[visual-assets.md](visual-assets.md) 與 [dead-code-audit.md](dead-code-audit.md)。0.45 Patch 文件只供歷史追溯，不對目前 HEAD 重套。現行角色新圖來源為 src/assets/roles。只提交本機；合併 main／推送／部署需新授權。

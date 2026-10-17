@@ -1,3 +1,14 @@
+# 版本變更紀錄
+
+各版本段落記錄當時動作與驗證，不代表當前待辦；當前狀態見 README／known-issues。0.45 已後續獲使用者驗收並合併本機 main，0.46 起只提交本機分支。
+
+# 0.48.1-beta.1
+
+- 選板右上人數／警長局文案換為非互動 Beta badge，配置仍保留於板子詳情。
+- 保守靜態掃描及手動 Review：刪除 gameNote、未引用 MREG、只寫不讀 presentationLight／參數及多餘 phase 條件；規則與存檔不變。可重跑 scripts/static-audit.cjs，風險保留項目見 docs/dead-code-audit.md。
+- Review 全部專案 Markdown 與舊 HANDOFF manifest，區分當前契約／操作／限制與歷史決策／驗收。修正舊七板／17 支／舊視覺等現況，歷史數據保留；舊 manifest 原位元組移至 docs/history/handoff-0.30.3.json。
+- 全套 26 支回歸、角色邊界及 build；Chrome Beta 多尺寸部分驗證另報，不代表手機實機全流程。只提交本機，不合併 main、不推送／部署。
+
 # 0.48.0-beta.1
 
 - 產品更名 Aurawolf｜全知之人，同步首頁、HUD、頁面標題／metadata、setup／備援控制台、復盤標題及下載檔名。保留 localStorage key 和技術 package identity。

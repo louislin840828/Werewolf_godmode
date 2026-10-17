@@ -38,9 +38,16 @@ Detailed tokens, component states and phase-one scope: [docs/visual-design.md](d
 - 玩家是獨立命運標記，不綁房屋；座號優先、整個標記可點、不因死亡／行動重排。背景安靜，不干擾文字或多對一／一對多技能線。
 - 操作媒介採墨色底與少量筆線；選取摘要保留固定空間，主確認不位移。保留取消／修改／棄票／撤回／警徽等既有入口，不增加拖曳、長按、蓄力或動畫等待。
 - 動態只解釋變化、不阻擋操作，支援 reduced-motion；保留節點與圖片準備快取，不逐局清除重載。
-- UI 不得改變底層規則、已確認家規、controller 驗證或存檔契約。先交付夜間行動／白天討論／投票供確認，再延伸其他頁面；未有真實瀏覽器验收不得宣稱完成 RWD。
+- UI 不得改變底層規則、已確認家規、controller 驗證或存檔契約。全介面已自 0.46 納入範圍；部分 Chrome 檢查不代表完整手機 RWD，未有實機驗收不得宣稱全面完成。
 
-## City artwork and visual delivery (0.45)
+## Current maintenance context
+
+- Canonical portraits: user-approved replacement WebP in `src/assets/roles/` (0.48); never restore old dist-only artwork or reduce quality.
+- Hidden/privacy overlay mode was removed in 0.48. Keep normal HTML hidden and aria-hidden semantics.
+- Work stays on local `visual/interface-consistency`; do not merge main, push or deploy without fresh authorization.
+- Document purposes/current vs historical status: `docs/documentation-review.md`; risky cleanup candidates: `docs/dead-code-audit.md`.
+
+## City artwork and visual delivery (since 0.45)
 
 - `src/assets/scenes/` contains the shared day/night city; `src/assets/ui/` contains
   ink material and decorative SVG masks. Build copies all `src/assets/` byte-for-byte.

@@ -1,5 +1,9 @@
 # 0.45 視覺改版驗收與套用
 
+性質：歷史 0.45 Patch 交付／安全套用紀錄，不是當前待套用操作。使用者後續回報本機驗收通過；已提交 c99ee5a 並快轉合併本機 main。0.46 之後留在 visual/interface-consistency，未合併／推送／部署。勿對目前 HEAD 重套或 reverse 此 Patch。
+
+以下保留交付當時的基準、驗證限制與操作條件。
+
 本輪基準：`8ebf4afd74d6a35697e89d310d4eb3066d5c349f`（0.44.1-beta.1）。
 只交付 Patch，含新增二進位素材；未推 GitHub、未部署、未合併 main。
 

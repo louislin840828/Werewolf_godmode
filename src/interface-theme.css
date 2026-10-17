@@ -1,4 +1,6 @@
 /* Shared ink language for all host surfaces. Layout and engine contracts stay intact. */
+.board-gallery .gallery-header .beta-badge{flex:none;display:inline-flex;align-items:center;padding:4px 10px;border:1px solid var(--ui-line);border-radius:6px 4px 7px 4px;background:var(--ui-ink);color:var(--ui-paper);font:600 11px/1.2 system-ui;letter-spacing:.8px;white-space:nowrap}
+@media(max-width:370px){.board-gallery .gallery-header{gap:8px;padding-inline:12px}.board-gallery .gallery-header>span{font-size:15px;letter-spacing:0}.board-gallery .gallery-header .beta-badge{padding:4px 7px}}
 .graphic-play .game-brand{letter-spacing:.5px;font-size:20px;min-width:0}
 .graphic-play .game-brand small{font-size:10px;letter-spacing:0;white-space:nowrap}
 .graphic-play .game-hud nav .sig{width:22px;height:22px;overflow:visible}

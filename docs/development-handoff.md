@@ -1,6 +1,6 @@
-# 月夜議會：開發交接
+# Aurawolf｜全知之人：保存與開發交接
 
-更新：2026-10-15。交接版本 0.30.3-beta.1，功能對應 Site 第 33 版。本次交接只同步文件，不另部署網站。
+性質：當前保存／搬站契約。現行版本以 package.json 為準（0.48.1-beta.1）；Site 第 33 版及 0.30.3 ZIP 僅為歷史來源，manifest 已封存於 history/handoff-0.30.3.json。本輪只提交本機，不部署。
 
 ## 本階段範圍
 
@@ -59,12 +59,12 @@ HTTP 快取由瀏覽器與 Hosting 回應控制；`portraitPreload`、`portraitN
 - 先閱讀 `AGENTS.md` 與 `docs/role-system.md`；UI 修改維持在呈現層，遵守 GameEngine／controller 邊界。
 - 現有建置指令是 `node build.cjs`，發布內容為 `dist/`；不需 Sites 執行期 API 或後端服務。
 - 對局資訊包含未公開角色與技能目標；排查時避免把實際玩家完整 localStorage 內容無意間貼入公開 issue 或共享日誌。
-- README、統一 dev／preview／build／test 指令、版本標示、七板規則與已知限制已補齊。使用者已完成前版本機驗證；本機 MCP 連接、自有 Hosting 與最新手機回歸尚待使用者環境執行。
+- README、統一 dev／preview／build／test 指令、版本標示、八板規則與已知限制已補齊。使用者已完成前版本機驗證；本機 MCP 連接、自有 Hosting 與最新手機回歸尚待使用者環境執行。
 
-## 交接驗證基線
+## 當前驗證基線
 
-14 支既有測試已全數修復並通過，新增 tooling-check 後加上 victory-check／forecast-check 後總計 17 支。
-`npm test` 在乾淨暫存目錄建置，檢查目前 JavaScript 與 24 張原圖，再執行全套測試。
+當前全套 26 支，Node v24.22.0。早期 0.30 基線為 17 支，僅作歷史參考。
+`npm test` 在乾淨暫存目錄建置，檢查目前 JavaScript 與 24 張正式新版角色圖，再執行全套測試。
 `node scripts/dev-server.cjs --check` 驗證本機建置／首頁路徑，不啟動監聽埠。
 測試修復原因與範圍見 testing.md；手機完整對局驗收仍未完成。
 
@@ -84,4 +84,4 @@ HTTP 快取由瀏覽器與 Hosting 回應控制；`portraitPreload`、`portraitN
 開局圖片準備總等待上限為 8 秒，即使失敗／未完成仍允許開局；背景佇列繼續處理。
 預載與顯示解碼各自也有 8 秒上限，以釋放等待中的應用層佇列；不強制取消瀏覽器下載。
 切板／關閉詳情仍會取消原本開局意圖；遲到的完成通知不再次開局。
-24 張原圖品質與成功快取重用不變，Safari／Chrome 的實際視覺與網路行為仍待驗證。
+目前 24 張新版圖原位元組與成功快取重用保持，Safari／Chrome 的實際視覺與網路行為仍待驗證。

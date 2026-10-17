@@ -1,5 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{createGameTest}=require('./test-support.cjs');
 const {run}=createGameTest();const game=fs.readFileSync('src/game.js','utf8'),css=['game.css','mobile.css','graphic-play.css','interface-theme.css'].map(f=>fs.readFileSync('src/'+f,'utf8')).join('\n');
+assert(game.includes('class="beta-badge" aria-label="Beta 測試版本">Beta</small>'));assert(!game.includes('12 人／指定 10 人變體 · 警長局'));
 assert(!game.includes('presentationHidden'));assert(!game.includes('if(hidden)'));assert(!css.includes('veil-screen'));assert(!fs.readFileSync('src/app.js','utf8').includes('hidden=false'));
 assert(run('gameModel().title').includes('Aurawolf｜全知之人'));assert(run('exportText()').startsWith('Aurawolf｜全知之人'));
 const icons=['scroll','gear','atlas'].map(n=>run(`icon('${n}')`));assert.equal(new Set(icons).size,3);for(const n of ['scroll','gear','atlas'])assert(run(`icon('${n}')`).includes(`data-icon="${n}"`));

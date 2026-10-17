@@ -1,5 +1,7 @@
 # Aurawolf｜全知之人：圖像小說視覺契約
 
+性質：當前視覺契約；版本導入背景與驗收紀錄保留於文末／各版本文件，不作當前完成宣告。
+
 ## 產品與第一階段
 
 實體狼人殺真人上帝的手機輔助器。上帝從全知視角看共享中古城市，掌握主持節奏及最終決定；操作要能快速理解並迅速回到現場。
@@ -10,15 +12,15 @@
 
 ## 0.46 全介面一致性
 
-使用者本輪授權涵蓋選板、名冊／詳情、紀錄、管理與站內系統視窗，角色圖不換，動畫另階段處理。`interface-theme.css` 共用 ui-* token 在 graphic-play 後載入；密集資訊以安靜平底為主，材質放外殼，不全面加金框。原生確認／輸入改為站內 dialog，由 host intent adapter 完成後提交原操作，取消／過期不寫 state。詳見 [interface-consistency.md](interface-consistency.md)。下列 0.44／0.45 範圍描述保留為歷史背景。
+使用者本輪授權涵蓋選板、名冊／詳情、紀錄、管理與站內系統視窗，角色圖不換，動畫另階段處理。`interface-theme.css` 共用 ui-* token 在 graphic-play 後載入；密集資訊以安靜平底為主，材質放外殼，不全面加金框。原生確認／輸入改為站內 dialog，由 host intent adapter 完成後提交原操作，取消／過期不寫 state。詳見 [interface-consistency.md](interface-consistency.md)。下列 0.44／0.45 範圍描述保留為歷史背景。現行已覆蓋全介面，0.48 採用使用者新版角色圖並移除 Hidden；0.48.1 選板 header 使用非互動 Beta badge。
 
 ## 技術與可替換素材
 
-- `src/graphic-play.css`：最後載入的限定 `.graphic-play` token／元件，不改全域 :root，避免改到未核准的頁面。
+- `src/graphic-play.css`：限定 `.graphic-play` token／元件，之後載入 interface-theme.css 共用主題；不改規則。
 - `src/game.js`：只加入呈現範圍、互動色彩語意及命運標記 class。保留原 data-seat、座位順序、命名操作、選取／确认流程與圖片快取。
 - `src/city-render.js`：共享日夜插畫快取、解碼與等比 Canvas 裁切，無玩家／角色／技能資料；`CITY_ART` 對應 `src/assets/scenes/`。失敗不阻擋操作，下次初始化可重試。成功資源在同一分頁跨局保留。
-- `src/village-render.js`：第一階段轉接城市 painter，保留 resize、Canvas 重用與日夜過渡。其他階段目前仍沿用既有場景。
-- 角色 WebP 與 ROLE_ART 映射、portrait()／解碼準備／剪影備援保持不變。不降低品質、不重新生成。
+- `src/village-render.js`：轉接共享插畫，保留 resize、Canvas 重用與日夜過渡；遊玩各階段皆使用新城市。
+- 角色 WebP 使用 0.48 指定新版；ROLE_ART 映射、portrait()／解碼準備／剪影備援保持。不降低品質、不重新生成。
 - 不改規則、controller、角色模型、勝負預測、localStorage key／schema；夜間一瓶藥、死亡槍、10 人變體、首夜認牌均按現行契約。
 
 ## Token
@@ -91,4 +93,4 @@
 
 本輪三個驗收重點：城市是同一座城市的安靜背景；墨色媒介有筆觸而非平面暗底；金色與中立投票色用途清楚。先驗收真實運行畫面，再決定是否延伸其他入口。
 
-素材產生方式與提示見 [visual-assets.md](visual-assets.md)。本輪沒有瀏覽器控制能力；沒有新截圖或手機實測通過紀錄。
+素材產生方式與提示見 [visual-assets.md](visual-assets.md)。0.45 交付當時無瀏覽器控制能力；後續使用者回報本機驗收通過，0.46–0.48 有部分 Chrome 紀錄。手機完整驗收仍未完成。
