@@ -109,3 +109,18 @@ body[data-light=day] .vote-focus,body[data-light=dawn] .vote-focus{background:#e
 .game-brand small{font-size:10px;letter-spacing:1px}
 /* Independent merchant choices reuse the existing mobile skill-card grid. */
 .merchant-choice{width:100%;min-width:0}.merchant-target{margin:0 0 10px;color:var(--soft);font-size:13px}.merchant-target strong{color:var(--gold)}.merchant-hint{margin:8px 0 0;color:var(--soft);font-size:12px;line-height:1.6}.shot-choices .relic{min-width:90px}.vote-receipt>span>small{display:block;margin-top:3px}
+/* 0.41.0 vote result windows mirror the dawn death panel; PK keeps the prior tally in the vote tray. */
+.result-heart{display:none}
+.vote-world{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.vote-results{position:static;width:min(300px,84%);max-height:60%;overflow-y:auto;margin:0;padding:16px 12px;border:1px solid var(--edge);border-radius:12px;background:var(--glass);color:var(--ink);text-align:center;box-shadow:0 6px 28px #253c3522;pointer-events:none;z-index:2}
+.vote-world .dawn-results{position:static;transform:none;width:min(300px,84%)}
+.vote-results>small{display:block;font-size:10px;letter-spacing:3px;margin-bottom:9px}
+.vote-results>strong{display:block;font-size:22px;font-weight:500}
+.vote-results .vote-tally{display:block;margin-top:9px;font-size:12px;color:var(--soft);line-height:1.7}
+.vote-results .vote-note{display:block;margin-top:5px;font-size:11px;color:var(--soft)}
+.vote-deaths{border-top:1px solid var(--edge);margin-top:12px;padding-top:10px;display:grid;gap:7px;text-align:left}
+.vote-deaths>small{font-size:10px;color:var(--soft);letter-spacing:1px}
+.vote-deaths>span{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:13px}
+.vote-deaths b{font-weight:500;white-space:nowrap;color:var(--gold)}
+.vote-deaths span small{font-size:11px;color:var(--soft);overflow-wrap:anywhere;text-align:right}
+.vote-prior{width:100%;margin:0 0 9px;padding:8px 11px;border:1px solid var(--edge);border-radius:8px;background:var(--glass);color:var(--soft);font-size:11px}

@@ -4,7 +4,7 @@ const requests=[];
 class ImageMock {set src(value){this.url=value;if(!requests.includes(this))requests.push(this)}getAttribute(name){return name==='src'?this.url:null}decode(){this.decodeCalls=(this.decodeCalls||0)+1;if(this.decoded)return Promise.resolve();return new Promise((resolve,reject)=>{this.resolve=()=>{this.decoded=true;resolve()};this.reject=reject})}}
 let confirmed=0;
 const timers=new Map();let timerId=0;
-const ctx={Image:ImageMock,console,setTimeout:fn=>{timers.set(++timerId,fn);return timerId},clearTimeout:id=>timers.delete(id),esc:s=>s,viewState:()=>({phase:'setup',board:'demo'}),BOARD_TEMPLATES:{demo:{roles:['狼','神','民']}},galleryDetail:'demo',setupBoardFocus:'demo',galleryConfirm:()=>confirmed++};vm.createContext(ctx);
+const ctx={Image:ImageMock,console,setTimeout:fn=>{timers.set(++timerId,fn);return timerId},clearTimeout:id=>timers.delete(id),esc:s=>s,viewState:()=>({phase:'setup',board:'demo'}),BOARD_TEMPLATES:{demo:{roles:['狼','神','民']}},galleryDetail:'demo',galleryVariant:'standard12',boardConfiguration:()=>({roles:['狼','神','民']}),setupBoardFocus:'demo',galleryConfirm:()=>confirmed++};vm.createContext(ctx);
 vm.runInContext(source.slice(source.indexOf('const portraitNodes='),source.indexOf('function portraitsFor(')).replace(/function roleImageSource\(role\)\{[^\n]+/,"function roleImageSource(role){return role+'.webp'}"),ctx);
 const run=s=>vm.runInContext(s,ctx),flush=async()=>{for(let i=0;i<8;i++)await Promise.resolve()};
 let finished=false;process.on('beforeExit',()=>{if(!finished){console.error('Unresolved preparation');process.exitCode=1}});

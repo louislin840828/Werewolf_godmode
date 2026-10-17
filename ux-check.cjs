@@ -1,4 +1,4 @@
-const fs=require('fs'),vm=require('vm'),assert=require('assert'),nodes={};class MockImage{decode(){return Promise.resolve()}}const c={Image:MockImage,window:{innerWidth:390},console,Date,JSON,Math,setInterval:()=>{},setTimeout:()=>{},clearTimeout:()=>{},cancelAnimationFrame:()=>{},localStorage:{getItem:()=>null,setItem:()=>{}},document:{getElementById:id=>nodes[id]||{innerHTML:''},querySelector:()=>null,body:{dataset:{}}},confirm:()=>true,alert:m=>{throw Error(m)}};vm.createContext(c);const run=x=>vm.runInContext(x,c),obj=x=>JSON.parse(run('JSON.stringify('+x+')'));for(const f of ['app.js','app.view.js','boards.js','mechanical.js','mechanical.view.js','gargoyle.js','gargoyle.view.js','whiteknight.js','whiteknight.view.js','bloodmoon.js','bloodmoon.view.js','dream.js','dream.view.js','cupid.js','cupid.view.js','election.js','election.view.js','rules/role-state.js','role-runtime.js','game-controller.js','victory-forecast.js'])run(fs.readFileSync('src/'+f,'utf8'));run(fs.readFileSync('src/game.js','utf8').replace(/primeRoleImages\(\);render\(\);\s*$/,''));run('render=()=>{hydrateGame()};initVillage=()=>{}');
+const fs=require('fs'),vm=require('vm'),assert=require('assert'),nodes={};class MockImage{decode(){return Promise.resolve()}}const c={Image:MockImage,window:{innerWidth:390},console,Date,JSON,Math,setInterval:()=>{},setTimeout:()=>{},clearTimeout:()=>{},cancelAnimationFrame:()=>{},localStorage:{getItem:()=>null,setItem:()=>{}},document:{getElementById:id=>nodes[id]||{innerHTML:''},querySelector:()=>null,body:{dataset:{}}},confirm:()=>true,alert:m=>{throw Error(m)}};vm.createContext(c);const run=x=>vm.runInContext(x,c),obj=x=>JSON.parse(run('JSON.stringify('+x+')'));for(const f of ['app.js','app.view.js','boards.js','mechanical.js','mechanical.view.js','gargoyle.js','gargoyle.view.js','whiteknight.js','whiteknight.view.js','bloodmoon.js','bloodmoon.view.js','dream.js','dream.view.js','cupid.js','cupid.view.js','classic.js','classic.view.js','election.js','election.view.js','rules/role-state.js','role-runtime.js','game-controller.js','victory-forecast.js'])run(fs.readFileSync('src/'+f,'utf8'));run(fs.readFileSync('src/game.js','utf8').replace(/primeRoleImages\(\);render\(\);\s*$/,''));run('render=()=>{hydrateGame()};initVillage=()=>{}');
 function reset(board){run(`s=fresh();s.board='${board}';ensureMech();s.players.forEach((p,i)=>p.role=boardDefinition().roles[i]);s.n=2;s.phase='night';gKey='';hydrateGame()`);if(board==='cupid')run("ensureCupid();s.cupid.reserve=['平民','平民'];s.cupid.pick=0;s.cupid.cupidId=2;s.players.forEach((p,i)=>p.role=['平民','丘比特','狼王','狼人','狼人','預言家','女巫','獵人','白痴','平民','平民','平民'][i])")}
 for(const [board,count] of [['brothers',3],['mechanical',3],['gargoyle',3],['whiteknight',4],['bloodmoon',4],['dream',4],['cupid',3]]){reset(board);run('s.step=nightSteps().indexOf("wolves");s.draft.kill=10;hydrateGame()');const edges=obj('skillEdges(gameModel())');assert.equal(edges.length,count,board);assert(edges.every(e=>e.target===10));const svg=run('spellTrace(gameModel())');assert.equal((svg.match(/<path /g)||[]).length,count);assert(!svg.includes('NaN'));assert(svg.includes('data-target="10"'));}
 reset('cupid');run('s.n=1;s.step=nightSteps().indexOf("cupid");s.draft={loveA:3,loveB:6};hydrateGame()');assert.deepEqual(obj('skillEdges(gameModel()).map(e=>[e.source,e.target])'),[[2,3],[2,6]]);assert.equal((run('spellTrace(gameModel())').match(/<path /g)||[]).length,2);run('s.draft.loveA=2');assert(run('spellTrace(gameModel())').includes(' C'));run('s.draft.loveB=0');assert.equal(obj('skillEdges(gameModel())').length,1);
@@ -27,16 +27,16 @@ assert(run('selectionSummary(gameModel())').includes('2 號'));
 console.log('PASS: all selected targets/actor markers, mobile footer, explicit undo and registration receipts.');
 // Gallery browsing stays local until explicit confirmation; all templates still start normally.
 c.requestAnimationFrame=()=>{};nodes['board-track']={addEventListener:()=>{}};
-for(const id of ['brothers','mechanical','gargoyle','whiteknight','bloodmoon','dream','cupid']){
+for(const id of ['brothers','mechanical','gargoyle','whiteknight','bloodmoon','dream','cupid','classic']){
  assert(run(`boardPortraitRoles('${id}').includes('平民')`));
  assert(run(`BOARD_TEMPLATES['${id}'].roles.every(r=>boardPortraitRoles('${id}').includes(r))`));
  run(`s=fresh();s.phase='setup';setupBoardFocus='${id}';gDrawer='';gKey='';hydrateGame()`);
  const before=run('JSON.stringify(s)');run('renderBoardGallery()');assert.equal(run('JSON.stringify(s)'),before);
- assert.equal((nodes.app.innerHTML.match(/class="board-slide"/g)||[]).length,7);
+ assert.equal((nodes.app.innerHTML.match(/class="board-slide"/g)||[]).length,8);
  assert(!nodes.app.innerHTML.includes('onclick="galleryConfirm()"'));run(`galleryDetail='${id}'`);const detail=run('galleryDetailMarkup()');assert(detail.includes('確認使用'));assert(detail.includes('角色配置'));if(id==='cupid')assert(detail.includes('14 張牌，12 人入席'));
  run('galleryConfirm()');assert.equal(run('s.board'),id);assert.equal(run('s.phase'),'night');assert(run('s.players.every(p=>p.role==="未確認")'));
 }
-console.log('PASS: seven-card gallery, browsing leaves game state intact, explicit confirmation starts each board with unknown identities.');
+console.log('PASS: eight-card gallery, browsing leaves game state intact, explicit confirmation starts each board with unknown identities.');
 
 assert.equal(run('galleryGestureAxis(5,4)'), '');assert.equal(run('galleryGestureAxis(30,8)'), 'x');assert.equal(run('galleryGestureAxis(8,30)'), 'y');assert.equal(run('galleryGestureAxis(15,14)'), '');
 // A vertical-first drag cannot turn into a horizontal swipe; a horizontal drag suppresses click.
@@ -166,4 +166,43 @@ for(const board of ['brothers','mechanical','gargoyle','dream','cupid']){
  run('undo();chooseShotMode("skip");confirmShotChoice()');assert.equal(run('player(9).alive'),true);assert.equal(run('s.pending.length'),0);
  run('undo()');assert.equal(run('gameModel().kind'),'shot');assert.equal(run('s.pending.length'),1);
 }
-console.log('PASS: shot/skip cards, selection-only mode, seat reselect, production confirmation, existing shoot/skip and undo on five boards.');
+// During skill resolution the vote panel defers to keep the seat selection visible.
+run('render=()=>{hydrateGame()}');reset('brothers');run('s.phase="day";s.elected=true;gKey="";hydrateGame()');
+run('alive().forEach((p,i)=>s.votes[p.id]=i<4?7:i<6?12:0);countVotes(false)');
+assert.equal(run('player(7).alive'),false);assert.equal(run('gameModel().kind'),'shot');assert.equal(run('voteResultMarkup()'),'');
+run('chooseShotMode("shoot");g.shot=9;confirmShotChoice()');assert.equal(run('gameModel().kind'),'daydone');assert(run('voteResultMarkup()').includes('放逐結果'));
+assert(run('voteResultMarkup()').includes('本次出局 · 2 人'));assert(run('voteResultMarkup()').includes('7 號'));assert(run('voteResultMarkup()').includes('放逐'));assert(run('voteResultMarkup()').includes('9 號'));assert(run('voteResultMarkup()').includes('槍擊'));
+run('undo();undo()');assert.equal(run('s.voteResult'),undefined);
+console.log('PASS: vote result defers during skill targeting, then lists exile and gun deaths with causes.');
+// A lover's automatic death belongs to the same exile batch, even without a gun.
+reset('cupid');run("s.phase='day';s.elected=true;s.cupid.lovers=[8,10];updateCupidFaction();s.votes={};alive().forEach(p=>s.votes[p.id]=10);countVotes(false)");
+assert.equal(run('player(10).alive'),false);assert.equal(run('player(8).alive'),false);assert.equal(run('s.pending.length'),0);
+const loverResult=run('voteResultMarkup()');assert(loverResult.includes('本次出局 · 2 人'));assert(loverResult.includes('10 號'));assert(loverResult.includes('8 號'));assert(loverResult.includes('殉情'));
+// A gun target who is the sheriff must pass the badge before the final panel.
+reset('brothers');run('s.phase="day";s.elected=true;s.sheriff=9;alive().forEach(p=>s.votes[p.id]=7);countVotes(false)');
+assert.equal(run('gameModel().kind'),'shot');assert.equal(run('voteResultMarkup()'),'');
+run('shoot(9)');assert.equal(run('gameModel().kind'),'badge');assert.equal(run('voteResultMarkup()'),'');
+nodes.badge={value:'10'};run('badge()');assert.equal(run('gameModel().kind'),'daydone');assert(run('voteResultMarkup()').includes('本次出局 · 2 人'));
+console.log('PASS: lover collateral, shot and badge completion all contribute to the final day result.');
+// A dreamer exiled by day does not kill the linked sleeper: that rule is night-only.
+reset('dream');run("ensureDream();s.phase='day';s.elected=true;s.dream.linkTarget=9;s.dream.linkNight=s.n;alive().forEach(p=>s.votes[p.id]=8);countVotes(false)");
+assert.equal(run('player(8).alive'),false);assert.equal(run('player(9).alive'),true);assert(run('voteResultMarkup()').includes('本次出局 · 1 人'));assert(!run('voteResultMarkup()').includes('攝夢牽連'));
+console.log('PASS: daytime dreamer exile does not invent night-only collateral.');
+
+// Exile conclusions open a consolidated result window; PK rounds keep the prior tally in view.
+reset('brothers');run('s.phase="day";s.elected=true;gKey="";hydrateGame()');
+run('alive().forEach((p,i)=>s.votes[p.id]=i<4?9:i<6?12:0);countVotes(false)');
+assert.equal(run('s.voteResult.elect'),false);assert.equal(run('s.voteResult.outcome'),'exiled');assert.equal(run('s.voteResult.target'),9);assert.equal(run('s.voteResult.n'),run('s.n'));assert.equal(run('player(9).alive'),false);
+assert(run('voteResultMarkup()').includes('放逐結果'));assert(run('voteResultMarkup()').includes('9 號被放逐'));assert(run('voteResultMarkup()').includes('9 號 4 票'));assert(run('voteResultMarkup()').includes('棄 6 票'));
+assert.equal(run('gameModel().kind'),'daydone');
+prod();assert(nodes.app.innerHTML.includes('vote-results'));assert(nodes.app.innerHTML.includes('9 號被放逐'));assert(nodes.app.innerHTML.includes('result-heart'));
+run('undo()');assert.equal(run('s.voteResult'),undefined);assert.equal(run('player(9).alive'),true);assert.equal(run('gameModel().kind'),'vote');
+reset('brothers');run('s.phase="day";s.elected=true;gKey="";hydrateGame()');
+run('alive().forEach((p,i)=>s.votes[p.id]=i<3?9:i<6?12:0);countVotes(false)');
+assert.equal(run('s.voteResult.outcome'),'pk');assert.deepEqual(obj('s.voteResult.pk'),[9,12]);assert.equal(run('s.voteDone'),false);assert.equal(run('voteResultMarkup()'),'');
+assert(run('voteTrayMarkup(gameModel())').includes('上一輪投票'));assert(run('voteTrayMarkup(gameModel())').includes('9 號 3 票'));
+run('alive().filter(p=>!s.pk.includes(p.id)).forEach((p,i)=>s.votes[p.id]=i<6?9:12);countVotes(false)');
+assert.equal(run('s.voteResult.outcome'),'exiled');assert.equal(run('s.voteResult.round'),2);assert.equal(run('s.voteResult.target'),9);assert(run('voteResultMarkup()').includes('第 2 輪'));assert(run('voteResultMarkup()').includes('9 號 6 票'));
+prod();assert(nodes.app.innerHTML.includes('第 2 輪'));assert(!nodes.app.innerHTML.includes('上一輪投票'));
+run('mutate(newNight)');assert.equal(run('s.phase'),'night');assert.equal(run('voteResultMarkup()'),'');assert.equal(run('votePriorRoundMarkup()'),'');
+console.log('PASS: exile result panel, prior-round tally, day freshness across nights and undo.');

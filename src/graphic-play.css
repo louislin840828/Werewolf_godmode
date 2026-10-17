@@ -1,0 +1,171 @@
+/* Shared graphic-novel play flow. Gallery, dossiers and host drawers retain their design. */
+.graphic-play{
+ --ink:#f0eee3;--soft:#bac3c7;--gold:#e5b861;--edge:#83939b55;--panel:#131c24;--glass:#131c24f5;
+ --gn-ink:#131c24;--gn-paper:#f0eee3;--gn-muted:#bac3c7;--gn-power:#e5b861;--gn-vote:#b5c9d3;
+ --gn-wolf:#b86575;--gn-out:#a9aeb0;--gn-error:#f0bba4;--gn-disabled:#818a91;
+ --gn-line:#788991;--gn-radius:9px 6px 11px 5px;--gn-touch:48px;
+ color:var(--gn-paper);background:var(--gn-ink);color-scheme:dark;
+}
+.graphic-play[data-interaction=vote]{--gold:var(--gn-vote)}
+.graphic-play .game-hud,.graphic-play .ritual-dock,.graphic-play>.dock-footer,.graphic-play .play-scroll{background:var(--gn-ink);color:var(--gn-paper);border-color:var(--edge)}
+.graphic-play .game-hud{border-bottom:2px solid #74858b66}
+.graphic-play .game-brand small,.graphic-play .game-hud nav button,.graphic-play .chapter-marker small{color:var(--gn-muted)}
+.graphic-play .chapter-marker{color:var(--gn-paper)}
+.graphic-play .game-world{background:#263944}
+.graphic-play .world-haze{background:linear-gradient(#07111a44,transparent 30%,transparent 70%,#07111a66)}
+.graphic-play .world-title{z-index:1;text-shadow:0 2px 3px #07111a}
+.graphic-play .world-title h1{color:var(--gn-paper);font-weight:600;letter-spacing:1px}
+.graphic-play .world-title>span{color:var(--gn-muted)}
+.graphic-play .village-heart{color:var(--gn-muted)}
+.graphic-play .village-heart>.sig{filter:none}
+/* Number-led fate seals. Existing data-seat keys/order/whole-button handlers stay intact. */
+.graphic-play .fate-marker{width:68px;height:82px;min-width:44px;min-height:44px;justify-content:flex-start;gap:3px;opacity:1;filter:none;transition:opacity .16s ease}
+.graphic-play .fate-marker:before,.graphic-play .fate-marker .pawn{display:none}
+.graphic-play .fate-marker .seat-medal{width:48px;height:48px;margin:0;border:2px solid #a7b2b5;background:#101a23f5;color:var(--gn-paper);border-radius:48% 51% 46% 53%;box-shadow:1px 2px 0 #071016;font-size:27px;font-variant-numeric:tabular-nums;line-height:1}
+.graphic-play .fate-marker .seat-role{flex-shrink:0;font-size:11px;line-height:17px;max-width:78px;background:#101a23ed;border-radius:3px;padding:0 3px;color:var(--gn-paper);text-shadow:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.graphic-play .fate-marker .seat-caption{display:none}
+.graphic-play .fate-marker .seat-condition{display:none}
+.graphic-play .fate-marker .seat-out{display:block;font-size:10px;line-height:14px;background:#101a23;color:var(--gn-out)}
+.graphic-play .fate-marker .seat-actor{left:-4px;top:0;writing-mode:horizontal-tb;background:#101a23;border-color:var(--gn-line);color:var(--gn-paper);font-size:10px;line-height:13px;padding:1px 3px}
+.graphic-play .fate-marker .seat-selected{right:0;top:-4px;border:1px solid var(--gold);border-radius:50%;background:var(--gold);color:#151e25;box-shadow:none;font-size:13px;width:18px;height:18px}
+.graphic-play .fate-marker.acting .seat-medal{border-style:dashed;border-color:#d2d8d6}
+.graphic-play .fate-marker.chosen .seat-medal,.graphic-play .fate-marker.targeted .seat-medal{border:2px solid var(--gold);background:#20282c;color:var(--gold);box-shadow:0 0 0 2px #111a22}
+.graphic-play .fate-marker.ineligible{opacity:.55}
+.graphic-play .fate-marker.fallen .seat-medal{border-style:dashed;color:var(--gn-out);border-color:var(--gn-out);background:#1a2229}
+.graphic-play .fate-marker.fallen .seat-role{color:var(--gn-out)}
+.graphic-play .fate-marker .seat-medal i{color:var(--gn-paper);filter:none;font-size:17px;right:-10px;top:-9px}
+.graphic-play .fate-marker .vote-badge{background:#1b2c37;border-color:var(--gn-vote);color:var(--gn-vote);box-shadow:none;right:-7px;top:32px;font-size:10px}
+.graphic-play .spell-trace{z-index:0}
+.graphic-play .spell-trace path,.graphic-play .spell-trace path.venom{stroke:var(--gn-power);stroke-width:.4;filter:none;animation:none;opacity:.5;stroke-dasharray:1.2 1.1}
+.graphic-play .spell-trace path.active{opacity:1}
+/* Ink medium: brush edges belong to the surface, never across text or hit areas. */
+.graphic-play .ritual-dock{border-top:2px solid #927a514d;box-shadow:none;position:relative;isolation:isolate}
+.graphic-play .ritual-dock:before{content:'';position:absolute;left:12px;right:12px;top:3px;height:2px;background:linear-gradient(90deg,transparent,#bca36c66 14%,#bca36c33 44%,transparent 48%,#bca36c33 70%,transparent);pointer-events:none}
+.graphic-play .spoken-line{color:var(--gn-paper);font-weight:500}
+.graphic-play .call-label,.graphic-play .ritual-detail,.graphic-play .turn-detail summary,.graphic-play .turn-options summary,.graphic-play .secondary-actions button,.graphic-play .undo-action,.graphic-play .candidate-line,.graphic-play .vote-progress{color:var(--gn-muted)}
+.graphic-play .current-character{border:1px solid var(--gn-line);border-radius:var(--gn-radius);box-shadow:none;background:#101b24}
+.graphic-play .relic,.graphic-play .ritual-slot,.graphic-play .day-power{background:#1a252e;color:var(--gn-paper);border:1px solid #77889077;border-radius:var(--gn-radius);box-shadow:none;transform:none;min-height:var(--gn-touch)}
+.graphic-play .relic.on,.graphic-play .relic.poison.on,.graphic-play .ritual-slot.on{background:#282a29;border:2px solid var(--gn-power);color:var(--gn-power);box-shadow:none;transform:none}
+.graphic-play .relic.charged:after{content:'✓';width:16px;height:16px;display:grid;place-items:center;border-radius:50%;background:var(--gn-power);color:#121b22;box-shadow:none;font-size:11px;right:4px;bottom:4px}
+.graphic-play .relic small,.graphic-play .day-power small,.graphic-play .ritual-slot small,.graphic-play .ritual-slot span{color:var(--gn-muted);opacity:1}
+.graphic-play .ritual-slot strong,.graphic-play .merchant-target strong{color:var(--gn-power)}
+.graphic-play .day-power>.sig{color:var(--gn-power)}
+.graphic-play .day-power.danger{border-color:var(--gn-line)}
+.graphic-play .relic:disabled,.graphic-play button:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
+.graphic-play .commit-btn{min-height:48px;background:#e5b861;color:#151e25;border:2px solid #f0ce85;border-radius:var(--gn-radius);box-shadow:2px 3px 0 #060e14;white-space:normal;overflow-wrap:anywhere}
+.graphic-play .commit-btn:hover{background:#edc779}
+.graphic-play .commit-btn:disabled{background:#3b454d;color:#c4cbd0;border-color:#6c7b83;opacity:1;box-shadow:none}
+.graphic-play .abstain-btn{background:#1b2731;border-color:var(--gn-vote);color:var(--gn-vote);border-radius:var(--gn-radius);box-shadow:none}
+.graphic-play .choice-receipt{color:var(--gn-muted)}
+.graphic-play .choice-receipt>span{background:#1a252d;border:1px solid #72838c55;border-radius:4px}
+.graphic-play .choice-receipt b{color:var(--gold)}
+.graphic-play .receipt-empty>span{background:none;border-color:transparent}
+.graphic-play .revelation{background:#16232ef7;border:2px solid var(--gn-power);color:var(--gn-paper);border-radius:var(--gn-radius);box-shadow:3px 4px 0 #08131d;animation:none}
+.graphic-play .revelation small,.graphic-play .revelation span{color:var(--gn-muted)}
+.graphic-play .revelation strong,.graphic-play .revelation>.sig{color:var(--gn-power)}
+.graphic-play .game-toast{background:#17242e;border-color:var(--gn-error);color:var(--gn-paper);box-shadow:none;border-radius:var(--gn-radius)}
+.graphic-play .hunter-status{background:#23332e;border-color:#8daa99;color:#e0ece4}
+.graphic-play .hunter-status.blocked{background:#303036;border-color:#afb0b9;color:#e5e3eb}
+.graphic-play .dawn-results,.graphic-play .vote-results{color:var(--gn-paper);background:#15232df5;border-color:var(--gn-line);border-radius:var(--gn-radius);box-shadow:none}
+/* Voting is neutral even when wolves vote. No faction-dependent selectors. */
+.graphic-play[data-interaction=vote] .commit-btn{background:var(--gn-vote);border-color:#d2dfe4;color:#15212a}
+.graphic-play[data-interaction=vote] .commit-btn:disabled{background:#3b454d;border-color:#6c7b83;color:#c4cbd0}
+.graphic-play .vote-focus{color:var(--gn-paper);background:#172630ed;border-color:#92a6b0;border-radius:var(--gn-radius)}
+.graphic-play .vote-focus b,.graphic-play .vote-focus i,.graphic-play .vote-focus .vote-destination{color:var(--gn-vote)}
+.graphic-play .vote-focus>small,.graphic-play .vote-focus em{color:var(--gn-muted)}
+.graphic-play .voter{background:#1a2730;color:var(--gn-paper);border:1px solid #758993;border-radius:var(--gn-radius);box-shadow:none}
+.graphic-play .voter.on{border:2px solid var(--gn-vote);background:#30434f;color:var(--gn-vote);box-shadow:none}
+.graphic-play .voter.recorded{border-style:dashed}
+.graphic-play .voter span,.graphic-play .vote-receipt{color:var(--gn-muted)}
+.graphic-play .vote-receipt b{color:var(--gn-paper)}
+.graphic-play .vote-receipt button,.graphic-play .vote-meter strong{color:var(--gn-vote)}
+.graphic-play .vote-meter progress::-webkit-progress-value{background:var(--gn-vote)}
+.graphic-play .vote-meter progress::-moz-progress-bar{background:var(--gn-vote)}
+.graphic-play button:focus-visible{outline:2px solid #f1f0e3;outline-offset:3px}
+.graphic-play .ritual-intro>div,.graphic-play .day-power span{min-width:0}
+.graphic-play .spoken-line,.graphic-play .ritual-detail,.graphic-play .day-power strong{overflow-wrap:anywhere}
+@media(max-width:650px),(max-width:1000px) and (max-height:600px){
+ .graphic-play .fate-marker{width:44px;height:44px;gap:0}
+ .graphic-play .fate-marker .seat-medal{width:36px;height:36px;min-height:36px;font-size:23px}
+ .graphic-play .fate-marker .seat-role{position:absolute;top:38px;width:max-content;max-width:68px;height:16px;font-size:11px;line-height:16px;margin:0;pointer-events:none}
+ .graphic-play .fate-marker .seat-actor{left:-8px;top:-3px;font-size:9px;line-height:11px}
+ .graphic-play .fate-marker .seat-out{position:absolute;top:55px;line-height:14px;font-size:10px;white-space:nowrap;text-shadow:none;padding:0 3px}
+ .graphic-play .fate-marker .vote-badge{top:27px;right:-8px;font-size:10px;padding:2px 3px}
+ .graphic-play .fate-marker .seat-selected{top:-5px;right:-3px}
+ .graphic-play .world-title h1{font-size:17px}
+ .graphic-play .ritual-dock{flex:1 0 auto}
+ .graphic-play>.dock-footer .choice-receipt,.graphic-play>.dock-footer .vote-receipt{height:48px;min-height:48px;max-height:48px}
+ .graphic-play .relic{min-height:72px}
+ /* Keep every voter reachable without shrinking the 48px touch targets. */
+ .graphic-play .voting-dock{padding:10px 12px;flex:1 0 auto}
+ .graphic-play .voting-dock .voter-line{gap:6px;margin-bottom:0}
+ .graphic-play .voting-dock .voter-line:before{font-size:12px;line-height:18px}
+ .graphic-play .voting-dock .voter{min-height:48px;height:48px;padding:4px;gap:2px}
+ .graphic-play .voting-dock .voter b{font-size:18px;line-height:20px}
+ .graphic-play .voting-dock .voter span{font-size:12px;line-height:16px}
+ .graphic-play .voting-dock .turn-options{margin-top:6px}
+ .graphic-play[data-interaction=vote] .mobile-vote-focus .vote-focus{min-height:44px;padding:6px 8px;gap:6px}
+ .graphic-play[data-interaction=vote] .mobile-vote-focus .vote-focus>small{display:none}
+ .graphic-play[data-interaction=vote] .mobile-vote-focus .vote-focus>div{width:100%;justify-content:center;gap:12px}
+ .graphic-play[data-interaction=vote] .mobile-vote-focus .vote-focus b{font-size:22px}
+ .graphic-play[data-interaction=vote]>.dock-footer .ritual-commit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:8px}
+ .graphic-play[data-interaction=vote]>.dock-footer .abstain-btn{white-space:nowrap;padding:10px 8px;gap:6px;font-size:13px;letter-spacing:0}
+ .graphic-play[data-interaction=vote]>.dock-footer .commit-btn{padding:10px 8px;gap:6px}
+}
+@media(min-width:651px) and (max-width:1000px) and (max-height:600px){
+ .graphic-play .play-scroll{align-items:stretch;background:var(--gn-ink)}
+ .graphic-play .fate-marker{width:44px;height:44px}
+}
+/* Override legacy day selectors without changing their out-of-scope pages. */
+body[data-light] .graphic-play .game-hud,body[data-light] .graphic-play .ritual-dock,body[data-light] .graphic-play>.dock-footer,body[data-light] .graphic-play .play-scroll,body[data-light] .graphic-play{background:var(--gn-ink);color:var(--gn-paper)}
+body[data-light] .graphic-play .spoken-line,body[data-light] .graphic-play .world-title h1{color:var(--gn-paper)}
+body[data-light] .graphic-play .world-title>span,body[data-light] .graphic-play .call-label,body[data-light] .graphic-play .secondary-actions button{color:var(--gn-muted)}
+body[data-light] .graphic-play .relic,body[data-light] .graphic-play .day-power{background:#1a252e;color:var(--gn-paper);border-color:#77889077}
+body[data-light] .graphic-play .relic.on,body[data-light] .graphic-play .relic.poison.on{background:#282a29;color:var(--gn-power);border-color:var(--gn-power)}
+body[data-light] .graphic-play .voter{background:#1a2730;color:var(--gn-paper);border-color:#758993}
+body[data-light] .graphic-play .voter.on{background:#30434f;color:var(--gn-vote);border-color:var(--gn-vote)}
+body[data-light] .graphic-play .vote-focus{background:#172630ed;color:var(--gn-paper);border-color:#92a6b0}
+body[data-light] .graphic-play .vote-focus b,body[data-light] .graphic-play .vote-focus i,body[data-light] .graphic-play .vote-meter strong,body[data-light] .graphic-play .vote-receipt button{color:var(--gn-vote)}
+body[data-light] .graphic-play .vote-focus em,body[data-light] .graphic-play .vote-focus>small,body[data-light] .graphic-play .day-power small{color:var(--gn-muted)}
+body[data-light] .graphic-play .choice-receipt b{color:var(--gold)}
+body[data-light] .graphic-play>.dock-footer .ritual-commit{background:transparent}
+body[data-light] .graphic-play .fate-marker .seat-out{color:var(--gn-out);text-shadow:none}
+body[data-light] .graphic-play .abstain-btn{background:#1b2731;color:var(--gn-vote);border-color:var(--gn-vote)}
+/* Less frequent play states use the same ink medium, not legacy green/glow frames. */
+.graphic-play .reserve-slots select,.graphic-play .thief-card,.graphic-play .withdrawal-card,.graphic-play .vote-prior,.graphic-play .victory-forecast,.graphic-play .role-transition{
+ background:#1a252e;color:var(--gn-paper);border:1px solid var(--gn-line);border-radius:var(--gn-radius);box-shadow:none;
+}
+.graphic-play .reserve-slots label,.graphic-play .thief-card small,.graphic-play .withdrawal-card span,.graphic-play .role-transition small{color:var(--gn-muted)}
+.graphic-play .reserve-slots select{min-height:48px;padding:10px;font-size:16px}
+.graphic-play .thief-card.on{border:2px solid var(--gn-power);background:#282a29;box-shadow:none}
+.graphic-play .thief-card.on strong{color:var(--gn-power)}
+.graphic-play .thief-card.on small:before{content:'✓ ';color:var(--gn-power)}
+body[data-light] .graphic-play .withdrawal-card.on{background:#282a29;color:var(--gn-paper);border:2px solid var(--gn-power)}
+body[data-light] .graphic-play .withdrawal-card.retired{background:#202830;color:var(--gn-muted);border:1px dashed var(--gn-line)}
+.graphic-play .withdrawal-card.on strong{color:var(--gn-power)}
+.graphic-play .vote-prior{color:var(--gn-muted);border-color:#92a6b0}
+.graphic-play .victory-forecast{background:#17242e;padding:14px;border-color:var(--gn-power)}
+.graphic-play .victory-forecast strong,.graphic-play .victory-forecast summary{color:var(--gn-power)}
+.graphic-play .forecast-actions button,.graphic-play .result-reselect,.graphic-play .world-corner button{
+ min-height:48px;border:1px solid var(--gn-line);border-radius:var(--gn-radius);background:#1a252e;color:var(--gn-paper);padding:10px 12px;box-shadow:none;
+}
+.graphic-play .forecast-actions .primary,.graphic-play.veil-screen .primary{
+ min-height:48px;background:var(--gn-power);color:#151e25;border:2px solid #f0ce85;border-radius:var(--gn-radius);box-shadow:2px 3px 0 #060e14;
+}
+.graphic-play .result-reselect{border-color:var(--gn-power)}
+.graphic-play .role-transition{background:#16232ef5;animation:none}
+.graphic-play .role-transition strong{color:var(--gn-paper)}
+.graphic-play.role-intro{--gold:var(--gn-power);background:var(--gn-ink);border:1px solid var(--gn-line);border-radius:var(--gn-radius);box-shadow:3px 4px 0 #08131d}
+.graphic-play.role-intro .intro-art{background:#101a23}
+.graphic-play.role-intro .intro-art-shade{background:linear-gradient(transparent 60%,#131c24)}
+.graphic-play.role-intro .intro-copy h2,.graphic-play.role-intro .intro-call{color:var(--gn-paper)}
+.graphic-play.role-intro .intro-label,.graphic-play.role-intro .intro-note{color:var(--gn-muted)}
+.graphic-play.role-intro .intro-chapter{color:var(--gn-power)}
+.graphic-play.veil-screen{background:var(--gn-ink);color:var(--gn-paper)}
+.graphic-play.veil-screen p{color:var(--gn-muted)}
+.graphic-play.veil-screen>.sig{color:var(--gn-power)}
+.graphic-play .vote-meter progress,.graphic-play .vote-meter progress::-webkit-progress-bar{background:#78899133}
+.graphic-play .world-haze{background:linear-gradient(#07111a44,transparent 30%,transparent 70%,#07111a66)}
+body[data-light] .graphic-play .world-title{text-shadow:0 2px 3px #07111a}
+body[data-light] .graphic-play .village-heart{color:var(--gn-muted);text-shadow:0 1px 3px #07111a}
+@media(prefers-reduced-motion:reduce){.graphic-play .fate-marker,.graphic-play .seat-orbit,.graphic-play .game-hud,.graphic-play .ritual-dock,.graphic-play>.dock-footer{transition:none}}

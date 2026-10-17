@@ -1,8 +1,8 @@
 // Bounded adversarial search. Uses the live rules on isolated, synchronous copies.
 // No save/render, player information, resource or undo mutation escapes the sandbox.
-const FORECAST_POLICY='one-cycle-v2';
+const FORECAST_POLICY='one-cycle-v4';
 let forecastCache={key:'',value:null};
-function forecastKey(q=s){return JSON.stringify([FORECAST_POLICY,q.board,q.phase,q.n,q.step,q.players,q.rules,q.sheriff,q.elected,q.voteDone,q.voteRound,q.pk,q.votes,q.pending,q.badge,q.heal,q.poison,q.trade,q.revenge,q.guardLast,q.mech,q.stone,q.white,q.blood,q.dream,q.cupid,q.draft,q.winner,q.roleSystem?.deaths]);}
+function forecastKey(q=s){return JSON.stringify([FORECAST_POLICY,q.board,q.variant,q.phase,q.n,q.step,q.players,q.rules,q.sheriff,q.elected,q.voteDone,q.voteRound,q.pk,q.votes,q.pending,q.badge,q.heal,q.poison,q.trade,q.revenge,q.guardLast,q.mech,q.stone,q.white,q.blood,q.dream,q.cupid,q.draft,q.winner,q.roleSystem?.deaths]);}
 function forecastSandbox(q,fn){
  const live=s,liveMutate=mutate;try{s=clone(q);s.history=[];s.logs=[];if(s.roleSystem){s.roleSystem.events=[];s.roleSystem.information={};}mutate=fn=>fn();return fn();}finally{s=live;mutate=liveMutate;}
 }
@@ -106,7 +106,7 @@ function calculateVictoryForecast(q,{maxNodes=10000,maxMs=180}={}){
  function vote(state,targets,round){
   // Coalition ballots are one legal strategy. Opposing ballots include abstention
   // and split votes. PK candidates lose their vote exactly as in countVotes().
-  const voters=state.players.filter(p=>p.alive&&(round===1||!targets.includes(p.id)));
+  const voters=state.players.filter(p=>p.alive&&!(state.board==='classic'&&p.idiotRevealed)&&(round===1||!targets.includes(p.id)));
   const pack=voters.filter(RoleSystem.isWolf),others=voters.filter(p=>!RoleSystem.isWolf(p));
   const options=[0,...targets];
   return any(options,packTarget=>{

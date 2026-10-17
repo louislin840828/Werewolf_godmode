@@ -64,6 +64,7 @@ const RoleSystem=(()=>{
    else if(id==='learn')add(id,m.learned||d.learn?0:1);
    else if(id==='swap')add(id,q.cupid?.pick>=0?0:1,1);
    else if(id==='link')add(id,q.cupid?.lovers.length===2?0:1,1);
+   else if(id==='reveal'&&q.board==='classic')add(id,p.idiotRevealed?0:1);
    else if(id==='hunt')add(id,null,2);
    else if(id==='knife'&&['機械狼','石像鬼'].includes(p.role))add(id,null,q.n,{enabled:p.alive&&independentKnife(q),requires:'ordinaryWolvesGoneBeforeNight'});
    else if(id==='knife'&&p.role==='狼弟')add(id,null,q.revenge?q.revenge+1:Infinity,{enabled:p.alive&&!!q.revenge&&q.n>q.revenge});
@@ -94,7 +95,7 @@ const RoleSystem=(()=>{
   const r=p.role==='狼弟'?q.revenge&&q.n===q.revenge?'revenge':q.revenge&&q.n>q.revenge?'joined':'waiting':null;
   const learned=p.role==='機械狼'?(q.mech?.learned||(q.draft?.learn?{role:player(q,q.draft.learn)?.role,night:q.n,id:q.draft.learn}:null)):null;
   return {id:p.id,registered,originalRole:original,currentRole:p.role,originalAlignment:base,alignment:third?'第三方':base,edge:!registered?'unknown':isWolf(p)?'wolf':p.role==='平民'?'villager':gods.has(p.role)?'god':'other',alive:p.alive,life:delayed?'delayedDeath':p.alive?'alive':'dead',death,
-   canSpeak:p.alive||!!q.cupid?.speakers.includes(p.id),canVote:p.alive&&!(elect&&excluded.includes(p.id))&&!(q.phase==='day'&&q.pk?.includes(p.id)),canAct:p.alive&&registered&&!effects(q,p.id).some(e=>['fear','seal'].includes(e.kind)),
+   canSpeak:p.alive||!!q.cupid?.speakers.includes(p.id),canVote:p.alive&&!(q.board==='classic'&&p.idiotRevealed)&&!(elect&&excluded.includes(p.id))&&!(q.phase==='day'&&q.pk?.includes(p.id)),canAct:p.alive&&registered&&!effects(q,p.id).some(e=>['fear','seal'].includes(e.kind)),
    pendingAbilities:(q.pending||[]).filter(h=>h.id===p.id).map(h=>({id:h.type==='whiteTake'?'take':'shoot',remaining:h.guns})),skills:skills(q,p),effects:effects(q,p.id),relationships:relationships(q,p.id),progression:r,learned,inspectionRole:p.role==='機械狼'?(learned?.role||q.rules.rawMech||'機械狼'):p.role,lover:!!q.cupid?.lovers.includes(p.id),originalThief:q.cupid?.thiefId===p.id,
    knowledge:(q.roleSystem?.information?.[p.id]||[]).map(clone)};
  }

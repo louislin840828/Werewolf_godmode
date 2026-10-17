@@ -25,3 +25,22 @@ const code=fs.readFileSync('src/game.js','utf8'),a=code.indexOf('render=function
 console.log('PASS: explicit nomination/speech/withdraw/vote/PK flow, round-one exclusion/round-two restored withdrawal votes, two ties lose badge, candidate preservation across nights on seven boards, second explosion during withdrawal or partially recorded vote, next-morning badge loss, special-role explosion effects, death filtering, single-bomb option, reload/undo, and production controls.');
 run('render=()=>hydrateGame()');reset();nominate();run('confirmGame();setChoice(11);confirmGame()');assert.equal(run('sheriffForfeit()'),'vote');explode(3);assert.equal(run('s.boom'),1);assert.equal(run('s.election.lossPending'),true);nightDone();assert.equal(run('gameModel().kind'),'badgeLost');
 console.log('PASS: an explosion after completed speeches forfeits the remaining vote stage without replaying speeches.');
+
+// Consolidated sheriff result windows: elected, unopposed, badge lost and PK prior context.
+run('render=()=>{hydrateGame()}');reset();nominate();run('confirmGame();setChoice(11);confirmGame()');
+run('sheriffVoters().forEach((p,i)=>s.votes[p.id]=i<5?9:10);countVotes(true)');
+assert.equal(run('s.phase'),'dawn');assert.equal(run('s.sheriff'),9);assert.equal(run('s.voteResult.elect'),true);assert.equal(run('s.voteResult.outcome'),'elected');assert.equal(run('s.voteResult.target'),9);assert.equal(run('s.voteResult.n'),run('s.n'));
+assert(run('voteResultMarkup()').includes('警長結果'));assert(run('voteResultMarkup()').includes('9 號當選警長'));assert(run('voteResultMarkup()').includes('9 號 5 票'));
+run('confirmGame();confirmGame()');assert.equal(run('s.phase'),'day');assert.equal(run('voteResultMarkup()'),'');
+run('mutate(newNight);s.step=nightSteps().indexOf("review");s.draft={};nextNight();hydrateGame()');assert.equal(run('s.phase'),'dawn');assert.equal(run('s.n'),2);assert.equal(run('voteResultMarkup()'),'');
+reset();nominate();run('confirmGame();setChoice(10);setChoice(11);confirmGame();confirmGame()');
+assert.equal(run('s.voteResult.outcome'),'unopposed');assert.equal(run('s.voteResult.target'),9);assert(run('voteResultMarkup()').includes('唯一候選人'));assert(run('voteResultMarkup()').includes('9 號當選警長'));
+reset();run('confirmGame()');assert.equal(run('s.phase'),'dawn');assert.equal(run('s.voteResult.outcome'),'lost');assert(run('voteResultMarkup()').includes('警徽流失'));assert(run('voteResultMarkup()').includes('無人上警或全部退水'));
+reset();nominate();run('confirmGame();setChoice(11);confirmGame()');
+run('sheriffVoters().forEach((p,i)=>s.votes[p.id]=i<4?9:i<8?10:0);countVotes(true)');
+assert.equal(run('s.voteResult.outcome'),'pk');assert.equal(run('gameModel().kind'),'pkSpeech');
+assert(run('votePriorRoundMarkup()').includes('平票'));assert(run('votePriorRoundMarkup()').includes('9 號 4 票'));assert(run('sheriffTray(gameModel())').includes('上一輪警長投票'));
+run('confirmGame()');assert.equal(run('gameModel().kind'),'vote');assert(run('voteTrayMarkup(gameModel())').includes('上一輪警長投票'));
+run('sheriffVoters().forEach((p,i)=>s.votes[p.id]=i<5?9:10);countVotes(true)');
+assert.equal(run('s.voteResult.outcome'),'lost');assert(run('voteResultMarkup()').includes('兩輪均平票'));assert(run('voteResultMarkup()').includes('警徽流失'));
+console.log('PASS: sheriff result windows for elected/unopposed/lost conclusions, PK prior-round context and per-day freshness.');

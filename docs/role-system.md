@@ -1,6 +1,6 @@
 # 角色狀態系統 v1
 
-七個固定板子共用 RoleSystem 狀態規格。既有板子的原始欄位保留為寫入來源，
+八個固定板子共用 RoleSystem 狀態規格。既有板子的原始欄位保留為寫入來源，
 透過規則轉接層計算共用狀態，避免同一個資源存在兩份可獨立修改的資料。
 
 ## 共用狀態
@@ -21,6 +21,10 @@
 | 資訊 | inspectionRole / knowledge | 當下查驗回報與當時已確認告知的資訊 |
 
 ## 共用判定
+
+classic 白痴的 `players[].idiotRevealed` 是翻牌／失去票權的權威欄位；未翻牌時可省略。
+翻牌不改 alive、不建立 death，`reveal` 技能剩餘次數改為 0；票權與屠邊分別計算。
+欄位隨 localStorage 與撤回快照保存，結構事件記入 roleStateChanged。cupid 的死亡翻牌家規仍使用原有 speakers 欄位。
 
 傷害結算保留多個因素。中毒、殉情、連續攝夢、攝夢牽連、自爆均禁止死亡開槍；
 夢魘恐懼限制當夜槍，不能延伸成翌日放逐禁槍。白狼王帶人是不同能力，
@@ -56,5 +60,5 @@
 GameEngine.read / role / roles / events 回傳不可直接修改的副本。
 GameEngine.register / choose / advance / settle 等操作由控制層提交並驗證。
 畫面、CSS、村莊繪圖與原生手冊均獨立於規則檔案；架構檢查禁止畫面存取 live s
-或直接執行底層死亡、勝負與階段結算。既有七板仍使用個別流程 adapter，
+或直接執行底層死亡、勝負與階段結算。八板仍使用個別流程 adapter，
 尚未加入自訂人數、任意角色組合或尚未定義的跨板技能衝突。

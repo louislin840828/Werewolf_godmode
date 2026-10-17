@@ -13,9 +13,9 @@ checkpoint=function(){
  ensureRoleSystem();const meta={...s.roleSystem,events:[],information:{},snapshotCursor:s.roleSystem.nextEventId-1};
  const x=clone({...s,history:undefined,roleSystem:meta});s.history.push(x);if(s.history.length>100)s.history.shift();
 };
-function ensureRoleSystem(){ensureMech();if(isStone())ensureStone();if(isWhiteKnight())ensureWhite();if(isBloodMoon())ensureBlood();if(isDream())ensureDream();if(isCupid())ensureCupid();if(s.phase==='election')ensureElection();RoleSystem.migrate(s);}
+function ensureRoleSystem(){s.variant??='standard12';ensureMech();if(isStone())ensureStone();if(isWhiteKnight())ensureWhite();if(isBloodMoon())ensureBlood();if(isDream())ensureDream();if(isCupid())ensureCupid();if(s.phase==='election')ensureElection();RoleSystem.migrate(s);}
 function pushRoleEvent(type,data){RoleSystem.event(s,type,data);}
-function roleResources(q){return {heal:q.heal,poison:q.poison,trade:q.trade,revenge:q.revenge,guardLast:q.guardLast,mechanical:q.mech,white:q.white,blood:q.blood,dream:q.dream,cupid:q.cupid,election:q.election};}
+function roleResources(q){return {heal:q.heal,poison:q.poison,trade:q.trade,revenge:q.revenge,guardLast:q.guardLast,mechanical:q.mech,white:q.white,blood:q.blood,dream:q.dream,cupid:q.cupid,idiotRevealed:q.players.filter(p=>p.idiotRevealed).map(p=>p.id),election:q.election};}
 function recordRoleChanges(before){
  for(const p of s.players){const old=before.players.find(x=>x.id===p.id);if(!old)continue;
   if(old.role!==p.role){if(p.role==='未確認')delete s.roleSystem.identities[p.id];else if(!s.roleSystem.identities[p.id])s.roleSystem.identities[p.id]=p.role;pushRoleEvent(old.role==='未確認'?'identityConfirmed':'roleChanged',{player:p.id,from:old.role,to:p.role});}
@@ -79,12 +79,13 @@ function reconcileVictoryOnLoad(){
 ensureRoleSystem();pruneLegacyDeathSkills();reconcileVictoryOnLoad();
 // Stable boundary used by controllers; visual modules only receive frozen data.
 const GameEngine=Object.freeze({
+ configure:(board,variant)=>setBoardConfiguration(board,variant),
  read:viewState,
  role:id=>deepFreezeRoleView(clone(RoleSystem.state(s,id))),
  roles:()=>deepFreezeRoleView(clone(s.players.map(p=>RoleSystem.state(s,p.id)))),
  events:()=>deepFreezeRoleView(clone(s.roleSystem.events)),
  choose:(field,value,options={})=>commitDraftChoice(field,value,options),
- register:ids=>{const rs=currentReg();if(!rs||!Array.isArray(ids)||ids.length!==rs.length||ids.some(id=>!Number.isInteger(id)||!player(id)?.alive)||new Set(ids).size!==ids.length)return;const k=nightSteps()[s.step];if(isCupid())return cupidRegister(k,ids);if(isDream())return dreamRegister(k,ids);if(isBloodMoon())return bloodRegister(k,ids);if(isWhiteKnight())return whiteRegister(k,ids);if(isStone())return stoneRegister(k,ids);if(isMech())return mRegister(k,ids);return registerRoles(ids);},
+ register:ids=>{const rs=currentReg();if(!rs||!Array.isArray(ids)||ids.length!==rs.length||ids.some(id=>!Number.isInteger(id)||!player(id)?.alive)||new Set(ids).size!==ids.length)return;const k=nightSteps()[s.step];if(isClassic())return classicRegister(k,ids);if(isCupid())return cupidRegister(k,ids);if(isDream())return dreamRegister(k,ids);if(isBloodMoon())return bloodRegister(k,ids);if(isWhiteKnight())return whiteRegister(k,ids);if(isStone())return stoneRegister(k,ids);if(isMech())return mRegister(k,ids);return registerRoles(ids);},
  advance:()=>nextNight(),settle:()=>settle(),back:()=>backNight(),undo:()=>undo(),
  recordInformation:(recipients,kind,target,result)=>mutate(()=>{for(const recipient of recipients)pushRoleEvent('information',{recipient,kind,target,result});}),
  clearFlowNotice:()=>{if(s.flowNotice){delete s.flowNotice;save();}},

@@ -27,6 +27,19 @@ A layout, color, portrait, animation, popup or mobile UI request should be imple
 in presentation files. Changing a controller is acceptable only for the requested
 interaction; keep its game-rule validation contract intact. Do not silently adjust rules.
 
+## Visual design contract
+
+Detailed tokens, component states and phase-one scope: [docs/visual-design.md](docs/visual-design.md).
+
+- 真人上帝的手機輔助器：全知視角觀察共享中古城市；主持節奏與最終決定留給上帝，操作後能迅速抬頭回到現場。
+- 粗獷圖像小說：不規則墨線、乾筆陰影、克制印刷質感與色塊；避免擬真 3D、RPG 金屬框、滿版發光與密集裝飾。沿用可替換角色素材，不重生、不降品質。
+- 金色用於技能／目標／連線／確認，含狼人技能；緋紅僅表達狼人美術力量。投票選取為中立灰藍／石色，不依陣營變色。出局、停用、錯誤有獨立語意並附文字／形狀，不只靠顏色。
+- 日夜共用主要構圖、固定環繞座位與操作結構；白天是天亮城市，不強迫面板亮底。短內容填滿剩餘空間。
+- 玩家是獨立命運標記，不綁房屋；座號優先、整個標記可點、不因死亡／行動重排。背景安靜，不干擾文字或多對一／一對多技能線。
+- 操作媒介採墨色底與少量筆線；選取摘要保留固定空間，主確認不位移。保留取消／修改／棄票／撤回／警徽等既有入口，不增加拖曳、長按、蓄力或動畫等待。
+- 動態只解釋變化、不阻擋操作，支援 reduced-motion；保留節點與圖片準備快取，不逐局清除重載。
+- UI 不得改變底層規則、已確認家規、controller 驗證或存檔契約。先交付夜間行動／白天討論／投票供確認，再延伸其他頁面；未有真實瀏覽器验收不得宣稱完成 RWD。
+
 ## Required checks
 
 For a complete regression baseline run `npm test` (or `node test-all.cjs`). This

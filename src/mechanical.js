@@ -3,7 +3,7 @@ const MECH_ROLES=['機械狼','狼人','狼人','狼人','通靈師','女巫','�
 const base={nightSteps,nextNight,backNight,outcomes,kill,start};
 const isMech=()=>s.board==='mechanical';
 function ensureMech(){s.mech??={learned:null,poisonUsed:false,shieldUsed:false,doubleUsed:false,gunUsed:false,lastShield:0};s.guardLast??=0;for(const [k,v] of Object.entries({shieldOnce:true,rawMech:'機械狼',guardSaveDies:true,mechBoom:false,doubleShieldPierce:true}))if(s.rules[k]===undefined)s.rules[k]=v;}
-function changeBoard(value){if(s.phase!=='setup')return;mutate(()=>{s.board=value;s.players.forEach(p=>p.role='未確認');ensureMech()})}
+function changeBoard(value){return setBoardConfiguration(value,'standard12');}
 start=function(){if(!isMech())return base.start();mutate(()=>{ensureMech();s.players.forEach(p=>p.role='未確認');s.mechanicalFlowVersion=2;s.phase='night';log('模板：機械狼／通靈師；各角色睜眼時認牌與行動，學習結果最後告知');log('規則：'+rulesText())})};
 const MREG={regMech:['機械狼'],regWolves:['狼人','狼人','狼人'],regSpirit:['通靈師'],regWitch:['女巫'],regHunter:['獵人'],regGuard:['守衛']};
 const MTITLE={regMech:'機械狼認牌',regWolves:'普通狼人認牌',regSpirit:'通靈師認牌',regWitch:'女巫認牌',regHunter:'獵人認牌',regGuard:'守衛認牌',mechanical:'機械狼獨立行動',guard:'守衛',wolves:'普通狼隊',witch:'女巫',spirit:'通靈師',hunter:'獵人開槍狀態',mechGun:'機械狼開槍狀態',mechResult:'機械狼 · 學習結果',review:'夜間結算確認'};
