@@ -3,9 +3,9 @@
 手機優先的狼人殺主持工具，提供 12 人警長局及指定板子的固定 10 人變體。支援八個固定板子、首夜逐步認牌、
 技能目標、夜間結算、警長／放逐投票、撤回、玩家詳情與中文復盤紀錄。
 
-專案版本：**0.48.1-beta.1**（以 package.json 為準）。選板右上角為 Beta 標籤；全介面採墨色圖像小說呈現，使用新版 24 張角色圖，提供唯讀全角色圖鑑與站內主持視窗。Hidden 模式已移除。對局存檔 key／schema 不變，文字復盤不是可還原存檔。
+專案版本：**0.49.1-beta.1**（以 package.json 為準）。選板右上角為 Beta 標籤；全介面採墨色圖像小說呈現，使用新版 24 張角色圖，提供唯讀全角色圖鑑與站內主持視窗。手機遊玩頂欄收為右上角浮動選單，技能優先、保存說明置於捲動內容末端，確認／棄票與撤回仍常駐。角色介紹彈窗完整呈現 1:1 圖片，進入按鈕常駐。Hidden 模式已移除。對局存檔 key／schema 不變，文字復盤不是可還原存檔。
 
-當前工作留在本機 `visual/interface-consistency`；本機 main 停留 0.45，後續未合併、未推送或部署。Chrome 已有部分多尺寸／互動檢查，**手機實機與八板完整對局仍未完成驗收**。歷史變更見 [CHANGELOG.md](CHANGELOG.md)，文件用途與稽核見 [docs/documentation-review.md](docs/documentation-review.md)。
+0.49.1 已由使用者確認，授權合併並推送 `main`，由既有 Hosting 的 Git 整合自動部署；線上部署結果需另外核對。後續開發仍使用 `visual/interface-consistency`。Chrome 已有部分多尺寸／互動檢查，**手機實機與八板完整對局仍未完成驗收**。歷史變更見 [CHANGELOG.md](CHANGELOG.md)，文件用途與稽核見 [docs/documentation-review.md](docs/documentation-review.md)。
 
 規則與預測範圍見 [勝負與綁票預測](docs/victory-and-forecast.md)；接手入口為 [docs/agent-handoff.md](docs/agent-handoff.md)。
 

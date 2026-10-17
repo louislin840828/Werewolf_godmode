@@ -1,6 +1,6 @@
 # Aurawolf｜全知之人：保存與開發交接
 
-性質：當前保存／搬站契約。現行版本以 package.json 為準（0.48.1-beta.1）；Site 第 33 版及 0.30.3 ZIP 僅為歷史來源，manifest 已封存於 history/handoff-0.30.3.json。本輪只提交本機，不部署。
+性質：當前保存／搬站契約。現行版本以 package.json 為準（0.49.1-beta.1）；Site 第 33 版及 0.30.3 ZIP 僅為歷史來源，manifest 已封存於 history/handoff-0.30.3.json。本輪只提交本機，不部署。
 
 ## 本階段範圍
 
@@ -63,7 +63,7 @@ HTTP 快取由瀏覽器與 Hosting 回應控制；`portraitPreload`、`portraitN
 
 ## 當前驗證基線
 
-當前全套 26 支，Node v24.22.0。早期 0.30 基線為 17 支，僅作歷史參考。
+當前全套 27 支，Node v24.22.0。早期 0.30 基線為 17 支，僅作歷史參考。
 `npm test` 在乾淨暫存目錄建置，檢查目前 JavaScript 與 24 張正式新版角色圖，再執行全套測試。
 `node scripts/dev-server.cjs --check` 驗證本機建置／首頁路徑，不啟動監聽埠。
 測試修復原因與範圍見 testing.md；手機完整對局驗收仍未完成。

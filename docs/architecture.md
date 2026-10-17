@@ -32,6 +32,10 @@
 
 `interface-theme.css` 在 graphic-play 之後載入，使用 ui-* 共用 token；對齊選板／抽屜／站內彈窗，不改遊玩座位、Canvas 或投票確認。`host-dialog.view.js` 提供原生 dialog top layer 與焦點／取消服務，無權威狀態存取。app.js 的 host intent adapter 在等待時不寫 state，以完整狀態比對拒絕過期 continuation；無 dialog 能力的 VM 使用同步原生 adapter。配置與重設支援完成回呼，界面只在成功後開局／清除抽屜。既有驗證與結算閉包不變。詳見 [interface-consistency.md](interface-consistency.md)。
 
+## 0.49 手機操作優先
+
+game.js 的原生 details／summary 主持選單只保存 DOM disclosure 狀態，視窗切換時重設手機收合／桌面展開；抽屜關閉返回手機選單焦點，不改 controller 或存檔。mobile.css 使頂欄浮在右上、不占 grid 列，保存說明放 play-scroll 末端、短內容靠底；技能控制以 CSS order 先於口令呈現，摘要／確認／棄票／撤回仍在独立常駐底欄。graphic-play.css 小螢幕城市至少 320px，44px 座位與共用線座標維持。Chrome 局部驗證與未驗收範圍見 testing.md／mobile-acceptance.md。
+
 ## 0.48.1 維護清理
 
 選板 header Beta 為非互動標籤；已移除 gameNote／MREG／只寫不讀的 presentationLight。高風險待清理項目見 dead-code-audit.md。舊 app.view.js render 仍供部分 standalone VM loader，正式主入口為 game.js render。

@@ -1,0 +1,26 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),{createGameTest}=require('./test-support.cjs');
+const {run}=createGameTest();
+const game=fs.readFileSync('src/game.js','utf8'),mobile=fs.readFileSync('src/mobile.css','utf8'),graphic=fs.readFileSync('src/graphic-play.css','utf8');
+assert(game.includes('id="hud-menu" class="hud-menu"'));
+assert(game.includes('aria-label="主持工具選單"'));
+assert(game.includes('onkeydown="hudMenuKey(event)"'));
+assert(game.includes('<footer class="play-note">${saveNoticeMarkup()}</footer></div><div class="dock-footer">'));
+assert(game.includes('class="desktop-save"'));
+assert(game.includes('class="save-warning" role="status"'));
+assert(mobile.includes('grid-template-rows:minmax(0,1fr) auto'));
+assert(mobile.includes('.game-shell .game-hud{position:fixed'));
+assert(mobile.includes('.dock-body>.ritual-controls{order:-1}'));
+assert(mobile.includes('.play-note{display:block;flex:none;margin-top:auto;'));
+assert(graphic.includes('height:clamp(320px,44svh,410px);min-height:320px'));
+assert(game.includes('class="intro-scroll"'));
+assert(game.includes('<footer class="intro-footer"><button id="begin-role"'));
+assert(!game.includes('class="intro-art-shade"'));
+assert(graphic.includes('aspect-ratio:1 / 1;object-fit:contain;object-position:center'));
+assert(graphic.includes('.role-intro .intro-art.duet{grid-template-columns:repeat(2,minmax(0,1fr))}'));
+assert(graphic.includes('.role-intro .intro-footer{flex:none;'));
+// Presentation-only menu transitions must not write game state or skill selection.
+const before=run('JSON.stringify(viewState())');
+run(`document.getElementById=()=>({dataset:{},open:false});mountHudMenu();closeHudMenu();hudMenuKey({key:'Escape',preventDefault(){}})`);
+assert.equal(run('JSON.stringify(viewState())'),before);
+assert(run('saveNoticeMarkup()').includes('進度已自動保留'));
+console.log('PASS: native HUD disclosure, scroll-end save notice, persistent confirmation/undo, skill-first phone layout and menu state isolation. Static/VM only; browser QA separate.');
