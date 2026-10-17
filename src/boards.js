@@ -56,4 +56,4 @@ function logText(entry){
  try{const r=JSON.parse(match[1]);if(r&&typeof r==='object'&&!Array.isArray(r))return '規則：'+rulesText(r);}catch(e){}
  return '規則：舊紀錄格式不完整，請參照本局上帝手冊。';
 }
-function exportText(){return ['月夜議會｜狼人殺復盤','模板：'+boardLabel(),...s.players.map(p=>`${who(p.id)}：${p.role}`),'規則：'+rulesText(),'',...s.logs.map(l=>`[${l.period} ${l.at}] ${logText(l)}`)].join('\n');}
+function exportText(){return ['Aurawolf｜全知之人 · 狼人殺復盤','模板：'+boardLabel(),...s.players.map(p=>`${who(p.id)}：${p.role}`),'規則：'+rulesText(),'',...s.logs.map(l=>`[${l.period} ${l.at}] ${logText(l)}`)].join('\n');}

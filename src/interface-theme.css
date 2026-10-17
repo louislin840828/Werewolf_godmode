@@ -1,4 +1,10 @@
-/* Shared 0.45 ink language for all host surfaces. Layout and engine contracts stay intact. */
+/* Shared ink language for all host surfaces. Layout and engine contracts stay intact. */
+.graphic-play .game-brand{letter-spacing:.5px;font-size:20px;min-width:0}
+.graphic-play .game-brand small{font-size:10px;letter-spacing:0;white-space:nowrap}
+.graphic-play .game-hud nav .sig{width:22px;height:22px;overflow:visible}
+@media(max-width:650px){.graphic-play .game-brand{font-size:17px;gap:6px}.graphic-play .game-brand>.sig{width:22px;height:22px}.graphic-play .game-brand small{font-size:9px}.graphic-play .chapter-marker{display:none}}
+@media(max-width:370px){.graphic-play .game-brand small{font-size:8px}.graphic-play .game-hud nav button{min-width:44px}}
+
 :root{
  --ui-ink:#131c24;--ui-paper:#f0eee3;--ui-muted:#bac3c7;--ui-power:#e5b861;--ui-line:#788991;
  --ui-error:#f0bba4;--ui-disabled:#818a91;--ui-radius:9px 6px 11px 5px;
@@ -9,7 +15,7 @@ body{background:var(--ui-ink);color:var(--ui-paper)}
  --ink:var(--ui-paper);--soft:var(--ui-muted);--gold:var(--ui-power);--edge:#78899155;--panel:var(--ui-ink);--glass:#131c24f5;
  color:var(--ui-paper);background-color:var(--ui-ink);color-scheme:dark;
 }
-:is(.board-gallery,.gallery-dialog,.game-drawer,.graphic-play.role-intro,.graphic-play.veil-screen){
+:is(.board-gallery,.gallery-dialog,.game-drawer,.graphic-play.role-intro){
  background-image:linear-gradient(#101a2266,#101a2266),var(--ui-material);background-size:auto,512px 512px;
 }
 .board-gallery .gallery-header,.board-gallery .gallery-footer,.game-drawer .drawer-head{

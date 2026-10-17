@@ -1,5 +1,7 @@
 # 視覺素材來源與替換
 
+0.48：使用者指定的 24 張新版角色 WebP 已原位元組同步為 `src/assets/roles/` 正式來源，取代舊圖；建置複製到 dist，不在 dist 修改。未降畫質，未重生素材。詳見 [aurawolf-brand.md](aurawolf-brand.md)。
+
 0.45 使用本次對話的內建 imagegen 產生／編輯，不使用外部素材庫，不更換24張角色圖。
 
 | 檔案（src/assets/ 下） | 尺寸 | 用途 |

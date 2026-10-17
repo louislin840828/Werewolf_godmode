@@ -1,6 +1,6 @@
 # 自動測試基線
 
-目前 0.47.0-beta.1 為 **25 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
+目前 0.48.0-beta.1 為 **26 支測試**；本次改版前 0.43.0 基線 20 支、0 失敗。0.29 的 14 支原有測試完成修復並加入
 tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以目前確認家規為準。
 
 ## 執行
@@ -16,6 +16,10 @@ tooling-check，0.30 再加入 victory-check／forecast-check。規則更新以�
 
 `node role-system-check.cjs` 可單獨檢查共用角色規則與呈現層邊界。
 部分個別測試需要建置後的圖片；完整驗證以統一入口為準。
+
+## 0.48 品牌／素材與隱藏清理
+
+新增 branding-check：品牌標題／匯出、hidden 模式與專用樣式移除、不同 keyed SVG 與正式角色素材建置位元組一致；保持所有既有規則及 UI 斷言。Chrome 多尺寸 header 與圖示接入範圍見 [aurawolf-brand.md](aurawolf-brand.md)。
 
 ## 0.47 角色圖鑑
 

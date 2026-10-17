@@ -177,7 +177,7 @@ body[data-light] .graphic-play .withdrawal-card.retired{background:#202830;color
 .graphic-play .forecast-actions button,.graphic-play .result-reselect,.graphic-play .world-corner button{
  min-height:48px;border:1px solid var(--gn-line);border-radius:var(--gn-radius);background:#1a252e;color:var(--gn-paper);padding:10px 12px;box-shadow:none;
 }
-.graphic-play .forecast-actions .primary,.graphic-play.veil-screen .primary{
+.graphic-play .forecast-actions .primary{
  min-height:48px;background:var(--gn-power);color:#151e25;border:2px solid #f0ce85;border-radius:var(--gn-radius);box-shadow:2px 3px 0 #060e14;
 }
 .graphic-play .result-reselect{border-color:var(--gn-power)}
@@ -192,9 +192,6 @@ body[data-scene-motion=still] .graphic-play .role-transition{animation:none}
 .graphic-play.role-intro .intro-copy h2,.graphic-play.role-intro .intro-call{color:var(--gn-paper)}
 .graphic-play.role-intro .intro-label,.graphic-play.role-intro .intro-note{color:var(--gn-muted)}
 .graphic-play.role-intro .intro-chapter{color:var(--gn-power)}
-.graphic-play.veil-screen{background:var(--gn-ink);color:var(--gn-paper)}
-.graphic-play.veil-screen p{color:var(--gn-muted)}
-.graphic-play.veil-screen>.sig{color:var(--gn-power)}
 .graphic-play .vote-meter progress,.graphic-play .vote-meter progress::-webkit-progress-bar{background:#78899133}
 .graphic-play .world-haze{background:linear-gradient(#07111a44,transparent 30%,transparent 70%,#07111a66)}
 body[data-light] .graphic-play .world-title{text-shadow:0 2px 3px #07111a}

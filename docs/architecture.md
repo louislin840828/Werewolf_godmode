@@ -1,4 +1,4 @@
-# 架構與修改指南
+# Aurawolf｜全知之人：架構與修改指南
 
 ## 執行方式
 
@@ -32,6 +32,10 @@
 ## 0.46 全介面一致性
 
 `interface-theme.css` 在 graphic-play 之後載入，使用 ui-* 共用 token；對齊選板／抽屜／站內彈窗，不改遊玩座位、Canvas 或投票確認。`host-dialog.view.js` 提供原生 dialog top layer 與焦點／取消服務，無權威狀態存取。app.js 的 host intent adapter 在等待時不寫 state，以完整狀態比對拒絕過期 continuation；無 dialog 能力的 VM 使用同步原生 adapter。配置與重設支援完成回呼，界面只在成功後開局／清除抽屜。既有驗證與結算閉包不變。詳見 [interface-consistency.md](interface-consistency.md)。
+
+## 0.48 品牌／素材與清理
+
+舊 hidden 模式及 presentationHidden 完全移除；一般 hidden／aria-hidden 不變。新版 24 張圖以 src/assets/roles 為正式來源。SVG data-icon 為 DOM 重用鍵，metadata／介面／復盤使用新品牌；存檔 key 不變。詳見 [aurawolf-brand.md](aurawolf-brand.md)。
 
 ## 0.47 角色圖鑑
 

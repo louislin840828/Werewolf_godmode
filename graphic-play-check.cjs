@@ -17,7 +17,7 @@ const calls=[];const ctx=new Proxy({createLinearGradient:()=>({addColorStop(){}}
 const vm=require('node:vm'),c=vm.createContext({});vm.runInContext(fs.readFileSync('src/city-render.js','utf8'),c);c.ctx=ctx;
 vm.runInContext("drawGraphicCity(ctx,390,330,'night')",c);const first=JSON.stringify(calls);calls.length=0;vm.runInContext("drawGraphicCity(ctx,390,330,'night')",c);assert.equal(JSON.stringify(calls),first);calls.length=0;vm.runInContext("drawGraphicCity(ctx,390,330,'day')",c);assert(calls.length>0);assert.notEqual(JSON.stringify(calls),first);
 const css=fs.readFileSync('src/graphic-play.css','utf8');assert(!/:root|body\s*\{|html\s*\{/.test(css));assert(css.includes('.graphic-play[data-interaction=vote]'));assert(css.includes('--gn-power:#e5b861'));assert(css.includes('--gn-vote:#b5c9d3'));assert(css.includes('prefers-reduced-motion'));assert(css.includes('path.venom{stroke:var(--gn-power)'));assert(css.includes('height:48px;min-height:48px;max-height:48px'));
-for(const selector of ['.reserve-slots select','.thief-card','.withdrawal-card','.vote-prior','.victory-forecast','.role-transition','.forecast-actions .primary','.graphic-play.role-intro','.graphic-play.veil-screen'])assert(css.includes(selector),selector);
+for(const selector of ['.reserve-slots select','.thief-card','.withdrawal-card','.vote-prior','.victory-forecast','.role-transition','.forecast-actions .primary','.graphic-play.role-intro'])assert(css.includes(selector),selector);
 const village=fs.readFileSync('src/village-render.js','utf8');assert(village.includes("!!world.closest?.('.graphic-play')].join(':')"));
 assert(css.includes('.seat-role{flex-shrink:0;'));
 assert(css.includes('max-width:68px;height:16px;font-size:11px;line-height:16px'));

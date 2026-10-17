@@ -1,3 +1,11 @@
+# 0.48.0-beta.1
+
+- 產品更名 Aurawolf｜全知之人，同步首頁、HUD、頁面標題／metadata、setup／備援控制台、復盤標題及下載檔名。保留 localStorage key 和技術 package identity。
+- 使用者指定的新 24 張角色 WebP 同步至 src/assets/roles 為正式來源，原位元組取代舊版，build 不再覆蓋回舊圖。
+- 移除舊 hidden 模式狀態、兩處 render 分支、presentationHidden 動畫條件、veil-screen 樣式與舊提示。保留一般 HTML hidden／aria-hidden 與未公開資訊的規則語意。
+- 紀錄／管理／圖鑑為文件／完整齒輪／角色卡冊；加入 data-icon keyed reconciliation，避免重用錯誤 SVG 結構。手機品牌文字不擠壓操作入口。
+- 新增 branding-check；Node 全套 26 支與角色邊界／建置檢查，Chrome 品牌圖示與多尺寸部分驗證。未推送或部署。
+
 # 0.47.0-beta.1
 
 - Review 真實點擊確認原隱藏按鈕未接通：inline handler 的 hidden 被解析為元素屬性而非畫面狀態；不是已完成的防旁觀入口。

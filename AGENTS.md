@@ -1,4 +1,4 @@
-# 月夜議會 maintenance contract
+# Aurawolf｜全知之人 maintenance contract
 
 User priority: visual/UI changes must not change the underlying Werewolf rules.
 

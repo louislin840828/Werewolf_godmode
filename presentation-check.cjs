@@ -32,10 +32,10 @@ const reordered=new Element('div','',{id:'app'});reordered.append(new Element('t
 // Animation ghosts do not participate in reconciliation; they are inert and independently removed.
 const ghost=new Element('canvas','scene-crossfade');root.append(ghost);reconcile(root,reordered);assert.equal(ghost.parentElement,root);
 assert.match(source,/ghost\.setAttribute\('inert',''\)/);assert.match(source,/ghost\.setAttribute\('aria-hidden','true'\)/);
-assert.match(source,/if\(hidden\)\{cancelAnimationFrame/,'hide path bypasses animated reconciliation');
+assert(!source.includes('presentationHidden')&&!source.includes('if(hidden)'),'obsolete privacy mode removed');
 const village=fs.readFileSync('src/village-render.js','utf8');assert.match(village,/canvas===villageCanvas&&signature===villageSignature\)return/);assert.doesNotMatch(village,/\bs\.players/);
 const css=fs.readFileSync('src/mobile.css','utf8');assert.match(css,/\.ritual-intro,\.revelation,\.role-intro,\.game-drawer\{animation:none\}/);assert.match(css,/prefers-reduced-motion:reduce/);
-console.log('PASS: persistent canvas/seats/decoded portraits, focused drafts, disclosures, reorder/removal, inert exits, immediate privacy and reduced-motion contracts.');
+console.log('PASS: persistent canvas/seats/decoded portraits, focused drafts, disclosures, reorder/removal, inert exits, obsolete privacy cleanup and reduced-motion contracts.');
 // Semantic motion: reveal is local; drawer navigation does not re-enter its container.
 const calls=[],disclosure={open:true};let reduced=false;
 const element=name=>({getAnimations:()=>[],animate:(frames,options)=>calls.push({name,frames,options})});
