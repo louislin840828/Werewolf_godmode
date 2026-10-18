@@ -4,10 +4,9 @@ const roleRuntimeBase={save,mutate,log,kill,outcomes,gunOK,winner,shoot,badge};
 let roleRevision=0,roleViewCache=null,roleViewOwner=null;
 function restoreRoleCheckpoint(snapshot,current=s){
  const out=clone(snapshot),cursor=out.roleSystem?.snapshotCursor;
- if(cursor===undefined)return out;
- out.roleSystem.events=clone((current.roleSystem?.events||[]).filter(e=>e.id<=cursor));
+ if(cursor!==undefined){out.roleSystem.events=clone((current.roleSystem?.events||[]).filter(e=>e.id<=cursor));
  out.roleSystem.information={};for(const [id,list] of Object.entries(current.roleSystem?.information||{}))out.roleSystem.information[id]=clone(list.filter(e=>e.id<=cursor));
- delete out.roleSystem.snapshotCursor;return out;
+ delete out.roleSystem.snapshotCursor;}return out;
 }
 checkpoint=function(){
  ensureRoleSystem();const meta={...s.roleSystem,events:[],information:{},snapshotCursor:s.roleSystem.nextEventId-1};

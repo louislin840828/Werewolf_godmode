@@ -1,6 +1,6 @@
 # 自有 Git 與 Hosting 部署
 
-性質：發布操作參考，不是已部署證明。0.49.3 使用者授權合併並推送 main，沿用既有 Hosting 的 Git 整合自動部署；0.49.1 為上一輪已推送版本。Git 遠端為 louislin840828/Werewolf_godmode；目前未記錄正式網址，推送成功不代表線上部署已成功，需另外核對狀態與版號。vercel.json／wrangler.jsonc 為選用 Hosting 設定，不另外建立新站。後續發布／遠端分享仍須取得授權。
+性質：發布操作參考，不是已部署證明。0.49.5 使用者授權合併並推送 main，沿用既有 Hosting 的 Git 整合自動部署；0.49.3 為上一輪已推送版本。Git 遠端為 louislin840828/Werewolf_godmode；目前未記錄正式網址，推送成功不代表線上部署已成功，需另外核對狀態與版號。vercel.json／wrangler.jsonc 為選用 Hosting 設定，不另外建立新站。後續發布／遠端分享仍須取得授權。
 自有站不需要舊 Sites 的 project id、write credential 或任何 ChatGPT 服務 token。
 
 ## 首次接手

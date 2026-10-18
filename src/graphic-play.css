@@ -54,6 +54,8 @@
 .graphic-play .relic small,.graphic-play .day-power small,.graphic-play .ritual-slot small,.graphic-play .ritual-slot span{color:var(--gn-muted);opacity:1}
 .graphic-play .ritual-slot strong,.graphic-play .merchant-target strong{color:var(--gn-power)}
 .graphic-play .day-power>.sig{color:var(--gn-power)}
+.graphic-play .day-power.on,.graphic-play .duel-result.success{border-color:var(--gn-power)}
+.graphic-play .duel-result.fail{border-color:var(--gn-error)}
 .graphic-play .day-power.danger{border-color:var(--gn-line)}
 .graphic-play .relic:disabled,.graphic-play button:disabled{opacity:.5;cursor:not-allowed;box-shadow:none}
 .graphic-play .commit-btn{position:relative;isolation:isolate;min-height:48px;background:linear-gradient(100deg,#71532538,#e5b86115,#71532538),var(--gn-material);color:#f5d59a;border:1px solid #e5b86166;border-radius:var(--gn-radius);box-shadow:2px 3px 0 #060e14;white-space:normal;overflow-wrap:anywhere}

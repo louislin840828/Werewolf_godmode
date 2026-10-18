@@ -32,6 +32,7 @@
  .graphic-play>.dock-footer{grid-column:2;grid-row:3;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:12px 20px;border-left:1px solid var(--edge);max-height:50dvh;overflow-y:auto;min-width:0}
  .graphic-play>.dock-footer>*{grid-column:1;min-width:0}
  .graphic-play>.dock-footer .ritual-commit{display:flex;flex-direction:row;align-items:stretch;width:100%;min-width:0;margin:0;padding:0;background:transparent;gap:8px}
+ .graphic-play>.dock-footer .ritual-commit.end-commit{flex-direction:column;align-items:stretch}
  .graphic-play>.dock-footer .commit-btn{flex:1;min-width:0;min-height:48px;width:auto;padding:12px;font-size:14px}
  .graphic-play>.dock-footer .abstain-btn{flex:0 1 40%;min-width:0;min-height:48px;padding:12px 8px;font-size:14px}
  .graphic-play>.dock-footer .undo-action{min-height:44px;justify-self:start;margin:0;padding:8px 0}
@@ -50,6 +51,13 @@
 }
 .board-gallery .gallery-header .beta-badge{flex:none;display:inline-flex;align-items:center;padding:4px 10px;border:1px solid var(--ui-line);border-radius:6px 4px 7px 4px;background:var(--ui-ink);color:var(--ui-paper);font:600 11px/1.2 system-ui;letter-spacing:.8px;white-space:nowrap}
 @media(max-width:370px){.board-gallery .gallery-header{gap:8px;padding-inline:12px}.board-gallery .gallery-header>span{font-size:15px;letter-spacing:0}.board-gallery .gallery-header .beta-badge{padding:4px 7px}}
+.game-hud nav a.hud-feedback{display:flex;align-items:center;gap:6px;min-width:44px;min-height:48px;padding:6px;color:var(--soft);text-decoration:none;font-size:11px}
+.game-hud nav a.hud-feedback .sig{width:19px;height:19px}
+.game-hud nav a.hud-feedback:hover{color:var(--gold)}
+.dock-footer>.ritual-commit.end-commit,.ritual-commit.end-commit{display:flex;flex-direction:column;align-items:stretch;gap:4px;width:100%}
+a.commit-btn{text-decoration:none;text-align:center}
+.end-story{align-self:center;min-height:44px;padding:8px 4px;background:none;border:0;border-bottom:1px solid #adbc8d55;color:var(--soft);font-size:13px}
+@media(max-width:650px),(max-width:1000px) and (max-height:600px){.game-hud nav a.hud-feedback{flex-direction:column;justify-content:center;min-width:48px;min-height:48px;padding:4px;font-size:12px}}
 .graphic-play .game-brand{letter-spacing:.5px;font-size:20px;min-width:0}
 .graphic-play .game-brand small{font-size:10px;letter-spacing:0;white-space:nowrap}
 .graphic-play .game-hud nav .sig{width:22px;height:22px;overflow:visible}
