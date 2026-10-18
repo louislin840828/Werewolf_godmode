@@ -1,6 +1,6 @@
 # Aurawolf｜全知之人：保存與開發交接
 
-性質：當前保存／搬站契約。現行版本以 package.json 為準（0.49.5-beta.1）；Site 第 33 版及 0.30.3 ZIP 僅為歷史來源，manifest 已封存於 history/handoff-0.30.3.json。0.49.5 已由使用者授權推送 `main`，沿用既有 Git 整合部署；推送成功仍須另核對線上版號。
+性質：當前保存／搬站契約。現行版本以 package.json 為準（0.49.6-beta.1）；Site 第 33 版及 0.30.3 ZIP 僅為歷史來源，manifest 已封存於 history/handoff-0.30.3.json。0.49.6 已由使用者授權推送 `main`，沿用既有 Git 整合部署；推送成功仍須另核對線上版號。
 
 ## 本階段範圍
 

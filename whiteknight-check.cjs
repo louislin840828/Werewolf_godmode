@@ -24,7 +24,7 @@ console.log('PASS: full white/knight first night, 4 shared wolves, exact 12 role
 const renderCode=fs.readFileSync('src/game.js','utf8');const begin=renderCode.indexOf('render=function(){'),end=renderCode.indexOf('\nconst ROLE_ART=',begin);run(renderCode.slice(begin,end));const productionRender=run('render');require('./test-support.cjs').installRenderDOM(c,nodes);
 function markup(){productionRender();return nodes.app.innerHTML}
 reset();assert(markup().includes('騎士決鬥'));assert(markup().includes('白狼王自爆'));run('beginWhiteVote()');assert(!markup().includes('class="day-power'));assert(markup().includes('此位棄票'));
-reset();run("openWhiteAction('duel')");assert(markup().includes('確認決鬥'));assert(markup().includes('取消技能'));run('setChoice(2);resolveWhiteAction()');assert(markup().includes('決鬥成功'));run('acknowledgeDuel()');assert(markup().includes('守衛'));
+reset();run("openWhiteAction('duel')");assert(markup().includes('確認決鬥'));assert(markup().includes('取消決鬥'));run('setChoice(2);resolveWhiteAction()');assert(markup().includes('決鬥成功'));run('acknowledgeDuel()');assert(markup().includes('守衛'));
 reset();run("openWhiteAction('explode');resolveWhiteAction()");assert(markup().includes('放棄帶人'));run('resolveWhiteTake(9)');assert(markup().includes('守衛'));
 reset();run("s.phase='setup'");assert(markup().includes('白狼王'));run('start()');assert(markup().includes('registration-slots'));assert(markup().includes('點選座位'));assert.equal(run('gameModel().kind'),'register');
 console.log('PASS: production markup covers all new states, vote lock hides power cards, explicit abstention/cancel/forfeit, and first-night role fields. Browser QA not performed.');
