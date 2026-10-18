@@ -68,7 +68,7 @@ run('s.step=nightSteps().indexOf("review");hydrateGame();refreshIntro(gameModel(
 c.setTimeout=originalTimeout;
 // Vote receipts and edits keep the existing auto-advance, eligibility and tally rules.
 for(const board of ['brothers','mechanical','gargoyle','whiteknight','bloodmoon','dream','cupid']){
- reset(board);run('s.phase="day";s.elected=true;s.voteDone=false;s.votes={};gameModel();if(s.white)s.white.voting=true;if(s.blood)s.blood.voting=true;if(s.dream)s.dream.voting=true;if(s.cupid)s.cupid.voting=true;gKey="";hydrateGame();syncVotePresentation(gameModel())');
+ reset(board);run('s.phase="day";s.elected=true;s.voteDone=false;s.votes={};beginDayVote();gKey="";hydrateGame();syncVotePresentation(gameModel())');
  assert.equal(run('gameModel().kind'),'vote',board);assert.equal(run('voteComplete(gameModel())'),false);
  run('refreshIntro(gameModel())');assert.equal(run('introOpen'),false);
  run('sceneSeatChoice(12);syncVotePresentation(gameModel())');assert.equal(run('s.votes[1]'),12);assert.equal(run('g.voter'),2);assert(run('voteReceiptMarkup(gameModel())').includes('1 號 → 12 號'));
@@ -135,7 +135,7 @@ console.log('PASS: independent merchant target/gift in either order, persistent 
 
 // A lost transient receipt never implies that the persisted votes disappeared.
 for(const board of ['brothers','mechanical','gargoyle','whiteknight','bloodmoon','dream','cupid']){
- reset(board);run('s.phase="day";s.elected=true;s.voteDone=false;s.votes={};gameModel();if(s.white)s.white.voting=true;if(s.blood)s.blood.voting=true;if(s.dream)s.dream.voting=true;if(s.cupid)s.cupid.voting=true;gKey="";hydrateGame();syncVotePresentation(gameModel())');
+ reset(board);run('s.phase="day";s.elected=true;s.voteDone=false;s.votes={};beginDayVote();gKey="";hydrateGame();syncVotePresentation(gameModel())');
  assert(run('voteReceiptMarkup(gameModel())').includes('尚未記錄投票'));
  run('sceneSeatChoice(12);sceneAbstainVote();s=JSON.parse(JSON.stringify(s));gKey="";votePresentationKey="";lastVoteReceipt=null;hydrateGame();syncVotePresentation(gameModel())');
  assert.equal(run('s.votes[1]'),12);assert.equal(run('s.votes[2]'),0);

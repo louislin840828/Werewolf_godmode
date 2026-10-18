@@ -7,7 +7,7 @@ run('setChoice(9)');assert.equal(run('player(9).alive'),true);assert.equal(run('
 assert.equal(obj('skillEdges(gameModel())').length,4);assert(run('seatHTML(player(9),gameModel())').includes('fate-marker'));assert(run('seatHTML(player(9),gameModel())').includes('seat-selected'));
 run('clearChoice()');assert.equal(run('s.draft.kill'),0);
 run("s.phase='day';s.players[8].alive=false;gKey='';hydrateGame()");assert(run('seatHTML(player(9),gameModel())').includes('seat-out'));assert.deepEqual(obj('s.players.map((p,i)=>seatPosition(i,390,330))'),pos);
-run('s.players[8].alive=true;recordVote(1,9)');assert.equal(run('s.votes[1]'),9);assert(run('seatHTML(player(9),gameModel())').includes('✓'));
+run('s.players[8].alive=true;beginDayVote();recordVote(1,9)');assert.equal(run('s.votes[1]'),9);assert(run('seatHTML(player(9),gameModel())').includes('✓'));
 run('g.voter=2;abstainVote()');assert.equal(run('s.votes[2]'),0);run('recordVote(1,10)');assert.equal(run('s.votes[1]'),10);assert.equal(run('player(10).alive'),true);
 for(const phase of ['election','dawn','end']){run(`s.phase='${phase}'`);assert.equal(run("graphicPlayMode({kind:'review'})"),true);}
 run("s.phase='night'");assert(run("introMarkup({kind:'review',title:'夜間結算',eyebrow:'NIGHT',line:'確認',actions:[],symbol:'moon'})").includes('role-intro graphic-play'));

@@ -1,6 +1,6 @@
 # Aurawolf｜全知之人：保存與開發交接
 
-性質：當前保存／搬站契約。現行版本以 package.json 為準（0.49.1-beta.1）；Site 第 33 版及 0.30.3 ZIP 僅為歷史來源，manifest 已封存於 history/handoff-0.30.3.json。本輪只提交本機，不部署。
+性質：當前保存／搬站契約。現行版本以 package.json 為準（0.49.3-beta.1）；Site 第 33 版及 0.30.3 ZIP 僅為歷史來源，manifest 已封存於 history/handoff-0.30.3.json。0.49.3 已由使用者授權推送 `main`，沿用既有 Git 整合部署；推送成功仍須另核對線上版號。
 
 ## 本階段範圍
 
@@ -27,6 +27,10 @@
 主要實作：`src/app.js`（key、讀寫、初始載入、開新局），
 `src/role-runtime.js`（save 包裝、遷移、撤回），
 `src/rules/role-state.js`（角色 schema），`src/game-controller.js`（操作及草稿保存）。
+
+0.49.2 增加一般四板的 dayVoting 布林欄位：確認開始放逐投票時保存、下一夜／天亮重設，撤回含此欄位；key／schemaVersion 不變。舊保存沒有此欄位時，已有票單（含棄票）、PK 或第二輪仍視為投票已開始，不能自爆；未記票的一般四板舊白天保存回到討論，由上帝明確開始投票。
+
+0.49.3 一般四板自爆卡的選取者與開啟模式為 controller UI 暫存，不寫存檔；重整回到討論／已保存投票階段，不恢復未確認自爆座號。確認自爆才保存死亡、資源、階段與撤回快照。
 
 ## 重新開啟與手機使用限制
 
@@ -63,7 +67,7 @@ HTTP 快取由瀏覽器與 Hosting 回應控制；`portraitPreload`、`portraitN
 
 ## 當前驗證基線
 
-當前全套 27 支，Node v24.22.0。早期 0.30 基線為 17 支，僅作歷史參考。
+當前全套 29 支，Node v24.22.0。早期 0.30 基線為 17 支，僅作歷史參考。
 `npm test` 在乾淨暫存目錄建置，檢查目前 JavaScript 與 24 張正式新版角色圖，再執行全套測試。
 `node scripts/dev-server.cjs --check` 驗證本機建置／首頁路徑，不啟動監聽埠。
 測試修復原因與範圍見 testing.md；手機完整對局驗收仍未完成。

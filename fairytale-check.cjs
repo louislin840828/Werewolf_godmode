@@ -11,7 +11,7 @@ run("s.step=0;s.draft.learn=6;hydrateGame()");assert(!run('gameModel().actions')
 // Delayed learning of each role must affect same-night spiritual inspection.
 for(const role of ['通靈師','女巫','守衛','獵人','狼人','平民']){run(`s.mech.learned=null;s.draft.learn=s.players.find(p=>p.role==='${role}').id`);assert.equal(run('spiritResult(1)'),role)}
 // Explicit abstention records zero, advances to next voter, and can be edited.
-run("s=fresh();s.players.forEach((p,i)=>p.role=ROLES[i]);s.phase='day';gKey='';hydrateGame();gameModel();g.voter=1;abstainVote()");assert.equal(run('s.votes[1]'),0);assert.equal(run('g.voter'),2);run('g.voter=1;setChoice(3)');assert.equal(run('s.votes[1]'),3);
+run("s=fresh();s.players.forEach((p,i)=>p.role=ROLES[i]);s.phase='day';gKey='';hydrateGame();beginDayVote();gameModel();g.voter=1;abstainVote()");assert.equal(run('s.votes[1]'),0);assert.equal(run('g.voter'),2);run('g.voter=1;setChoice(3)');assert.equal(run('s.votes[1]'),3);
 // The popup triggers once per role, not repeatedly during a single role's choices.
 reset();run('refreshIntro(gameModel())');assert.equal(run('introOpen'),true);run('dismissIntro();refreshIntro(gameModel())');assert.equal(run('introOpen'),false);register([1]);run('refreshIntro(gameModel())');assert.equal(run('introOpen'),false);run('setChoice(7);confirmGame();refreshIntro(gameModel())');assert.equal(run('introOpen'),true);
 // All images resolve to existing deployable assets.

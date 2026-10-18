@@ -32,6 +32,10 @@
 
 `interface-theme.css` 在 graphic-play 之後載入，使用 ui-* 共用 token；對齊選板／抽屜／站內彈窗，不改遊玩座位、Canvas 或投票確認。`host-dialog.view.js` 提供原生 dialog top layer 與焦點／取消服務，無權威狀態存取。app.js 的 host intent adapter 在等待時不寫 state，以完整狀態比對拒絕過期 continuation；無 dialog 能力的 VM 使用同步原生 adapter。配置與重設支援完成回呼，界面只在成功後開局／清除抽屜。既有驗證與結算閉包不變。詳見 [interface-consistency.md](interface-consistency.md)。
 
+## 0.49.2 共用投票／自爆時機
+
+app.js 的 votingStarted(q)／explosionTimingAllowed(q) 為無 DOM 的共用讀取政策，放在基底以支援 standalone 板子規則 loader；game-controller.js 統一開始投票與公開 boom 入口，各板開啟／確認與 election resolver 共用政策，基底提示視窗 continuation 再驗證。一般四板以 s.dayVoting 保存明確開始投票，其他四板沿用既有 voting 欄位；票單／PK／第二輪也鎖定旧保存。views 只讀政策決定入口，不以隱藏按鈕取代控制驗證。key／schema 不變，開始投票撤回與下一夜／天亮重設见 development-handoff.md。
+
 ## 0.49 手機操作優先
 
 game.js 的原生 details／summary 主持選單只保存 DOM disclosure 狀態，視窗切換時重設手機收合／桌面展開；抽屜關閉返回手機選單焦點，不改 controller 或存檔。mobile.css 使頂欄浮在右上、不占 grid 列，保存說明放 play-scroll 末端、短內容靠底；技能控制以 CSS order 先於口令呈現，摘要／確認／棄票／撤回仍在独立常駐底欄。graphic-play.css 小螢幕城市至少 320px，44px 座位與共用線座標維持。Chrome 局部驗證與未驗收範圍見 testing.md／mobile-acceptance.md。

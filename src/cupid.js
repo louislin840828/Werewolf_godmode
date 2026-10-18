@@ -37,13 +37,13 @@ roleStatus=function(id){const st=cupidBase.roleStatus(id);if(!isCupid()||!st)ret
 
 gunOK=function(id){if(isCupid()&&(outcomes()[id]||[]).includes('殉情'))return false;return cupidBase.gunOK(id);};
 
-function cupidCanAct(){ensureCupid();return isCupid()&&['day','election'].includes(s.phase)&&!s.voteDone&&!s.cupid.voting&&!Object.keys(s.votes).length&&!s.pending.length&&!s.badge&&!s.cupid.action;}
+function cupidCanAct(){ensureCupid();return explosionTimingAllowed()&&isCupid()&&['day','election'].includes(s.phase)&&!s.voteDone&&!s.cupid.voting&&!Object.keys(s.votes).length&&!s.pending.length&&!s.badge&&!s.cupid.action;}
 function beginCupidVote(){if(!cupidCanAct())return;mutate(()=>{s.cupid.voting=true;log(s.phase==='election'?'開始警長投票；自爆關閉':'開始放逐投票；自爆關閉');});}
 function openCupidAction(){if(!cupidCanAct())return toast('投票開始後不能自爆。');mutate(()=>s.cupid.action={kind:'explode',target:0});}
 function cancelCupidAction(){if(!isCupid()||!s.cupid.action)return;mutate(()=>s.cupid.action=null);}
 function cupidActionModel(){return {kind:'cupidAction',title:'狼人 · 自爆',eyebrow:'BEFORE THE VOTE',line:'選擇要自爆的狼人。',symbol:'claw',actions:[action('cupidTarget','自爆者','claw',alive().filter(wolf),false)],confirm:'確認狼人自爆'};}
 function cupidFinishTransition(){checkWin();if(s.afterBoom&&!s.pending.length&&!s.badge&&!s.winner){s.afterBoom=false;newNight();}}
-function resolveCupidAction(){const a=s.cupid.action,p=player(a?.target);if(!a||!p?.alive||!wolf(p))return toast('請選擇存活狼人。');if(!['day','election'].includes(s.phase)||s.voteDone||s.cupid.voting||Object.keys(s.votes).length||s.pending.length||s.badge)return toast('目前不能自爆。');mutate(()=>{s.cupid.action=null;const election=s.phase==='election';kill(p.id,'自爆');if(election){consumeElectionExplosion();s.phase='dawn';s.cupid.deathBatch=clone(s.nightResult||{});Object.entries(s.nightResult||{}).forEach(([id,c])=>kill(+id,c.join('＋')));s.cupid.deathBatch=null;s.nightResult=null;s.phase='day';}s.afterBoom=true;cupidFinishTransition();});}
+function resolveCupidAction(){const a=s.cupid.action,p=player(a?.target);if(!a||!p?.alive||!wolf(p))return toast('請選擇存活狼人。');if(!explosionTimingAllowed()||!['day','election'].includes(s.phase)||s.voteDone||s.cupid.voting||Object.keys(s.votes).length||s.pending.length||s.badge)return toast('目前不能自爆。');mutate(()=>{s.cupid.action=null;const election=s.phase==='election';kill(p.id,'自爆');if(election){consumeElectionExplosion();s.phase='dawn';s.cupid.deathBatch=clone(s.nightResult||{});Object.entries(s.nightResult||{}).forEach(([id,c])=>kill(+id,c.join('＋')));s.cupid.deathBatch=null;s.nightResult=null;s.phase='day';}s.afterBoom=true;cupidFinishTransition();});}
 boom=function(){if(!isCupid())return cupidBase.boom();openCupidAction();};
 candidate=function(id,on){if(isCupid()&&(s.cupid?.voting||s.cupid?.action))return;cupidBase.candidate(id,on);};
 badge=function(){if(!isCupid())return cupidBase.badge();const id=+readHostValue('badge');if(id&&!player(id)?.alive)return;mutate(()=>{s.sheriff=id;s.badge=false;log(id?`警徽移交 ${who(id)}`:'警徽撕毀');cupidFinishTransition();});};

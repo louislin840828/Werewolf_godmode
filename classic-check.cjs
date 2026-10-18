@@ -24,7 +24,7 @@ assert.equal(run("roleStatus(8).skills.find(x=>x.id==='reveal').remaining"),0);
 assert(run('voteResultMarkup()').includes('白痴翻牌 · 仍存活'));
 assert(run("s.roleSystem.events.some(e=>e.type==='roleStateChanged'&&e.changes.idiotRevealed.includes(8))"));
 run('save()');t.context.persisted=t.saved();run('s=JSON.parse(persisted);ensureRoleSystem();undo()');assert.equal(run('player(8).idiotRevealed'),undefined);assert.equal(run('roleStatus(8).canVote'),true);
-run("mutate(()=>kill(8,'放逐'));newNight();s.phase='day';s.voteDone=false");assert(!obj('dayModel().voters').some(p=>p.id===8));
+run("mutate(()=>kill(8,'放逐'));newNight();s.phase='day';s.voteDone=false;beginDayVote()");assert(!obj('dayModel().voters').some(p=>p.id===8));
 run('recordVote(8,1)');assert.equal(run('s.votes[8]'),undefined);
 run("s.phase='election';s.elected=false;s.candidates=[1,2];s.election={stage:'vote',registered:[1,2],withdrawn:[]}");assert(!obj('sheriffVoters()').some(p=>p.id===8));
 for(const cause of ['狼隊刀','女巫毒','槍擊']){reset();run(`mutate(()=>kill(8,'放逐'));mutate(()=>kill(8,'${cause}'))`);assert.equal(run('player(8).alive'),false);assert.equal(run('roleStatus(8).canSpeak'),false);assert(run('roleStatus(8).death.factors.length>0'));}

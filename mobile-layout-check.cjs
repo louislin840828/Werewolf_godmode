@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),{createGameTest}=require('./test-support.cjs');
 const {run}=createGameTest();
-const game=fs.readFileSync('src/game.js','utf8'),mobile=fs.readFileSync('src/mobile.css','utf8'),graphic=fs.readFileSync('src/graphic-play.css','utf8');
+const game=fs.readFileSync('src/game.js','utf8'),mobile=fs.readFileSync('src/mobile.css','utf8'),graphic=fs.readFileSync('src/graphic-play.css','utf8'),theme=fs.readFileSync('src/interface-theme.css','utf8');
 assert(game.includes('id="hud-menu" class="hud-menu"'));
 assert(game.includes('aria-label="主持工具選單"'));
 assert(game.includes('onkeydown="hudMenuKey(event)"'));
@@ -18,6 +18,11 @@ assert(!game.includes('class="intro-art-shade"'));
 assert(graphic.includes('aspect-ratio:1 / 1;object-fit:contain;object-position:center'));
 assert(graphic.includes('.role-intro .intro-art.duet{grid-template-columns:repeat(2,minmax(0,1fr))}'));
 assert(graphic.includes('.role-intro .intro-footer{flex:none;'));
+assert(theme.includes('grid-template-columns:minmax(0,1fr) clamp(340px,36vw,480px)'));
+assert(theme.includes('.graphic-play .voting-dock .voter-line{display:grid'));
+assert(!game.includes("'靜態場景':'微動態'"));
+assert(!game.includes('切換靜態場景'));
+assert(game.includes('查看名冊'));
 // Presentation-only menu transitions must not write game state or skill selection.
 const before=run('JSON.stringify(viewState())');
 run(`document.getElementById=()=>({dataset:{},open:false});mountHudMenu();closeHudMenu();hudMenuKey({key:'Escape',preventDefault(){}})`);

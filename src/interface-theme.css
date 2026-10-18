@@ -1,4 +1,53 @@
 /* Shared ink language for all host surfaces. Layout and engine contracts stay intact. */
+/* Desktop host workspace. Phone portrait/landscape retain their existing structure. */
+@media(min-width:1001px),(min-width:651px) and (min-height:601px){
+ .game-shell.graphic-play{height:var(--app-height);min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(340px,36vw,480px);grid-template-rows:75px minmax(0,1fr) auto;overflow:hidden}
+ .graphic-play .game-hud{grid-column:1/-1;grid-row:1;position:relative;inset:auto;min-width:0;min-height:0;width:auto;padding:0 20px;display:block}
+ .graphic-play .hud-menu{display:block;width:100%;height:100%}
+ .graphic-play .hud-tools{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:16px;width:100%;height:74px;min-width:0}
+ .graphic-play .hud-menu-toggle{display:none}
+ .graphic-play .hud-tools .game-brand{flex:0 1 auto;min-height:48px;padding:4px 0}
+ .graphic-play .hud-tools .chapter-marker{flex:none;display:flex;gap:8px}
+ .graphic-play .hud-tools nav{flex:none;display:flex;flex-direction:row;gap:6px}
+ .graphic-play .hud-tools nav button{flex-direction:row;min-width:44px;min-height:48px;padding:6px;gap:6px}
+ .graphic-play .hud-tools nav .clock{display:flex}
+ .graphic-play .play-scroll{display:contents}
+ .graphic-play .game-world{grid-column:1;grid-row:2 / 4;min-width:0;min-height:0;height:auto;overflow:hidden}
+ .graphic-play .ritual-dock{grid-column:2;grid-row:2;min-width:0;min-height:0;max-height:none;overflow-y:auto;overflow-x:hidden;position:relative;bottom:auto;padding:20px;border-top:0;border-left:1px solid var(--edge);box-shadow:none;scroll-padding-block:16px}
+ .graphic-play .ritual-dock:before{display:none}
+ .graphic-play .dock-body{display:flex;flex-direction:column;max-height:none;margin:0;padding:0;overflow:visible}
+ .graphic-play .ritual-intro{align-items:flex-start;gap:12px;margin-bottom:16px}
+ .graphic-play .ritual-intro>div{min-width:0;flex:1}
+ .graphic-play .turn-name{font-size:22px;line-height:1.4;margin:0 0 8px}
+ .graphic-play .spoken-line{font-size:16px;line-height:1.7;overflow-wrap:anywhere}
+ .graphic-play .ritual-controls{display:block;min-width:0}
+ .graphic-play .relics,.graphic-play .registration-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(76px,1fr));gap:8px;min-width:0}
+ .graphic-play .relic,.graphic-play .ritual-slot{width:100%;min-width:0;min-height:76px}
+ .graphic-play .day-powers{display:flex;flex-direction:column;align-items:stretch}
+ .graphic-play .day-power{width:100%;min-width:0}
+ .graphic-play .voting-dock .voter-line{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:none;overflow:visible;padding:0}
+ .graphic-play .voting-dock .voter{width:100%;min-width:0;height:auto;min-height:48px;flex:none}
+ .graphic-play .turn-options{margin-top:12px}
+ .graphic-play .secondary-actions{display:flex;flex-wrap:wrap;gap:8px 16px}
+ .graphic-play>.dock-footer{grid-column:2;grid-row:3;display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:12px 20px;border-left:1px solid var(--edge);max-height:50dvh;overflow-y:auto;min-width:0}
+ .graphic-play>.dock-footer>*{grid-column:1;min-width:0}
+ .graphic-play>.dock-footer .ritual-commit{display:flex;flex-direction:row;align-items:stretch;width:100%;min-width:0;margin:0;padding:0;background:transparent;gap:8px}
+ .graphic-play>.dock-footer .commit-btn{flex:1;min-width:0;min-height:48px;width:auto;padding:12px;font-size:14px}
+ .graphic-play>.dock-footer .abstain-btn{flex:0 1 40%;min-width:0;min-height:48px;padding:12px 8px;font-size:14px}
+ .graphic-play>.dock-footer .undo-action{min-height:44px;justify-self:start;margin:0;padding:8px 0}
+ .graphic-play>.dock-footer .saved-whisper{position:static;margin:0;font-size:11px;line-height:1.5;text-align:right;overflow-wrap:anywhere}
+ .graphic-play .world-title{left:50%;right:auto;top:42%;transform:translate(-50%,-50%);width:32%;max-width:280px}
+ .graphic-play .world-title h1{max-width:none;margin:8px 0;font-size:clamp(18px,2vw,25px);line-height:1.45;letter-spacing:1px;overflow-wrap:anywhere}
+ .graphic-play .world-title>span{font-size:10px;letter-spacing:1px}
+ .graphic-play .village-heart:not(.vote-heart){display:none}
+ .graphic-play[data-interaction=vote] .world-title,.graphic-play .game-world:has(.revelation) .world-title,.graphic-play .game-world:has(.dawn-results) .world-title,.graphic-play .game-world:has(.vote-results) .world-title{display:none}
+ .graphic-play .world-corner{left:12px;bottom:12px}
+}
+@media(min-width:651px) and (max-width:850px) and (min-height:601px){
+ .graphic-play .hud-tools .chapter-marker{display:none}
+ .graphic-play .hud-tools nav span{display:none}
+ .graphic-play .game-hud{padding-inline:12px}
+}
 .board-gallery .gallery-header .beta-badge{flex:none;display:inline-flex;align-items:center;padding:4px 10px;border:1px solid var(--ui-line);border-radius:6px 4px 7px 4px;background:var(--ui-ink);color:var(--ui-paper);font:600 11px/1.2 system-ui;letter-spacing:.8px;white-space:nowrap}
 @media(max-width:370px){.board-gallery .gallery-header{gap:8px;padding-inline:12px}.board-gallery .gallery-header>span{font-size:15px;letter-spacing:0}.board-gallery .gallery-header .beta-badge{padding:4px 7px}}
 .graphic-play .game-brand{letter-spacing:.5px;font-size:20px;min-width:0}
